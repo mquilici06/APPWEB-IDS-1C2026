@@ -1,1 +1,3 @@
-from flask import Blueprint,jsonify,request
+from flask import Blueprint
+
+menu_bp = Blueprint("menu", __name__)
