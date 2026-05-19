@@ -14,7 +14,7 @@ def listar_usuarios():
     cursor.execute("SELECT COUNT(*) AS total FROM menu")
     total= cursor.fetchone()["total"]
 
-    if not total
+    if not total:
         return "",204
 
     cursor.execute("SELECT * FROM menu")
