@@ -90,8 +90,9 @@ def editar_plato(id_plato):
     
     cursor.execute("""
                     UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s WHERE id_menu = %s;
-                   """, (nombre_act, desc_act, precio_act, precio_act, restr_act, seccion_act, id_plato))
-    
+                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act, id_plato))
+    conn.commit()
+
     cursor.close()
     conn.close()
 
