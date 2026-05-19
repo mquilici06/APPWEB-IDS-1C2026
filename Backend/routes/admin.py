@@ -3,7 +3,7 @@ from database.db import get_connection
 
 admin_bp = Blueprint("admin", __name__)
 
-@admin_bp.route("/admin/menu", methods=['POST'])
+@admin_bp.route("/menu/admin", methods=['POST'])
 def agregar_plato():
     try:
         conn = get_connection()
@@ -60,11 +60,25 @@ def agregar_plato():
 
     return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
 
+@admin_bp.route("/admin/<int:eliminar_id>", methods=["DELETE"])
+def eliminar_plato(eliminar_id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
 
-    
+    cursor.execute("SELECT id FROM menu WHERE id = %s", (eliminar_id,))
+    existe = cursor.fetchone()
+
+    if not existe:
+        cursor.close()
+        conn.close()
+        return jsonify({"Mensaje": "El ID no existe en el menu"}), 404
 
 
-
-
-
-
+    cursor.execute("DELETE FROM menu WHERE id = %s", (eliminar_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"Mensaje": "Plato eliminado"}), 200
