@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-venv/
-.venv/
-.env
-__pycache__/
-*.pyc
-*.pyo
-
-instance/
-
-db.sqlite3
-
-.DS_Store
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -232,4 +218,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
->>>>>>> develop
