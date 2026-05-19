@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS menu (
     nombre_plato VARCHAR(50) NOT NULL,
     desc_plato VARCHAR(200) NOT NULL,
     precio INTEGER NOT NULL,
+    restricciones VARCHAR(50), 
     seccion VARCHAR(20)
 );
 
