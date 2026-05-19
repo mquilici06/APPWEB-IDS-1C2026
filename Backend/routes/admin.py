@@ -3,7 +3,7 @@ from database.db import get_connection
 
 admin_bp = Blueprint("admin", __name__)
 
-@admin_bp.route("/menu/admin", methods=['POST'])
+@admin_bp.route("/admin/menu", methods=['POST'])
 def agregar_plato():
     try:
         conn = get_connection()
@@ -60,25 +60,48 @@ def agregar_plato():
 
     return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
 
-@admin_bp.route("/admin/<int:eliminar_id>", methods=["DELETE"])
-def eliminar_plato(eliminar_id):
+
+@admin_bp.route("/menu/<int:id_plato>", methods=["PUT"])
+def editar_plato(id_plato):
+
+    if id_plato < 1:
+        return jsonify({"Error": "Ingrese un id valido, id>0"}),400
+    
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
+        return jsonify({"Error": "Error de conexion con la base de datos"}),500
 
-    cursor.execute("SELECT id FROM menu WHERE id = %s", (eliminar_id,))
-    existe = cursor.fetchone()
+    data = request.json
 
-    if not existe:
-        cursor.close()
-        conn.close()
-        return jsonify({"Mensaje": "El ID no existe en el menu"}), 404
+    campos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
 
-
-    cursor.execute("DELETE FROM menu WHERE id = %s", (eliminar_id,))
+    for campo in campos_requeridos:
+        if campo not in data:
+            mensaje = f"Falta completar el campo {campo}"
+            return jsonify({"Error": mensaje}), 400
+        
+    nombre_act = data["nombre_plato"]
+    desc_act = data["desc_plato"]
+    precio_act = data["precio"]
+    restr_act = data["restricciones"]
+    seccion_act = data["seccion"]
+    
+    cursor.execute("""
+                    UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s WHERE id_menu = %s;
+                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act, id_plato))
     conn.commit()
+
     cursor.close()
     conn.close()
-    return jsonify({"Mensaje": "Plato eliminado"}), 200
+
+    return " ", 204
+
+    
+
+
+
+
+
+
