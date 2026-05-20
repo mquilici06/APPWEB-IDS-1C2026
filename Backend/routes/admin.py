@@ -79,6 +79,8 @@ def editar_plato(id_plato):
 
     for campo in campos_requeridos:
         if campo not in data:
+            cursor.close()
+            conn.close()
             mensaje = f"Falta completar el campo {campo}"
             return jsonify({"Error": mensaje}), 400
         
