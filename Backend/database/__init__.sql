@@ -36,7 +36,11 @@ CREATE TABLE IF NOT EXISTS estadisticas (
 );
 
 CREATE TABLE IF NOT EXISTS reservas(
-    id_reserva INTEGER AUTO_INCREMENT PRIMARY KEY
+    id_reserva INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    fecha_hora DATETIME NOT NULL,  
+    cantidad_personas INT NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
 INSERT INTO menu (nombre_plato, desc_plato, precio, seccion) VALUES
@@ -62,3 +66,18 @@ INSERT INTO menu (nombre_plato, desc_plato, precio, seccion) VALUES
 ('Limonada de jengibre', 'Limonada artesanal con jengibre fresco y menta', 700, 'bebidas'),
 ('Copa de vino', 'Selección del sommelier, tinto o blanco', 1200, 'bebidas'),
 ('Café espresso', 'Espresso doble de origen único', 500, 'bebidas');
+
+
+INSERT INTO clientes (id, nombre, email, celular) VALUES 
+(1, 'Juan Pérez', 'juan@email.com', '1152307414'),
+(2, 'María López', 'maria@email.com', '1197487796'),
+(3, 'Carlos Gómez', 'carlos@email.com', '1138245976'),
+(4, 'Luis Fernández', 'luis@email.com', '1158067048'),
+(5, 'Sofía Benítez', 'sofia@email.com', '1164178239'),
+(6, 'Ana Rodríguez', 'ana@email.com', '1146756807');
+
+
+INSERT INTO reservas (cantidad_personas, fecha_hora, id_cliente) VALUES 
+(3, '2026-05-17 12:30:00', 1),
+(5, '2026-05-17 12:30:00', 4),
+(10, '2026-05-18 22:00:00', 5);

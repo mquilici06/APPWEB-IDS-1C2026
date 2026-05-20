@@ -156,6 +156,49 @@ def actualizar_parcialmente_un_plato(id_plato):
 
 
 
+@admin_bp.route("/reservas", methods=["GET"])
+def listar_reservas_admin():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+
+    cursor.execute("SELECT COUNT(*) AS total FROM reservas")
+    total_reservas = cursor.fetchone()["total"]
+
+    if total_reservas == 0:
+        cursor.close()
+        conn.close()
+        return jsonify({"mensaje": "No hay reservas registradas"}), 204
+
+    
+    cursor.execute("SELECT * FROM reservas")
+    lista_De_reservas = cursor.fetchall()
+
+    reservas_echas = []
+
+    for reserva in lista_De_reservas:
+        id_del_cliente = reserva["id_cliente"]
+
+       
+        cursor.execute("SELECT nombre, email, celular FROM clientes WHERE id = %s", (id_del_cliente,))
+        cliente = cursor.fetchone()
+
+        if cliente:
+            reservas = {
+                "id_reserva": reserva["id_reserva"],
+                "nombre_Cliente": cliente["nombre"],
+                "email_cliente": cliente["email"],
+                "celular_cliente": cliente["celular"],
+                "fecha_y_hora": reserva["fecha_hora"],
+                "cantidad_personas": reserva["cantidad_personas"]
+            }
+            reservas_echas.append(reservas)
+
+    cursor.close()
+    conn.close()
+    return jsonify({"Reservas": reservas_echas}), 200
 
 
 
