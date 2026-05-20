@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS reservas(
     FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS mensajes_contacto (
+    id_mensaje INTEGER AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    mensaje VARCHAR(500) NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO menu (nombre_plato, desc_plato, precio, seccion) VALUES
 
 -- ENTRADAS
