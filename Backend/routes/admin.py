@@ -100,60 +100,6 @@ def editar_plato(id_plato):
 
     return " ", 204
 
-
-
-@admin_bp.route("/menu/<int:id_plato>", methods=['PATCH'])
-def actualizar_parcialmente_un_plato(id_plato):
-
-    if id_plato < 1:
-        return jsonify({"Error": "Ingrese un id valido, id>0"}),400
-    
-
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}),500
-    
-    cursor.execute("SELECT COUNT(*) AS total FROM menu WHERE id_menu=%s",(id_plato,))
-    total = cursor.fetchone()["total"]
-
-    if not total:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Plato no encontrado"}), 404
-
-    
-    data = request.json
-
-    if not data:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Faltan datos"}), 400
-
-    datos_posibles = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
-    secciones_validas = ["Pastas", "Salsas", "Bebidas", "Postres"]
-    
-    dato_a_modificar = data.get("dato_a_modificar")
-    nuevo_dato = data.get("nuevo_dato")
-
-
-    if dato_a_modificar not in datos_posibles:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "El dato a modificar debe ser valido"}), 400
-    
-    elif dato_a_modificar == "seccion":
-        if nuevo_dato not in secciones_validas:
-            return jsonify({"Error": "Sección no valida"}), 400
-
-    cursor.execute(f"UPDATE menu SET {dato_a_modificar}=%s WHERE id_menu=%s",(nuevo_dato,id_plato,))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify({"Mensaje": "Plato actualizado correctamente"}), 201
-
     
 
 @admin_bp.route("/admin/<int:eliminar_id>", methods=["DELETE"])
