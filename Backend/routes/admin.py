@@ -180,7 +180,7 @@ def eliminar_plato(eliminar_id):
 
 
 @admin_bp.route("/reservas", methods=["GET"])
-def listar_reservas_admin():
+def mostrar_reservas():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -193,7 +193,7 @@ def listar_reservas_admin():
     if total_reservas == 0:
         cursor.close()
         conn.close()
-        return jsonify({"mensaje": "No hay reservas registradas"}), 204
+        return jsonify({"mensaje": "No hay reservas registradas"}), 200
 
     
     cursor.execute("SELECT * FROM reservas")
