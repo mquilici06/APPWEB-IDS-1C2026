@@ -36,11 +36,13 @@ CREATE TABLE IF NOT EXISTS estadisticas (
     FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS reservas(
+CREATE TABLE IF NOT EXISTS reservas (
     id_reserva INTEGER AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT NOT NULL,
-    fecha_hora DATETIME NOT NULL,  
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
     cantidad_personas INT NOT NULL,
+    estado VARCHAR(20) DEFAULT 'confirmada', -- Reemplazo del ENUM
     FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
