@@ -1,9 +1,9 @@
 from flask import Flask, render_template
-from routes import mis_rutas
+from routes.routes import mis_rutas
 
 app = Flask(__name__)
 
-app.register_blueprint(mis_rutas, url_prefix="/api")
+app.register_blueprint(mis_rutas, url_prefix="")
 
 
 @app.route("/")
