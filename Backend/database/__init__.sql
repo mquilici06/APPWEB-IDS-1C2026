@@ -77,9 +77,3 @@ INSERT INTO clientes (id, nombre, email, celular) VALUES
 (4, 'Luis Fernández', 'luis@email.com', '1158067048'),
 (5, 'Sofía Benítez', 'sofia@email.com', '1164178239'),
 (6, 'Ana Rodríguez', 'ana@email.com', '1146756807');
-
-
-INSERT INTO reservas (cantidad_personas, fecha_hora, id_cliente) VALUES 
-(3, '2026-05-17 12:30:00', 1),
-(5, '2026-05-17 12:30:00', 4),
-(10, '2026-05-18 22:00:00', 5);
