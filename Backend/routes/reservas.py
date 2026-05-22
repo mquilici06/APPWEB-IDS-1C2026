@@ -5,7 +5,7 @@ reservas_bp = Blueprint("reservas", __name__)
 
 @reservas_bp.route("/disponibilidad", methods=["GET"])
 def consultar_disponibilidad():
-
+    #se manda la fecha como query params
     fecha = request.args.get('fecha')
     
     if not fecha:
@@ -26,13 +26,13 @@ def consultar_disponibilidad():
     resultados = cursor.fetchall()
 
     ocupacion = {}
-    for fila in resultados:
+    for fila in resultados: #Por cada Fila que trajo (ej: {'hora': 20:00:00, 'total': 5})
         hora_limpia = str(fila['hora'])[:5]
         ocupacion[hora_limpia] = fila['total']
 
     disponibilidad = []
     for h in horarios_disp:
-        cantidad = ocupacion.get(h, 0)
+        cantidad = ocupacion.get(h, 0)#consulta disponibilidad en c/u horario, si no hay devuelve 0
         disponibilidad.append({
             "hora": h,
             "estado": "disponible" if cantidad < capacidad_max else "agotado",
