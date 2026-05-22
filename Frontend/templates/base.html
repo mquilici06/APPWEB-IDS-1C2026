@@ -4,28 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Altezza{% endblock %}</title>
-	<link rel="stylesheet" href="../static/styles/base.css">
-	<link rel="shortcut icon" href="../static/images/icon.png" type="icon">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
 </head>
 
 <body>
+
+    <header id="main-header">
+        <div class="logo-altezza">
+            <h1>Altezza</h1>
+            <span>ristorante</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#menu">Menú</a></li>
+                <li><a href="#reserva">Reserva</a></li>
+                <li><a href="#resenas">Reseñas</a></li>
+                <li><a href="#contacto">Contáctanos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+  
 	<footer id="contacto">
     <div class="footer-caja-grande">
         <div class="footer-caja-chica">
             <h2 class="titulo-footer">Altezza</h2>
-            <p>Pasión por la cocina italiana auténtica. <br> Te esperamos para vivir una velada inolvidable.</p>
+            <p>Apasionados por la cocina italiana auténtica. <br> Te esperamos para vivir una velada inolvidable.</p>
         </div>
 		
         <div class="footer-caja-chica">
 			<h4>Horarios</h4>
             <p>Jue - Dom: 19:00 a 00:00</p>
-            <p>Dom: 12:30 a 16:00</p>
         </div>
 		<div class="footer-caja-chica">
 			<h4>Contacto</h4>
 			<a href="tel:+541159596780">✆ +54 11 5959-6780</a>
 			<a href="mailto:reservas@altezza.com">✉ reservas@altezza.com</a>
-			<address>📍 Calle Factos 1133, BA</address>
+			<address>📍 Av. Del Libertador, 6820 CABA</address>
 		</div>
 	</div>
 
