@@ -17,7 +17,6 @@ footer {
     border-bottom: 1px solid rgba(255, 255, 255, 1);
     padding-bottom: 1rem;
     max-width: auto;
-    margin: 0 auto;
 }
 
 .titulo-footer {
@@ -50,12 +49,10 @@ footer {
     margin-bottom: 0.8rem;
     font-size: 0.9rem;
     font-style: normal;
-    transition: all 0.3s ease;
 }
 
 .footer-caja-chica {
     color: #c5a059;
-    transform: translateX(5px);
 }
 
 .copyright {
@@ -66,13 +63,53 @@ footer {
     letter-spacing: 1px;
 }
 
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-        text-align: center;
-    }
+header {
+    background-color: #6d071a;
+    padding: 1rem 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+}
 
-    .footer-col a:hover {
-        transform: none;
-    }}
+.logo-altezza{ 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.logo-altezza h1 {
+    font-family: 'Playfair Display', serif;
+    color:#c5a059;
+    font-size: 2rem;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+.logo-altezza span {
+    color:#c5a059;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 0.7rem;
+}
+
+nav ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 2.5rem; 
+}
+
+nav a {
+    text-decoration: none;
+    color:#ffffff;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+}
+
+nav a:hover { 
+    color:#c5a059;
+}
+
