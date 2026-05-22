@@ -7,15 +7,20 @@ footer {
     text-align: center;
     background-color: #1a1a1a; 
     color: #fff;
-    padding: 4rem 8% 2rem;
+    padding: 2rem 4% 1rem;
     font-family: 'Montserrat', sans-serif;
+}
+
+body{
+    color: #1a1a1a;
+    background-color: #ccc;
 }
 
 .footer-caja-grande {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    border-bottom: 1px solid rgba(255, 255, 255, 1);
-    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 1);
+    padding-bottom: 0.5rem;
     max-width: auto;
 }
 
@@ -57,7 +62,7 @@ footer {
 
 .copyright {
     text-align: center;
-    padding-top: 2rem;
+    padding-top: 1rem;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.4);
     letter-spacing: 1px;
