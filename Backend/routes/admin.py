@@ -151,7 +151,7 @@ def mostrar_reservas():
         id_del_cliente = reserva["id_cliente"]
 
        
-        cursor.execute("SELECT nombre, email, celular FROM clientes WHERE id = %s", (id_del_cliente,))
+        cursor.execute("SELECT nombre, email, celular FROM usuarios WHERE id = %s", (id_del_cliente,))
         cliente = cursor.fetchone()
 
         if cliente:
@@ -160,7 +160,8 @@ def mostrar_reservas():
                 "nombre_Cliente": cliente["nombre"],
                 "email_cliente": cliente["email"],
                 "celular_cliente": cliente["celular"],
-                "fecha_y_hora": reserva["fecha_hora"],
+                "fecha": reserva["fecha"],
+                "hora": reserva["hora"],
                 "cantidad_personas": reserva["cantidad_personas"]
             }
             reservas_echas.append(reservas)
