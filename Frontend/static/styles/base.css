@@ -16,6 +16,7 @@ body{
     background-color: #ccc;
 }
 
+/* Footer */
 .footer-caja-grande {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -68,6 +69,7 @@ body{
     letter-spacing: 1px;
 }
 
+/* HEADER */
 header {
     background-color: #6d071a;
     padding: 1rem 8%;
@@ -77,19 +79,20 @@ header {
     position: fixed;
     width: 100%;
     box-sizing: border-box;
+    top: 0;
 }
 
-.logo-altezza{ 
-    display: flex; 
-    flex-direction: column; 
-}
-
-.logo-altezza h1 {
+#header-titulo {
     font-family: 'Playfair Display', serif;
     color:#c5a059;
     font-size: 2rem;
     line-height: 0.9;
     text-transform: uppercase;
+}
+
+.logo-altezza{ 
+    display: flex; 
+    flex-direction: column; 
 }
 
 .logo-altezza span {
@@ -99,6 +102,7 @@ header {
     font-size: 0.7rem;
 }
 
+/* NAV HEADER */
 nav ul { 
     display: flex; 
     list-style: none; 

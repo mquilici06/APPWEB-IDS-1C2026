@@ -6,13 +6,14 @@
     <title>{% block title %}Altezza{% endblock %}</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
 	<link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
+	{% block estilos %}{% endblock %}
 </head>
 
 <body>
 
     <header id="main-header">
         <div class="logo-altezza">
-            <h1>Altezza</h1>
+            <p id="header-titulo">Altezza</p>
             <span>ristorante</span>
         </div>
         <nav>
