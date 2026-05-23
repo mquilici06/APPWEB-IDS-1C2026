@@ -1,6 +1,9 @@
 import mysql.connector
+import os
 
-with open("database/__init__.sql") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(BASE_DIR, "__init__.sql")) as f:
+    sql = f.read()
     sql = f.read()
 
 conn = mysql.connector.connect(

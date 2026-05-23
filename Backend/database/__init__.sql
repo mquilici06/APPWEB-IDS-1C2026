@@ -42,38 +42,31 @@ CREATE TABLE IF NOT EXISTS reservas (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     cantidad_personas INT NOT NULL,
-    estado VARCHAR(20) DEFAULT 'confirmada', -- Reemplazo del ENUM
+    estado VARCHAR(20) DEFAULT 'confirmada',
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion) VALUES
-
--- PRINCIPALES
 ('Gnocchi de Calabaza', 'Ñoquis artesanales con crema de gorgonzola y semillas de calabaza tostadas.', 13500, 'Vegetariano', 'Platos Principales'),
 ('Spaghetti Frutti di Mare', 'Pasta larga con calamares, langostinos y mejillones en salsa de vino blanco y tomate.', 17000, 'Mariscos', 'Platos Principales'),
-('Rigatoni al Pesto Genovés', 'Pasta corta con salsa de albahaca fresca, piñones, ajo y queso parmesano.', 12000, 'Contiene Frutos Secos / Vegetariano', 'Platos Principales'),
-('Pappardelle con Ragú de Cordero', 'Pasta ancha con estofado de cordero cocinado a fuego lento durante 8 horas.', 16500, 'Ninguna', 'Platos Principales'),
-('Fusilli Sin Gluten Primavera', 'Pasta de maíz con vegetales de temporada salteados en aceite de oliva y ajo.', 14000, 'Sin Gluten / Vegano', 'Platos Principales');
+('Rigatoni al Pesto Genoves', 'Pasta corta con salsa de albahaca fresca, pinones, ajo y queso parmesano.', 12000, 'Contiene Frutos Secos / Vegetariano', 'Platos Principales'),
+('Pappardelle con Ragu de Cordero', 'Pasta ancha con estofado de cordero cocinado a fuego lento durante 8 horas.', 16500, 'Ninguna', 'Platos Principales'),
+('Fusilli Sin Gluten Primavera', 'Pasta de maiz con vegetales de temporada salteados en aceite de oliva y ajo.', 14000, 'Sin Gluten / Vegano', 'Platos Principales'),
+('Tiramisu Clasico', 'Bizcochos de soletilla empapados en cafe espresso, crema de mascarpone y cacao.', 7500, 'Vegetariano', 'Postres'),
+('Panna Cotta de Frutos Rojos', 'Crema cocida con vainilla natural y coulis de frambuesas frescas.', 6500, 'Sin Gluten', 'Postres'),
+('Cannoli Siciliani', 'Tubos de masa crujiente rellenos de crema de ricotta dulce y chispas de chocolate.', 5000, 'Vegetariano', 'Postres'),
+('Gelato Artesanal (3 bolas)', 'Seleccion de helados italianos: Vainilla, Chocolate amargo o Pistacho.', 6000, 'Sin Gluten / Vegetariano', 'Postres'),
+('Affogato al Caffe', 'Una bola de helado de vainilla ahogada en un shot de espresso caliente.', 5500, 'Sin Gluten / Vegetariano', 'Postres'),
+('Vino Chianti Classico (Copa)', 'Vino tinto italiano de la region de Toscana, ideal para carnes rojas y pastas.', 8000, 'Contiene Sulfitos', 'Bebidas'),
+('Limonata San Pellegrino', 'Bebida gaseosa tradicional italiana de limon natural.', 3500, 'Vegano / Sin Gluten', 'Bebidas'),
+('Cerveza Peroni Nastro Azzurro', 'Cerveza lager italiana premium, ligera y refrescante.', 4500, 'Contiene Gluten', 'Bebidas'),
+('Agua Mineral Acqua Panna', 'Agua mineral sin gas proveniente de los manantiales de la Toscana (500ml).', 3000, 'Ninguna', 'Bebidas'),
+('Aperol Spritz', 'Coctel refrescante con Aperol, Prosecco, soda y una rodaja de naranja.', 9000, 'Vegano', 'Bebidas');
 
--- POSTRES
-('Tiramisú Clásico', 'Bizcochos de soletilla empapados en café espresso, crema de mascarpone y cacao.', 7.50, 'Vegetariano / Contiene Cafeína', 'Postres'),
-('Panna Cotta de Frutos Rojos', 'Crema cocida con vainilla natural y coulis de frambuesas frescas.', 6.50, 'Sin Gluten', 'Postres'),
-('Cannoli Siciliani', 'Tubos de masa crujiente rellenos de crema de ricotta dulce y chispas de chocolate.', 5.00, 'Vegetariano', 'Postres'),
-('Gelato Artesanal (3 bolas)', 'Selección de helados italianos: Vainilla, Chocolate amargo o Pistacho.', 6.00, 'Sin Gluten / Vegetariano', 'Postres'),
-('Affogato al Caffè', 'Una bola de helado de vainilla "ahogada" en un shot de espresso caliente.', 5.50, 'Sin Gluten / Vegetariano', 'Postres');
-
--- BEBIDAS
-('Vino Chianti Classico (Copa)', 'Vino tinto italiano de la región de Toscana, ideal para carnes rojas y pastas.', 8.00, 'Contiene Sulfitos', 'Bebidas'),
-('Limonata San Pellegrino', 'Bebida gaseosa tradicional italiana de limón natural.', 3.50, 'Vegano / Sin Gluten', 'Bebidas'),
-('Cerveza Peroni Nastro Azzurro', 'Cerveza lager italiana premium, ligera y refrescante.', 4.50, 'Contiene Gluten', 'Bebidas'),
-('Agua Mineral Acqua Panna', 'Agua mineral sin gas proveniente de los manantiales de la Toscana (500ml).', 3.00, 'Ninguna', 'Bebidas'),
-('Aperol Spritz', 'Cóctel refrescante con Aperol, Prosecco, soda y una rodaja de naranja.', 9.00, 'Vegano', 'Bebidas');
-
-
-INSERT INTO clientes (id, nombre, email, celular) VALUES 
-(1, 'Juan Pérez', 'juan@email.com', '1152307414'),
-(2, 'María López', 'maria@email.com', '1197487796'),
-(3, 'Carlos Gómez', 'carlos@email.com', '1138245976'),
-(4, 'Luis Fernández', 'luis@email.com', '1158067048'),
-(5, 'Sofía Benítez', 'sofia@email.com', '1164178239'),
-(6, 'Ana Rodríguez', 'ana@email.com', '1146756807');
+INSERT INTO usuarios (id, nombre, email, celular, rol) VALUES 
+(1, 'Juan Pérez', 'juan@email.com', '1152307414', 'cliente'),
+(2, 'María López', 'maria@email.com', '1197487796', 'cliente'),
+(3, 'Carlos Gómez', 'carlos@email.com', '1138245976', 'cliente'),
+(4, 'Luis Fernández', 'luis@email.com', '1158067048', 'cliente'),
+(5, 'Sofía Benítez', 'sofia@email.com', '1164178239', 'cliente'),
+(6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente');

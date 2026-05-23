@@ -1,5 +1,5 @@
 from flask import Flask, render_template, Blueprint
-from Backend.routes.platos import menu_bp
+from routes.platos import menu_bp
 from routes.resenas import resenas_bp
 from routes.reservas import reservas_bp
 from routes.admin import admin_bp
