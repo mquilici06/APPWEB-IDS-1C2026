@@ -102,7 +102,7 @@ def editar_plato(id_plato):
 
     
 
-@admin_bp.route("/admin/<int:eliminar_id>", methods=["DELETE"])
+@admin_bp.route("/<int:eliminar_id>", methods=["DELETE"])
 def eliminar_plato(eliminar_id):
     try:
         conn = get_connection()
@@ -110,7 +110,7 @@ def eliminar_plato(eliminar_id):
     except:
         return jsonify({"Error": "Error de conexion con la base de datos"}), 500
     
-    cursor.execute("SELECT id FROM menu WHERE id = %s", (eliminar_id,))
+    cursor.execute("SELECT id_menu FROM menu WHERE id_menu = %s", (eliminar_id,))
     existe = cursor.fetchone()
 
     if not existe:
@@ -118,7 +118,7 @@ def eliminar_plato(eliminar_id):
         conn.close()
         return jsonify({"Mensaje": "El ID no existe en el menu"}), 404
 
-    cursor.execute("DELETE FROM menu WHERE id = %s", (eliminar_id,))
+    cursor.execute("DELETE FROM menu WHERE id_menu = %s", (eliminar_id,))
     conn.commit()
     cursor.close()
     conn.close()

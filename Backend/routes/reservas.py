@@ -48,6 +48,8 @@ def consultar_disponibilidad():
 
 @reservas_bp.route("/<int:id_reserva>", methods=["GET"])
 def buscar_reserva(id_reserva):
+    if id_reserva == 0:
+        return jsonify({"Mensaje": "Por favor escribir un id valido"}), 400
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
