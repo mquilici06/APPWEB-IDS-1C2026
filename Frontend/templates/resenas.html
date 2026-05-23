@@ -2,6 +2,50 @@
 
 {% block title %}Reseñas{% endblock %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/resenas.css') }}">
+{% endblock %}
+
 {% block content %}
-  <h1>aca van reseñas</h1>
+
+<section class="resenas-hero">
+    <p class="resenas-subtitulo">La experiencia de nuestros comensales</p>
+    <h1 class="resenas-titulo">Reseñas</h1>
+</section>
+<section class="resenas-contenido">
+    <div class="resenas-columna">
+        <h2 class="resenas-seccion-titulo">Reseñas:</h2>
+        <div id="lista-resenas" class="resenas-grid">
+            <p class="resenas-estado">No hay reseñas todavia.</p>
+        </div>
+    </div>
+    <div class="resenas-columna">
+        <h2 class="resenas-seccion-titulo">Deja tu reseña</h2>
+        <div id="form-mensaje" class="form-mensaje oculto"></div>
+        <form id="form-resena">
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="campo">
+                <label>Puntuacion</label>
+                <div class="estrellas">
+                    <span class="estrella" data-valor="1">☆</span>
+                    <span class="estrella" data-valor="2">☆</span>
+                    <span class="estrella" data-valor="3">☆</span>
+                    <span class="estrella" data-valor="4">☆</span>
+                    <span class="estrella" data-valor="5">☆</span>
+                </div>
+                <input type="hidden" id="puntuacion" value="0">
+            </div>
+            <div class="campo">
+                <label for="mensaje">Escribi</label>
+                <textarea id="mensaje" placeholder="Contanos tu experiencia..."
+                          rows="5" maxlength="500" required></textarea>
+                <span class="contador">0 / 500</span>
+            </div>
+            <button type="submit" class="btn-enviar">Publicar</button>
+        </form>
+    </div>
+</section>
 {% endblock %}
