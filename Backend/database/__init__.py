@@ -8,7 +8,7 @@ with open(os.path.join(BASE_DIR, "__init__.sql")) as f:
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Root1234!"
+    password="Root123!"
 )
 
 cursor = conn.cursor()
