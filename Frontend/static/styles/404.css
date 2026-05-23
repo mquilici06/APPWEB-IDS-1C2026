@@ -1,0 +1,31 @@
+.box-404 {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    flex: 1;
+    position: relative;
+}
+
+h1 {
+    font-size: clamp(2rem, 20vw, 20rem);
+    color: rgba(200, 200, 200, 0.2);
+}
+
+#parrafo {
+    font-size: clamp(1rem, 3vw, 2rem);
+    position: absolute;    /* lo use para centrar en el medio de la pagina */
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+}
+
+body {
+    min-height: 92.5vh; /* ponemos esto para que el pie de pagina se quede al final*/
+    display: flex;
+    flex-direction: column;
+}
