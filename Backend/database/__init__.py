@@ -4,12 +4,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(BASE_DIR, "__init__.sql")) as f:
     sql = f.read()
-    sql = f.read()
 
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Root123!"
+    password="Root1234!"
 )
 
 cursor = conn.cursor()
