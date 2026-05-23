@@ -46,3 +46,4 @@ def consultar_disponibilidad():
 
 
 
+@reservas_bp.route("/<int:id_reserva", methods=["GET"])
