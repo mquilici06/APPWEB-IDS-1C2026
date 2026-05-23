@@ -110,6 +110,7 @@ nav ul {
     gap: 2.5rem; 
 }
 
+#link-logo,
 nav a {
     text-decoration: none;
     color:#ffffff;
