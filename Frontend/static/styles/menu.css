@@ -93,3 +93,28 @@ h1 {
     border-bottom: 1px #fff solid;
     font-style: italic;
 }
+
+.box-salsas-bebidas {
+    display:flex;
+    color: #c5a059;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 1rem;
+    font-size: 2rem;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.box-lista-syb {
+    width: 40%;
+    padding: 1rem;
+    background-color: #6d071a;
+}
+
+.lista {
+    list-style: none;
+    padding: 0,5;
+    border-left: 2px solid #fff;
+    margin: 1rem;
+}
