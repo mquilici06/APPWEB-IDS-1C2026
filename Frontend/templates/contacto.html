@@ -1,7 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Contactanos{% endblock %}
+{% block title %}Contactanos - Altezza Ristorante{% endblock %}
+
+{% block estilos %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/contacto.css')}}">
+{% endblock %}
 
 {% block content %}
-  <h1>aca va el contacto</h1>
+<div class="caja-total-contacto">
+  <div class="caja-informacion">
+    <h1>Contactanos</h1>
+    <div class="items-contacto">
+      <p>Direccion: Av.Del Libertador 6820 CABA</p>
+      <p>Telefono: +(54) 11 5959-6780</p>
+      <p>E-mail: reservas-altezza@gmail.com</p>
+      <p>Horario: Jue - Dom: 19:00 a 00:00</p>
+    </div>
+    <div class="caja-mapa">
+      <h2>Encontranos</h2>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3286.1646496602148!2d-58.45696982350558!3d-34.54938635463205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb42f9de50bf9%3A0x6e8cd03a084b9bbe!2sAv.%20del%20Libertador%206820%2C%20C1429%20Cdad.%20Aut%C3%B3noma%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1779631305335!5m2!1ses!2sar"></iframe>  
+    </div>
+  </div>
+
+  <div class="caja-mensaje">
+    <h2 class="caja-titulo">Mandanos un mensaje</h2>
+    <form action={# {{ url_for('contacto') }} #}method="POST" class="form">
+      <div class="form-mensaje">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="fnombre" placeholder="nombre">
+        <label for="e-mail">E-mail:</label>
+        <input type="text" id="e-mail" name="femail" placeholder="e-mail">
+        <label for="mensaje">Mensaje:</label>
+        <input type="textarea" id="mensaje" name="fmensaje" placeholder="mensaje">
+        </br>
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 {% endblock %}
+

@@ -10,3 +10,8 @@ def menu():
 @mis_rutas.route("/index")
 def index():
     return render_template("index.html")
+
+@mis_rutas.route("/contacto")
+def contacto():
+    return render_template("contacto.html")
+
