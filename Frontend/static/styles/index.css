@@ -2,35 +2,35 @@
    ESTILOS DEL INICIO (index.html)
 */
 
-/* SECCIÓN HERO */
+/* SECCIÓN INICIO */
 .inicio-altezza {
     position: relative;
-    height: 100vh; /* Ocupa toda la pantalla */
+    height: 100vh;
     display: flex; 
     align-items: center;
     justify-content: center;
     text-align: center;
     overflow: hidden;
-    margin-top: -4rem; /* Compensa el padding-top del body para que la imagen toque el techo (debajo del header fixed) */
+    margin-top: -4rem;
 }
 
-.hero-bg {
+.foto-fondo {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que la imagen cubra todo sin deformarse */
+    object-fit: cover;
     z-index: -2;
 }
 
-.hero-overlay {
+.difuminado {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Oscurece la imagen para que el texto sea legible */
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: -1;
 }
 
@@ -106,14 +106,14 @@
 
 /* SECCIÓN SOBRE NOSOTROS */
 .sobre-altezza {
-    background-color: #f4f4f4; /* Contraste con el gris del body */
+    background-color: #f4f4f4;
     padding: 6rem 10%;
     text-align: center;
 }
 
 .text-sobre-altezza h2 {
     font-family: 'Playfair Display', serif;
-    color: #6d071a; /* El rojo de tu header */
+    color: #6d071a;
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
 }
@@ -129,7 +129,7 @@
 
 /* SECCIÓN DESTACADOS */
 .caracts-altezza {
-    background-color: #1a1a1a; /* Oscuro, similar al footer */
+    background-color: #1a1a1a;
     padding: 5rem 10%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
