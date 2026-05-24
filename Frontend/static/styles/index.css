@@ -129,12 +129,13 @@
 
 /* SECCIÓN DESTACADOS */
 .caracts-altezza {
-    background-color: #1a1a1a;
-    padding: 5rem 10%;
+    background-color: #636363;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 4rem 4%;
     text-align: center;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .caja-caract h3 {
@@ -143,6 +144,7 @@
     font-size: 1.5rem;
     margin-bottom: 1rem;
     text-transform: uppercase;
+    padding: 0 1rem;
 }
 
 .caja-caract p {
@@ -150,4 +152,5 @@
     color: #ccc;
     font-size: 0.95rem;
     line-height: 1.6;
+    padding: 0 1rem;
 }
