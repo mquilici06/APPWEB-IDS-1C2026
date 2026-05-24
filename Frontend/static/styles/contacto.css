@@ -1,15 +1,85 @@
 .caja-total-contacto{
     padding: 3rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 40rem; 
 }
 
-.caja-informacion{
+.caja-titulo{
+    color:#6d071a;
+    font-size: 2rem;
+    padding-right: 3rem;
+    border-bottom: 2px solid #6d071a;
+}
+
+.caja-informacion h1{
     color: #6d071a;
+    font-size: 3rem;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid #6d071a;
+}
+.caja-informacion .items-contacto{
+    font-size: 1.5rem;
+}
+
+.items-contacto p{
+    color:black;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.caja-mapa{
+    width: 100%;
+    margin-top: 2rem;
+}
+.caja-mapa h2{
+    color:#6d071a;
+    font-size: 2rem;
+    border-bottom: 2px solid #6d071a;
+}
+
+.caja-mapa iframe{
+    margin-top: 2rem;
+    width: 100%;
+    height: 300px;
+    border-radius: 1rem;
+}
+
+.caja-mensaje{
+    border: 1px solid #6d071a;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.form-mensaje{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.form-mensaje input{
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.form-mensaje textarea{
+    height: 200px;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.form-mensaje label{
+    border-bottom: 1px solid #6d071a;
+}
+
+.form-mensaje button{
+    padding: 14px;
+    background-color: #6d071a;
+    color: white;
     font-size: 1rem;
 }
-
-.items-contacto{
-    color:black;
-}
-
