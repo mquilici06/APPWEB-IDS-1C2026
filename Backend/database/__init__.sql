@@ -72,8 +72,8 @@ INSERT INTO usuarios (id, nombre, email, celular, rol) VALUES
 (6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente');
 
 INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, estado) VALUES
-(1, 1, '2026-05-25', '12:30:00', 2, 'confirmada'),
-(2, 2, '2026-05-28', '21:00:00', 4, 'confirmada'),
-(3, 3, '2026-06-05', '13:15:00', 6, 'pendiente'),
-(4, 4, '2026-06-07', '20:45:00', 2, 'confirmada'),
-(5, 5, '2026-06-12', '22:00:00', 5, 'cancelada');
+(1, 1, '2026-05-25', '12:30', 2, 'confirmada'),
+(2, 2, '2026-05-28', '21:00', 4, 'confirmada'),
+(3, 3, '2026-06-05', '13:15', 6, 'pendiente'),
+(4, 4, '2026-06-07', '20:45', 2, 'confirmada'),
+(5, 5, '2026-06-12', '22:00', 5, 'cancelada');
