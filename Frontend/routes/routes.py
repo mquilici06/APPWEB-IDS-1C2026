@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template
-import requests
 
 mis_rutas = Blueprint('rutas_prefijo_api', __name__)
 
@@ -14,4 +13,9 @@ def index():
 @mis_rutas.route("/contacto")
 def contacto():
     return render_template("contacto.html")
+
+@mis_rutas.route("/reservas")
+def reservas():
+    return render_template("reservas.html")
+
 
