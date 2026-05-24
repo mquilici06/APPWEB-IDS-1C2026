@@ -76,3 +76,49 @@ def buscar_reserva(id_reserva):
         mostrar_reserva['hora'] = str(mostrar_reserva['hora'])
                                    
     return jsonify(mostrar_reserva), 200
+
+@reservas_bp.route("/", methods=["POST"])
+def crear_reserva():
+    datos = request.get_json()
+ 
+    campos_requeridos = [ "personas", "fecha", "hora"]
+    for campo in campos_requeridos:
+        if not datos or not datos.get(campo):
+            return jsonify({"error": f"Falta el campo '{campo}'"}), 400
+ 
+    personas = datos["personas"]
+    fecha    = datos["fecha"]
+    hora     = datos["hora"]
+
+    try:
+        conn   = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return jsonify({"error": "Error de conexión con la base de datos"}), 500
+
+
+    cursor.execute("""
+        SELECT COUNT(*) as total FROM reservas WHERE fecha = %s AND hora = %s AND estado = %s
+    """, (fecha, hora, "confirmada"))
+
+    ocupacion =  cursor.fetchone()["total"]
+
+    if ocupacion >= 10:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "El horario seleccionado ya no tiene lugares disponibles"}), 409
+ 
+    cursor.execute("""
+        INSERT INTO reservas (fecha, hora,cantidad_personas, estado) VALUES (%s, %s, %s, %s)
+        """, (fecha, hora, personas, "confirmada"))
+ 
+    conn.commit()
+ 
+    cursor.close()
+    conn.close()
+ 
+    return jsonify({
+        "mensaje":    "Reserva confirmada"
+    }), 201
+
+
