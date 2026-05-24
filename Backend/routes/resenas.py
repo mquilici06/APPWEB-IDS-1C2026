@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from database.db import get_connection
+from Backend.database.db import get_connection
 
 resenas_bp = Blueprint("resenas", __name__)
-# Aca esta el GET que se usara para los clientes y para el admin.
+
 @resenas_bp.route("", methods=["GET"])
 def listar_resenas():
     try:
@@ -42,3 +42,45 @@ def listar_resenas():
     cursor.close()
     conn.close()
     return jsonify({"resenas": resenas_armadas}), 200
+
+@resenas_bp.route("", methods=["POST"])
+def crear_resena():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Body vacio"}), 400
+
+    nombre = data.get("nombre")
+    mensaje = data.get("mensaje")
+    puntuacion = data.get("puntuacion")
+
+    if not nombre:
+        return jsonify({"error": "El campo 'nombre' es obligatorio"}), 400
+    if not mensaje:
+        return jsonify({"error": "El campo 'mensaje' es obligatorio"}), 400
+    if puntuacion is None:
+        return jsonify({"error": "El campo 'puntuacion' es obligatorio"}), 400
+    if puntuacion < 1 or puntuacion > 5:
+        return jsonify({"error": "La puntuacion debe ser entre 1 y 5"}), 400
+    if len(mensaje) > 500:
+        return jsonify({"error": "El mensaje no puede superar los 500 caracteres"}), 400
+
+    cursor.execute("SELECT id FROM clientes WHERE nombre = %s", (nombre,))
+    cliente = cursor.fetchone()
+    if not cliente:
+        return jsonify({"error": "Nombre de cliente invalido"}), 404
+    id_cliente = cliente["id"]
+    
+    cursor.execute(
+        "INSERT INTO resenas (id_cliente, mensaje, puntuacion) VALUES (%s, %s, %s)",
+        (id_cliente, mensaje, puntuacion)
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": "Reseña enviada correctamente"}), 201
