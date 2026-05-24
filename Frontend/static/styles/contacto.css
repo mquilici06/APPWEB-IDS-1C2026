@@ -1,0 +1,15 @@
+.caja-total-contacto{
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.caja-informacion{
+    color: #6d071a;
+    font-size: 1rem;
+}
+
+.items-contacto{
+    color:black;
+}
+
