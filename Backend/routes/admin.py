@@ -176,7 +176,7 @@ def modificar_plato(modificar_reserva):
         return jsonify({"Error": "Ingrese un id valido"}),400
     
     try:
-        conn = get.connection()
+        conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
         return jsonify({"Error": "Error de conexion con la base de datos"}),500
