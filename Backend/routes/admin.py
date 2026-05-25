@@ -202,3 +202,31 @@ def modificar_plato(modificar_reserva):
     cursor.close()
     conn.close()
     return " ", 204 
+
+
+
+@admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
+def eliminar_resena(resena_id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
+
+   
+    cursor.execute("SELECT id_resena FROM resenas WHERE id_resena = %s", (resena_id,))
+    existe_reseña = cursor.fetchone()
+
+    if not existe_reseña:
+        cursor.close()
+        conn.close()
+        return jsonify({"Error": "La reseña no existe"}), 404
+
+  
+    cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (resena_id,))
+    conn.commit()
+
+    
+    cursor.close()
+    conn.close()
+    return '', 204
