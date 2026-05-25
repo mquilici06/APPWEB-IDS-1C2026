@@ -9,10 +9,11 @@
 {% block content %}
  
 <section class="hero">
-    <div class="hero-overlay"></div>
     <div class="hero-content">
-        <p class="hero-subtitulo">¡Reserva tu lugar para dejar de esperar!</p>
-        <h1 class="hero-titulo">Reservas</h1>
+        <div class="hero-caja">
+            <h1 class="hero-titulo">Reservas</h1>
+            <p class="hero-subtitulo">¡Reserva tu lugar para dejar de esperar!</p>
+        </div>
     </div>
 </section>
  
@@ -20,29 +21,6 @@
  
     <div class="reservas-columna">
         <h2 class="seccion-titulo">Elegí tu fecha</h2>
- 
-        <div class="calendario-wrapper">
-            <div class="cal-header">
-                <button class="cal-nav" id="prev-mes" aria-label="Mes anterior">&#8249;</button>
-                <span class="cal-mes-titulo" id="cal-titulo"></span>
-                <button class="cal-nav" id="next-mes" aria-label="Mes siguiente">&#8250;</button>
-            </div>
- 
-            <div class="cal-dias-semana">
-                <span>Dom</span><span>Lun</span><span>Mar</span>
-                <span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
-            </div>
- 
-            <div class="cal-grid" id="cal-grid"></div>
-
-            <p class="cal-fecha-elegida" id="fecha-elegida">Ninguna fecha seleccionada</p>
-        </div>
- 
-        <div class="horarios-wrapper oculto" id="horarios-section">
-            <h2 class="seccion-titulo" style="margin-top: 2rem;">Elegí el horario</h2>
-            <div class="horarios-grid" id="horarios-grid">
-            </div>
-        </div>
     </div>
  
     <div class="reservas-columna">
@@ -61,7 +39,7 @@
             <div class="campo">
                 <label for="telefono">Teléfono</label>
                 <input type="tel" id="telefono" name="telefono"
-                       placeholder="Ej: +54 11 1234-5678" required>
+                       placeholder="Ej: +54 11 9999-9999" required>
             </div>
  
             <div class="campo">
@@ -90,20 +68,10 @@
                 <textarea id="notas" name="notas"
                           placeholder="Alergias, ocasión especial, pedidos particulares..."
                           rows="4" maxlength="300"></textarea>
-                <span class="contador" id="contador-notas">0 / 300</span>
+                <span id="contador-notas">0 / 300</span>
             </div>
  
-            <input type="hidden" id="fecha-hidden" name="fecha">
-            <input type="hidden" id="hora-hidden" name="hora">
- 
-            <div class="resumen-reserva oculto" id="resumen-reserva">
-                <p class="resumen-label">Tu reserva:</p>
-                <p class="resumen-dato" id="resumen-texto">—</p>
-            </div>
- 
-            <button type="submit" class="btn-enviar" id="btn-enviar" disabled>
-                Confirmar reserva
-            </button>
+            <button type="submit" class="boton-enviar" id="btn-enviar" disabled>Confirmar reserva</button>
         </form>
     </div>
  

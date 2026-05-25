@@ -85,8 +85,6 @@ def crear_reserva():
     cursor.close()
     conn.close()
  
-    return jsonify({
-        "mensaje":    "Reserva confirmada"
-    }), 201
+    return jsonify({"mensaje":    "Reserva confirmada"}), 201
 
 
