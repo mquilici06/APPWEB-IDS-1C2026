@@ -170,4 +170,35 @@ def mostrar_reservas():
     conn.close()
     return jsonify({"Reservas": reservas_echas}), 200
 
-@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
+@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["Put"])
+def modificar_plato(modificar_reserva):
+    if modificar_reserva < 1:
+        return jsonify({"Error": "Ingrese un id valido"}),400
+    
+    try:
+        conn = get.connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}),500
+
+    data = request.json
+    
+    campos_requeridos = ["id_reserva", "fecha", "hora", "cantidad_personas", "estado"]
+
+    for campo in campos_requeridos:
+        if campo not in data:
+            cursor.close()
+            conn.close()
+            return jsonify({"Error": f"Falta el campo {campo}"}), 400
+
+    id_reserva_nuevo = data["id_reserva"]
+    fecha_nueva = data["fecha"]
+    hora_nueva = data["hora"]
+    cantidad_personas_nueva = data["cantidad_personas"]
+    estado_nuevo = data["estado"]
+
+    cursor.execute("UPDATE reservas SET id_reserva = %s, fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s", (id_reserva_nuevo, fecha_nueva, hora_nueva, cantidad_personas_nueva, estado_nuevo, modificar_reserva))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return " ", 204 
