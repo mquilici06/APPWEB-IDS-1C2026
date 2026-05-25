@@ -169,3 +169,5 @@ def mostrar_reservas():
     cursor.close()
     conn.close()
     return jsonify({"Reservas": reservas_echas}), 200
+
+@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])

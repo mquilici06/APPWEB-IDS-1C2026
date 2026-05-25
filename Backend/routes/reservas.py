@@ -43,7 +43,7 @@ def consultar_disponibilidad():
     conn.close()
 
     return jsonify(disponibilidad), 200
-
+    
 
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
