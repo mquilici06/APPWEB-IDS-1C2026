@@ -45,38 +45,6 @@ def consultar_disponibilidad():
     return jsonify(disponibilidad), 200
 
 
-
-@reservas_bp.route("/<int:id_reserva>", methods=["GET"])
-def buscar_reserva(id_reserva):
-    if id_reserva == 0:
-        return jsonify({"Mensaje": "Por favor escribir un id valido"}), 400
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Mensaje": "Error con la base de datos"}), 500
-    
-    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (id_reserva,))
-    reserva_existe = cursor.fetchone()
-
-    if not reserva_existe:
-        cursor.close()
-        conn.close()
-        return jsonify({"Mensaje": f"la reserva con id {id_reserva} no existe"}), 404
-
-    mostrar_reserva = dict(reserva_existe)
-
-    cursor.close()
-    conn.close()
-
-    if mostrar_reserva.get('fecha'):
-        mostrar_reserva['fecha'] = mostrar_reserva['fecha'].strftime('%d-%m-%Y')
-    
-    if mostrar_reserva.get('hora'):
-        mostrar_reserva['hora'] = str(mostrar_reserva['hora'])
-                                   
-    return jsonify(mostrar_reserva), 200
-
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
     datos = request.get_json()
