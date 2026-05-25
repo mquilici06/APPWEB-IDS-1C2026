@@ -84,3 +84,13 @@ def crear_resena():
     cursor.close()
     conn.close()
     return jsonify({"mensaje": "Reseña enviada correctamente"}), 201
+
+@resenas_bp.route("/<int:id>", methods=["DELETE"])
+def delete_resena(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": "Reseña eliminada"}), 200
