@@ -88,3 +88,12 @@ def crear_reserva():
     return jsonify({"mensaje":    "Reserva confirmada"}), 201
 
 
+@reservas_bp.route("/<int:id>", methods=["DELETE"])
+def borrar_reserva(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": "Reserva eliminada"}), 200
