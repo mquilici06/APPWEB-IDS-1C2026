@@ -17,5 +17,3 @@ def contacto():
 @mis_rutas.route("/reservas")
 def reservas():
     return render_template("reservas.html")
-
-
