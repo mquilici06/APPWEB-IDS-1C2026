@@ -147,3 +147,20 @@
     margin-bottom: 20px;
     border-left: 4px solid;
 }
+
+
+.fecha-selector {
+    margin-bottom: 25px;
+}
+
+.colocar-calendario {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #c9b097;
+    border-radius: 4px;
+    color: #4a2e2b;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    box-sizing: border-box;
+}
