@@ -207,6 +207,8 @@ def modificar_plato(modificar_reserva):
 
 @admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
 def eliminar_resena(resena_id):
+    if resena_id < 1:
+        return jsonify({"error": "Ingresar id valido, id > 0"}), 409
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
