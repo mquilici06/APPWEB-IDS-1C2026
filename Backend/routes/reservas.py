@@ -90,9 +90,17 @@ def crear_reserva():
 
 @reservas_bp.route("/<int:id>", methods=["DELETE"])
 def borrar_reserva(id):
-    conn = get_connection()
-    cursor = conn.cursor()
+    if id < 0:
+        return jsonify({"error": "Ingresar id valido, id > 0"}), 409
+    
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+    except Exception:
+        return jsonify({"error": "Error de conexión con la base de datos"}), 500
+    
     cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
+        
     conn.commit()
     cursor.close()
     conn.close()
