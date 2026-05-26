@@ -17,3 +17,16 @@ def contacto():
 @mis_rutas.route("/reservas")
 def reservas():
     return render_template("reservas.html")
+
+@mis_rutas.route("/admin")
+def admin():
+    return render_template("base_admin.html")
+
+@mis_rutas.route("/admin/reservas")
+def admin_reservas():
+    return render_template("admin_reservas.html")
+
+@mis_rutas.route('/admin/resenas')
+def admin_resenas():
+    return render_template('admin_resenas.html')
+
