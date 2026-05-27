@@ -8,6 +8,7 @@ from routes.admin import admin_bp
 app = Flask(__name__)
 app.secret_key = "altezza_password"  
 
+CORS(app)
 
 app.register_blueprint(menu_bp, url_prefix="/platos")
 app.register_blueprint(resenas_bp, url_prefix = "/resenas")
