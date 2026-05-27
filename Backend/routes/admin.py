@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,session
+from flask import Blueprint, request, jsonify, session, redirect
 from database.db import get_connection
 import bcrypt
 
@@ -229,7 +229,7 @@ def eliminar_resena(resena_id):
     conn.close()
     return '', 204
 
-@admin_bp.route("/login", methods=["POST"])
+@admin_bp.route("/login", methods=["GET","POST"])
 def login():
     try:
         conn = get_connection()
@@ -237,24 +237,28 @@ def login():
     except:
         return jsonify({"error": "Error de conexion"}), 500
 
-    data = request.get_json()
-    email = data.get("email")
-    contrasena = data.get("contrasena")
+    email = request.form.get("email")
+    contrasena = request.form.get("contrasena")
 
     cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
     usuario = cursor.fetchone()
+
     cursor.close()
     conn.close()
 
     if not usuario:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+        return "Usuario no encontrado", 404
 
     if not bcrypt.checkpw(contrasena.encode(), usuario["contrasena"].encode()):
-        return jsonify({"error": "Contrasena incorrecta"}), 401
+        return "Contraseña incorrecta", 401
 
-    session["usuario_id"] = usuario["id"]
-    session["rol"] = usuario["rol"]
-    return jsonify({"mensaje": "Login exitoso", "rol": usuario["rol"]}), 200
+    session["usuario_id"] = usuario["id"] # agrego para que se guarde del id de usuario y el rol
+    session["rol"] = usuario["rol"]       # preguntar a leo sobre las sesiones en 2 puertos distintos(cookies)
+
+    if usuario["rol"] != "admin":
+        return redirect("http://localhost:5001/login/admin")
+
+    return redirect("http://127.0.0.1:5001/admin")
 
 
 @admin_bp.route("/logout", methods=["POST"])
