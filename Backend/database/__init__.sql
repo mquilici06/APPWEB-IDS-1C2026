@@ -70,7 +70,8 @@ INSERT INTO usuarios (id, nombre, email, celular, rol, contrasena) VALUES /*cont
 (3, 'Carlos Gómez', 'carlos@email.com', '1138245976', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
 (4, 'Luis Fernández', 'luis@email.com', '1158067048', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
 (5, 'Sofía Benítez', 'sofia@email.com', '1164178239', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
-(6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC');
+(6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(7, 'Admin', 'admin@altezza.com', '1111111111', 'admin', '$2b$12$QLqWGYxA94vIYOiBYZqmkOTzsIgs.G8/gWOJZbDBgM9m9nXCVfG/6');
 
 INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, estado) VALUES
 (1, 1, '2026-05-25', '12:30', 2, 'confirmada'),
