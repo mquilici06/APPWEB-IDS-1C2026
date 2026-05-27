@@ -64,13 +64,13 @@ INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion) VALU
 ('Agua Mineral Acqua Panna', 'Agua mineral sin gas proveniente de los manantiales de la Toscana (500ml).', 3000, 'Ninguna', 'Bebidas'),
 ('Aperol Spritz', 'Coctel refrescante con Aperol, Prosecco, soda y una rodaja de naranja.', 9000, 'Vegano', 'Bebidas');
 
-INSERT INTO usuarios (id, nombre, email, celular, rol) VALUES 
-(1, 'Juan Pérez', 'juan@email.com', '1152307414', 'cliente'),
-(2, 'María López', 'maria@email.com', '1197487796', 'cliente'),
-(3, 'Carlos Gómez', 'carlos@email.com', '1138245976', 'cliente'),
-(4, 'Luis Fernández', 'luis@email.com', '1158067048', 'cliente'),
-(5, 'Sofía Benítez', 'sofia@email.com', '1164178239', 'cliente'),
-(6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente');
+INSERT INTO usuarios (id, nombre, email, celular, rol) VALUES /*contraseña de los ususarios 123456*/
+(1, 'Juan Pérez', 'juan@email.com', '1152307414', 'cliente', '$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(2, 'María López', 'maria@email.com', '1197487796', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(3, 'Carlos Gómez', 'carlos@email.com', '1138245976', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(4, 'Luis Fernández', 'luis@email.com', '1158067048', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(5, 'Sofía Benítez', 'sofia@email.com', '1164178239', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
+(6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC');
 
 INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, estado) VALUES
 (1, 1, '2026-05-25', '12:30', 2, 'confirmada'),

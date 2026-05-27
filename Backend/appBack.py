@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Blueprint
+from flask_cors import CORS
 from routes.platos import menu_bp
 from routes.resenas import resenas_bp
 from routes.reservas import reservas_bp
