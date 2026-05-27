@@ -1,0 +1,45 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.caja-centro {
+    display: flex;
+    background-color: #ccc;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.caja-centro form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.caja-formulario {
+    padding: 1rem;
+    width: 40vh;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.em-psw {
+    width: clamp(20vh, 25vh, 30vh);
+}
+
+#boton-enviar {
+    width: clamp(5vh, 10vh, 15vh);
+    align-self: end;
+}
+
+#foto {
+    width: clamp(10vh, 15vh, 25vh);
+    padding-bottom: 10px;
+    align-self: center;
+}
