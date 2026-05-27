@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>admin</title>
-    <link rel="stylesheet" href="../static/styles/admin-login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin-login.css')}}">
 </head>
 <body>
     <div class="caja-centro">
             <div class="caja-formulario">
-                <img id="foto" src="../static/images/icon.png" alt="Foto logo">
+                <img id="foto" src="{{ url_for('static', filename='images/icon.png')}}" alt="Foto logo">
 
                 <form id="form-login" action="http://127.0.0.1:5000/admin/login" method="POST">
                     <input class="em-psw" type="email" name="email" placeholder="Email">
