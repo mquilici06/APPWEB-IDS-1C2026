@@ -20,7 +20,7 @@ def reservas():
 
 @mis_rutas.route("/admin")
 def admin():
-    return render_template("base_admin.html")
+    return render_template("admin.html")
 
 @mis_rutas.route("/login/admin")
 def admin_login():
@@ -29,6 +29,10 @@ def admin_login():
 @mis_rutas.route("/admin/reservas")
 def admin_reservas():
     return render_template("admin_reservas.html")
+
+@mis_rutas.route('/admin/menu')
+def admin_menu():
+    return render_template('admin_menu.html')
 
 @mis_rutas.route('/admin/resenas')
 def admin_resenas():
