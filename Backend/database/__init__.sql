@@ -64,7 +64,7 @@ INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion) VALU
 ('Agua Mineral Acqua Panna', 'Agua mineral sin gas proveniente de los manantiales de la Toscana (500ml).', 3000, 'Ninguna', 'Bebidas'),
 ('Aperol Spritz', 'Coctel refrescante con Aperol, Prosecco, soda y una rodaja de naranja.', 9000, 'Vegano', 'Bebidas');
 
-INSERT INTO usuarios (id, nombre, email, celular, rol) VALUES /*contraseña de los ususarios 123456*/
+INSERT INTO usuarios (id, nombre, email, celular, rol, contrasena) VALUES /*contraseña de los ususarios 123456*/
 (1, 'Juan Pérez', 'juan@email.com', '1152307414', 'cliente', '$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
 (2, 'María López', 'maria@email.com', '1197487796', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
 (3, 'Carlos Gómez', 'carlos@email.com', '1138245976', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
