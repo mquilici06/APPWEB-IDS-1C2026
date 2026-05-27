@@ -18,6 +18,10 @@ def contacto():
 def reservas():
     return render_template("reservas.html")
 
+@mis_rutas.route("/resenas")
+def resenas():
+    return render_template("resenas.html")
+
 @mis_rutas.route("/admin")
 def admin():
     return render_template("admin.html")
