@@ -1,5 +1,6 @@
-from flask import Blueprint,request,jsonify
-from Backend.database.db import get_connection
+from flask import Blueprint,request,jsonify,session
+from database.db import get_connection
+import bcrypt
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -42,7 +43,6 @@ def agregar_plato():
         cursor.close()
         conn.close()
         return jsonify({"Error": "Precio establecido invalido"}), 400
-
 
     if seccion_plato not in secciones_validas:
         cursor.close()
@@ -150,7 +150,6 @@ def mostrar_reservas():
     for reserva in lista_De_reservas:
         id_del_cliente = reserva["id_cliente"]
 
-       
         cursor.execute("SELECT nombre, email, celular FROM usuarios WHERE id = %s", (id_del_cliente,))
         cliente = cursor.fetchone()
 
@@ -215,7 +214,6 @@ def eliminar_resena(resena_id):
     except:
         return jsonify({"Error": "Error de conexion con la base de datos"}), 500
 
-   
     cursor.execute("SELECT id_resena FROM resenas WHERE id_resena = %s", (resena_id,))
     existe_reseña = cursor.fetchone()
 
@@ -224,11 +222,42 @@ def eliminar_resena(resena_id):
         conn.close()
         return jsonify({"Error": "La reseña no existe"}), 404
 
-  
     cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (resena_id,))
     conn.commit()
-
     
     cursor.close()
     conn.close()
     return '', 204
+
+@admin_bp.route("/login", methods=["POST"])
+def login():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except:
+        return jsonify({"error": "Error de conexion"}), 500
+
+    data = request.get_json()
+    email = data.get("email")
+    contrasena = data.get("contrasena")
+
+    cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+    usuario = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    if not bcrypt.checkpw(contrasena.encode(), usuario["contrasena"].encode()):
+        return jsonify({"error": "Contrasena incorrecta"}), 401
+
+    session["usuario_id"] = usuario["id"]
+    session["rol"] = usuario["rol"]
+    return jsonify({"mensaje": "Login exitoso", "rol": usuario["rol"]}), 200
+
+
+@admin_bp.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return jsonify({"mensaje": "Sesion cerrada"}), 200

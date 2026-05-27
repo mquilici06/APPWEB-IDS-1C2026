@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from Backend.database.db import get_connection
+from database.db import get_connection
 
 resenas_bp = Blueprint("resenas", __name__)
 

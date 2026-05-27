@@ -1,10 +1,12 @@
 from flask import Flask, render_template, Blueprint
-from Backend.routes.platos import menu_bp
-from Backend.routes.resenas import resenas_bp
-from Backend.routes.reservas import reservas_bp
-from Backend.routes.admin import admin_bp
+from routes.platos import menu_bp
+from routes.resenas import resenas_bp
+from routes.reservas import reservas_bp
+from routes.admin import admin_bp
 
 app = Flask(__name__)
+app.secret_key = "altezza_password"  
+
 
 app.register_blueprint(menu_bp, url_prefix="/platos")
 app.register_blueprint(resenas_bp, url_prefix = "/resenas")

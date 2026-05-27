@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     celular VARCHAR(20) UNIQUE NOT NULL,
-    rol VARCHAR(10) NOT NULL
+    rol VARCHAR(10) NOT NULL,
+    contrasena varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS resenas (
