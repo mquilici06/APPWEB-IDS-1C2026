@@ -26,7 +26,7 @@ def listar_resenas():
     for resena in lista_resenas:
 
         cursor.execute(
-            "SELECT nombre FROM clientes WHERE id = %s",
+            "SELECT nombre FROM usuarios WHERE id = %s",
             (resena["id_cliente"],)
         )
         cliente = cursor.fetchone()
