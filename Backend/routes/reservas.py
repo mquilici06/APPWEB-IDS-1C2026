@@ -49,44 +49,44 @@ def consultar_disponibilidad():
 def crear_reserva():
     datos = request.get_json()
  
-    campos_requeridos = [ "personas", "fecha", "hora"]
+    campos_requeridos = ["id_cliente", "personas", "fecha", "hora"]
     for campo in campos_requeridos:
         if not datos or not datos.get(campo):
             return jsonify({"error": f"Falta el campo '{campo}'"}), 400
  
-    personas = datos["personas"]
-    fecha    = datos["fecha"]
-    hora     = datos["hora"]
-
+    id_cliente = datos["id_cliente"]
+    personas   = datos["personas"]
+    fecha      = datos["fecha"]
+    hora       = datos["hora"]
+    
     try:
         conn   = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except Exception:
-        return jsonify({"error": "Error de conexión con la base de datos"}), 500
-
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
 
     cursor.execute("""
-        SELECT COUNT(*) as total FROM reservas WHERE fecha = %s AND hora = %s AND estado = %s
+        SELECT COUNT(*) as total FROM reservas 
+        WHERE fecha = %s AND hora = %s AND estado = %s
     """, (fecha, hora, "confirmada"))
 
-    ocupacion =  cursor.fetchone()["total"]
+    ocupacion = cursor.fetchone()["total"]
 
     if ocupacion >= 10:
         cursor.close()
         conn.close()
         return jsonify({"error": "El horario seleccionado ya no tiene lugares disponibles"}), 409
- 
+
     cursor.execute("""
-        INSERT INTO reservas (fecha, hora,cantidad_personas, estado) VALUES (%s, %s, %s, %s)
-        """, (fecha, hora, personas, "confirmada"))
+        INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado) 
+        VALUES (%s, %s, %s, %s, %s)
+    """, (id_cliente, fecha, hora, personas, "confirmada")) # <-- Agregado "confirmada" aquí
  
     conn.commit()
- 
     cursor.close()
     conn.close()
- 
-    return jsonify({"mensaje":    "Reserva confirmada"}), 201
 
+    return jsonify({"mensaje": "Reserva confirmada"}), 201
 
 @reservas_bp.route("/<int:id>", methods=["DELETE"])
 def borrar_reserva(id):
