@@ -1,11 +1,19 @@
 {% extends "base_admin.html" %}
 
+{% block title %}Reseñas-admin{% endblock %}
+
+{% block estilos %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css')}}">
+{% endblock %}
+
 {% block admin_content %}
-    <h1 class="seccion">Gestion de Reseñas</h1>
-    <div class="caja-platos">
+
+<div class="seccion-resenas">
+    <h1>Gestion de Reseñas</h1>
+    <div class="caja-resenas-total">
         {% for resena in Resenas %}
-        <div class="caja-plato-ind">
-            <div class="texto-caja-ind">
+        <div class="caja-resenas-ind">
+            <div class="txt-resenas-ind">
                 <h2>{{ resena.nombre }}</h2>
                 <p>"{{ resena.mensaje }}"</p>
                 <p><strong>Puntuacion:</strong> {{ resena.puntuacion }} estrellas</p>
@@ -23,4 +31,6 @@
         {% endfor %}
 
     </div>
+</div>
+   
 {% endblock %}
