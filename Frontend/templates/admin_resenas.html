@@ -18,7 +18,7 @@
                 <p>"{{ resena.mensaje }}"</p>
                 <p><strong>Puntuacion:</strong> {{ resena.puntuacion }} estrellas</p>
                 <div class="precio-caja">
-                    <form action="{{ url_for('rutas_prefijo_api.eliminar_resena', id=resena.id_resena) }}" method="POST">
+                    <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
                         <button type="submit" style="background-color: #ff4d4d; color: white; border: none; padding: 10px; cursor: pointer;">
                             Eliminar
                         </button>
