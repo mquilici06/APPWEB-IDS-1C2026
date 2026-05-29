@@ -14,9 +14,7 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 for statement in sql.split(";"):
     if statement.strip():
-        print(statement)
         cursor.execute(statement)
         conn.commit()
-        print("Statement executed")
 cursor.close()
 conn.close()
