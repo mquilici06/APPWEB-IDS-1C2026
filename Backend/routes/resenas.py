@@ -53,6 +53,8 @@ def crear_resena():
 
     data = request.get_json(silent=True)
     if not data:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "Body vacio"}), 400
 
     nombre = data.get("nombre")
@@ -60,19 +62,31 @@ def crear_resena():
     puntuacion = data.get("puntuacion")
 
     if not nombre:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "El campo 'nombre' es obligatorio"}), 400
     if not mensaje:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "El campo 'mensaje' es obligatorio"}), 400
     if puntuacion is None:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "El campo 'puntuacion' es obligatorio"}), 400
     if puntuacion < 1 or puntuacion > 5:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "La puntuacion debe ser entre 1 y 5"}), 400
     if len(mensaje) > 500:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "El mensaje no puede superar los 500 caracteres"}), 400
 
     cursor.execute("SELECT id FROM clientes WHERE nombre = %s", (nombre,))
     cliente = cursor.fetchone()
     if not cliente:
+        cursor.close()
+        conn.close()
         return jsonify({"error": "Nombre de cliente invalido"}), 404
     id_cliente = cliente["id"]
     
@@ -88,7 +102,7 @@ def crear_resena():
 @resenas_bp.route("/<int:id>", methods=["DELETE"])
 def delete_resena(id):
     if id < 1:
-        return jsonify({"error": "Ingresar id valido, id > 0"}), 500
+        return jsonify({"error": "Ingresar id valido, id > 0"}), 400
 
     try:
         conn = get_connection()

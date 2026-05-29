@@ -182,7 +182,7 @@ def mostrar_reservas():
     conn.close()
     return jsonify({"Reservas": reservas_echas}), 200
 
-@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["Put"])
+@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
 def modificar_plato(modificar_reserva):
     if modificar_reserva < 1:
         return jsonify({"Error": "Ingrese un id valido"}),400
