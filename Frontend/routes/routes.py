@@ -55,3 +55,8 @@ def admin_menu():
 def admin_resenas():
     return render_template('admin_resenas.html')
 
+@mis_rutas.route('/admin/estadisticas')
+def admin_stats():
+    return render_template('admin_stats.html')
+
+

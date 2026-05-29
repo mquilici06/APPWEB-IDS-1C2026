@@ -1,0 +1,11 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Admin-estadisticas{% endblock %}
+
+{% block estilos %}
+  {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-stats.css')}}">
+{% endblock %}
+
+{% block admin_content %}
+    <h1 class="titulo-seccion">Tablero de Control</h1>
+{% endblock %}
