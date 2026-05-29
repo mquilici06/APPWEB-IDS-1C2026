@@ -1,10 +1,20 @@
 from flask import Blueprint, request, jsonify, session, redirect
 from database.db import get_connection
+from functools import wraps
 import bcrypt
 
 admin_bp = Blueprint("admin", __name__)
 
+def admin_requerido(funcion):
+    @wraps(funcion)
+    def wrapper(*args, **kwargs):
+        if session.get("rol") != "admin":
+            return jsonify({"Error": "No autorizado"}), 401
+        return funcion(*args, **kwargs)
+    return wrapper
+
 @admin_bp.route("/menu", methods=['POST'])
+@admin_requerido
 def agregar_plato():
     try:
         conn = get_connection()
@@ -62,6 +72,7 @@ def agregar_plato():
 
 
 @admin_bp.route("/menu/<int:id_plato>", methods=["PUT"])
+@admin_requerido
 def editar_plato(id_plato):
 
     if id_plato < 1:
@@ -103,6 +114,7 @@ def editar_plato(id_plato):
     
 
 @admin_bp.route("/<int:eliminar_id>", methods=["DELETE"])
+@admin_requerido
 def eliminar_plato(eliminar_id):
     try:
         conn = get_connection()
@@ -126,6 +138,7 @@ def eliminar_plato(eliminar_id):
 
 
 @admin_bp.route("/reservas", methods=["GET"])
+@admin_requerido
 def mostrar_reservas():
     try:
         conn = get_connection()
@@ -205,6 +218,7 @@ def modificar_plato(modificar_reserva):
 
 
 @admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
+@admin_requerido
 def eliminar_resena(resena_id):
     if resena_id < 1:
         return jsonify({"error": "Ingresar id valido, id > 0"}), 409
@@ -252,8 +266,8 @@ def login():
     if not bcrypt.checkpw(contrasena.encode(), usuario["contrasena"].encode()):
         return "Contraseña incorrecta", 401
 
-    session["usuario_id"] = usuario["id"] # agrego para que se guarde del id de usuario y el rol
-    session["rol"] = usuario["rol"]       # preguntar a leo sobre las sesiones en 2 puertos distintos(cookies)
+    session["usuario_id"] = usuario["id"] 
+    session["rol"] = usuario["rol"]
 
     if usuario["rol"] != "admin":
         return redirect("http://localhost:5001/login/admin")
