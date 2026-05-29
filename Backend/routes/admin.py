@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session, redirect
+from flask import Blueprint, request, jsonify, session
 from database.db import get_connection
 from functools import wraps
 import bcrypt
@@ -243,16 +243,23 @@ def eliminar_resena(resena_id):
     conn.close()
     return '', 204
 
-@admin_bp.route("/login", methods=["GET","POST"])
+@admin_bp.route("/login", methods=["POST"])
 def login():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
-        return jsonify({"error": "Error de conexion"}), 500
+        return jsonify({"ok": False, "mensaje": "Error de conexion"}), 500
 
-    email = request.form.get("email")
-    contrasena = request.form.get("contrasena")
+    data = request.get_json(silent=True)
+
+    email = data.get("femail")
+    contrasena = data.get("fcontrasena")
+
+    if not email or not contrasena:
+        cursor.close()
+        conn.close()
+        return jsonify({"ok": False, "mensaje": "Faltan datos"}), 400
 
     cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
     usuario = cursor.fetchone()
@@ -260,22 +267,16 @@ def login():
     cursor.close()
     conn.close()
 
-    if not usuario:
-        return "Usuario no encontrado", 404
-
     if not bcrypt.checkpw(contrasena.encode(), usuario["contrasena"].encode()):
-        return "Contraseña incorrecta", 401
-
-    session["usuario_id"] = usuario["id"] 
-    session["rol"] = usuario["rol"]
+        return jsonify({"ok": False, "mensaje": "Contraseña incorrecta"}), 401
 
     if usuario["rol"] != "admin":
-        return redirect("http://localhost:5001/login/admin")
+        return jsonify({"ok": False, "mensaje": "No autorizado"}), 403
 
-    return redirect("http://127.0.0.1:5001/admin")
-
-
-@admin_bp.route("/logout", methods=["POST"])
-def logout():
-    session.clear()
-    return jsonify({"mensaje": "Sesion cerrada"}), 200
+    return jsonify({
+        "ok": True,
+        "mensaje": "Login correcto",
+        "usuario": {
+            "id": usuario["id"],
+            "rol": usuario["rol"]
+        }}), 200
