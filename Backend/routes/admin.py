@@ -25,7 +25,7 @@ def agregar_plato():
     data = request.json
 
     datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
-    secciones_validas = ["Pastas", "Salsas", "Bebidas", "Postres"]
+    secciones_validas = ["pastas", "salsas", "bebidas", "postres"]
 
     for campo in datos_requeridos:
         if campo not in data:
@@ -54,7 +54,7 @@ def agregar_plato():
         conn.close()
         return jsonify({"Error": "Precio establecido invalido"}), 400
 
-    if seccion_plato not in secciones_validas:
+    if seccion_plato.lower() not in secciones_validas:
         cursor.close()
         conn.close()
         return jsonify({"Error": "Seccion del menu invalida"}), 400
@@ -62,7 +62,7 @@ def agregar_plato():
     cursor.execute("""
                    INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion)
                    VALUES (%s,%s,%s,%s,%s)
-                   """,(nombre_plato, descripcion_plato, precio_plato, restricciones_plato, seccion_plato)
+                   """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize())
                    )
     conn.commit()
     cursor.close()
