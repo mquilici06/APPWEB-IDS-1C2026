@@ -1,15 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for
-from functools import wraps
+from routes.auth import admin_requerido
 
-mis_rutas = Blueprint('rutas_prefijo_api', __name__)
-
-def admin_requerido(funcion):
-    @wraps(funcion)
-    def wrapper(*args, **kwargs):
-        if session.get("rol") != "admin":
-            return redirect(url_for("rutas_prefijo_api.admin_login"))
-        return funcion(*args, **kwargs)
-    return wrapper
+mis_rutas = Blueprint('frontend', __name__)
 
 @mis_rutas.route("/menu")
 def menu():
@@ -31,32 +23,32 @@ def reservas():
 def resenas():
     return render_template("resenas.html")
 
-@mis_rutas.route("/login/admin")
-def admin_login():
-    return render_template("admin_login.html")
+@mis_rutas.route("/logout", methods=["GET"])
+def logout():
+    session.clear()
+    return redirect(url_for("auth.login_admin"))
 
 @mis_rutas.route("/admin")
 @admin_requerido
 def admin():
-    return render_template("admin.html")
+    return render_template("admin/admin.html")
 
 @mis_rutas.route("/admin/reservas")
 @admin_requerido
 def admin_reservas():
-    return render_template("admin_reservas.html")
+    return render_template("admin/admin_reservas.html")
 
 @mis_rutas.route('/admin/menu')
 @admin_requerido
 def admin_menu():
-    return render_template('admin_menu.html')
+    return render_template('admin/admin_menu.html')
 
 @mis_rutas.route('/admin/resenas')
 @admin_requerido
 def admin_resenas():
-    return render_template('admin_resenas.html')
+    return render_template('admin/admin_resenas.html')
 
 @mis_rutas.route('/admin/estadisticas')
+@admin_requerido
 def admin_stats():
-    return render_template('admin_stats.html')
-
-
+    return render_template('admin/admin_stats.html')
