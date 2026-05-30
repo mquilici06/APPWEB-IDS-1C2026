@@ -8,20 +8,39 @@
 {% endblock %}
 
 {% block admin_content %}
-<h1 class="titulo-seccion">Tablero de Control</h1>
+<div class="dashboard-container">
+  <h1 class="titulo-seccion">Tablero de Control</h1>
+  <p class="subtitulo">Bienvenido al panel de administración de Altezza Ristorante. Selecciona una opción del menú
+    lateral para comenzar.</p>
 
-<div class="tablero">
-  <h2>Bienvenido al panel de administración de Altezza Ristorante.</h2>
-  <p>"Selecciona una opción del menú lateral para comenzar."</p>
-</div>
+  <section class="accesos-section">
+    <h2 class="seccion-subtitulo">Accesos Rápidos</h2>
 
-<div class="tarjetas-accesos">
-  <h3>Accesos Rápidos</h3>
-  <ul>
-    <li>Para cambiar platos o precios, ve a gestionar menu</li>
-    <li>Para revisar o eliminar reservas, ve a gestionar reservas</li>
-    <li>Para revisar o eliminar reseñas, ve a gestionar reseñas</li>
-    <li>Para revisar las estadísticas de ventas, ve a ver estadísticas</li>
-  </ul>
+    <div class="grid-tarjetas">
+      <div class="tarjeta-acceso">
+        <div class="tarjeta-icono">🍽️</div>
+        <h3>Gestionar Menú</h3>
+        <p>Cambia platos, edita precios y actualiza las categorías disponibles.</p>
+      </div>
+
+      <div class="tarjeta-acceso">
+        <div class="tarjeta-icono">📅</div>
+        <h3>Gestionar Reservas</h3>
+        <p>Revisa, confirma o elimina las reservas de mesas de los clientes.</p>
+      </div>
+
+      <div class="tarjeta-acceso">
+        <div class="tarjeta-icono">⭐</div>
+        <h3>Gestionar Reseñas</h3>
+        <p>Revisa los comentarios y opiniones sobre la experiencia en el restaurante.</p>
+      </div>
+
+      <div class="tarjeta-acceso">
+        <div class="tarjeta-icono">📊</div>
+        <h3>Ver Estadísticas</h3>
+        <p>Analiza los gráficos de rendimiento y las estadísticas de ventas.</p>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}
