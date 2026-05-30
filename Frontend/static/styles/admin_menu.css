@@ -3,3 +3,109 @@
     color: #6d071a;
     margin-bottom: 25px;
 }
+.contenedor-menu {
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.titulo-seccion { 
+    color: #5a1216; 
+    font-size: 28px; 
+    margin-bottom: 5px; 
+}
+.subtitulo { 
+    color: #666; 
+    margin-bottom: 30px; 
+    font-size: 14px; 
+}
+
+section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+section h2 { 
+    color: #333; 
+    font-size: 18px; 
+    margin-bottom: 15px; 
+    border-bottom: 2px solid #f4f4f4; 
+    padding-bottom: 8px; 
+}
+
+.formulario-plato { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+.grupo-formulario { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+}
+.formulario-plato input, .formulario-plato textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.formulario-plato textarea { 
+    resize: none; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+.ancho-completo { 
+    grid-template-columns: 1fr; 
+}
+.boton-guardar {
+    background: #5a1216;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: flex-start;
+    transition: background 0.2s;
+}
+.btn-guardar:hover { 
+    background: #7d1c21; 
+}
+
+.tabla-responsiva { 
+    overflow-x: auto; 
+}
+.tabla-menu { 
+    width: 100%; 
+    border-collapse: collapse; 
+    text-align: left; 
+    font-size: 14px; 
+}
+.tabla-menu th, .tabla-menu td { 
+    padding: 12px; 
+    border-bottom: 1px solid #eee; 
+}
+
+.tabla-menu th { 
+    background: #f8f9fa; 
+    color: #555; 
+    font-weight: 600; 
+}
+
+.tabla-menu small { 
+    color: #777; 
+    display: block; 
+    margin-top: 4px; 
+}
+
+.tabla-menu code {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #333;
+}
