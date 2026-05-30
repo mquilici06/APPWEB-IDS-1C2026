@@ -1,5 +1,26 @@
-.titulo-seccion {
-    font-family: 'Playfair Display', serif;
+.dashboard-container {
+    padding: 30px;
+    font-family: 'Segoe UI';
     color: #6d071a;
-    margin-bottom: 25px;
+}
+
+.titulo-seccion {
+    font-size: 3.0rem;
+    color: #6d071a;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.subtitulo {
+    font-size: 1.1rem;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.seccion-subtitulo {
+    font-size: 1.0rem;
+    color: #6d071a;
+    margin-bottom: 20px;
+    font-weight: 500;
 }
