@@ -1,26 +1,27 @@
 {% extends "admin/base_admin.html" %}
 
 {% block admin_content %}
-    <h1 class="seccion">Gestion de Reseñas</h1>
-    <div class="caja-platos">
-        {% for resena in Resenas %}
-        <div class="caja-plato-ind">
-            <div class="texto-caja-ind">
-                <h2>{{ resena.nombre }}</h2>
-                <p>"{{ resena.mensaje }}"</p>
-                <p><strong>Puntuacion:</strong> {{ resena.puntuacion }} estrellas</p>
-                <div class="precio-caja">
-                    <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
-                        <button type="submit" style="background-color: #ff4d4d; color: white; border: none; padding: 10px; cursor: pointer;">
-                            Eliminar
-                        </button>
-                    </form>
-                </div>
+<h1 class="seccion">Gestion de Reseñas</h1>
+<div class="caja-platos">
+    {% for resena in Resenas %}
+    <div class="caja-plato-ind">
+        <div class="texto-caja-ind">
+            <h2>{{ resena.nombre }}</h2>
+            <p>"{{ resena.mensaje }}"</p>
+            <p><strong>Puntuacion:</strong> {{ resena.puntuacion }} estrellas</p>
+            <div class="precio-caja">
+                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
+                    <button type="submit"
+                        style="background-color: #ff4d4d; color: white; border: none; padding: 10px; cursor: pointer;">
+                        Eliminar
+                    </button>
+                </form>
             </div>
         </div>
-        {% else %}
-            <p>No hay reseñas publicadas todavía</p>
-        {% endfor %}
-
     </div>
+    {% else %}
+    <p>No hay reseñas publicadas todavía</p>
+    {% endfor %}
+
+</div>
 {% endblock %}
