@@ -51,6 +51,43 @@
     padding: 30px 0;
 }
 
+.resenas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.resena-item {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #6d071a;
+    padding: 20px 24px;
+}
+
+.resena-nombre {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin: 0 0 6px 0;
+}
+
+.resena-puntuacion {
+    font-size: 0.85rem;
+    color: #c5a059;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+}
+
+.resena-mensaje {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
 .campo {
     display: flex;
     flex-direction: column;
