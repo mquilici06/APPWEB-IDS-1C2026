@@ -63,3 +63,9 @@
     color: #040506;
     line-height: 1.5;
 }
+
+.enlace-tarjeta {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
