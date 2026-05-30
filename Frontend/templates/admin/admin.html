@@ -3,9 +3,25 @@
 {% block title %}Admin - Altezza{% endblock %}
 
 {% block estilos %}
-  {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css')}}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css')}}">
 {% endblock %}
 
 {% block admin_content %}
-    <h1 class="titulo-seccion">Tablero de Control</h1>
-    {% endblock %}
+<h1 class="titulo-seccion">Tablero de Control</h1>
+
+<div class="tablero">
+  <h2>Bienvenido al panel de administración de Altezza Ristorante.</h2>
+  <p>"Selecciona una opción del menú lateral para comenzar."</p>
+</div>
+
+<div class="tarjetas-accesos">
+  <h3>Accesos Rápidos</h3>
+  <ul>
+    <li>Pra cambiar platos o precios, ve a gestionar menu</li>
+    <li>Para revisar o eliminar reservas, ve a gestionar reservas</li>
+    <li>Para revisar o eliminar reseñas, ve a gestionar reseñas</li>
+    <li>Para revisar las estadísticas de ventas, ve a ver estadísticas</li>
+  </ul>
+</div>
+{% endblock %}
