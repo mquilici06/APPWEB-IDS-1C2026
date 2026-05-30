@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
-from routes.auth import admin_requerido
+import requests
+from routes.auth import admin_requerido, BACKEND_URL
 
 mis_rutas = Blueprint('frontend', __name__)
 
@@ -21,7 +22,13 @@ def reservas():
 
 @mis_rutas.route("/resenas")
 def resenas():
-    return render_template("resenas.html")
+    try:
+        response = requests.get(f"{BACKEND_URL}/resenas")
+        data = response.json()
+        resenas = data.get("resenas", [])
+    except:
+        resenas = []
+    return render_template("resenas.html", resenas=resenas)
 
 @mis_rutas.route("/logout", methods=["GET"])
 def logout():
@@ -43,10 +50,16 @@ def admin_reservas():
 def admin_menu():
     return render_template('admin/admin_menu.html')
 
-@mis_rutas.route('/admin/resenas')
+@mis_rutas.route("/admin/resenas", methods=["GET"])
 @admin_requerido
 def admin_resenas():
-    return render_template('admin/admin_resenas.html')
+    try:
+        response = requests.get(f"{BACKEND_URL}/resenas")
+        data = response.json()
+        resenas = data.get("resenas", [])
+    except:
+        resenas = []
+    return render_template("admin/admin_resenas.html", resenas=resenas)
 
 @mis_rutas.route('/admin/estadisticas')
 @admin_requerido
