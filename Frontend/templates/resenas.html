@@ -11,8 +11,18 @@
 <section class="resenas-contenido">
     <div class="resenas-columna">
         <h2 class="resenas-seccion-titulo">Reseñas:</h2>
-        <div id="lista-resenas" class="resenas-grid">
-            <p class="resenas-estado">No hay reseñas todavia.</p>
+        <div class="resenas-lista">
+            {% for resena in resenas %}
+            <div class="resena-item">
+                <div class="resena-info">
+                    <h3 class="resena-nombre">{{ resena.nombre_cliente }}</h3>
+                    <p class="resena-puntuacion">{{ resena.puntuacion }} / 5 ★</p>
+                    <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
+                </div>
+            </div>
+            {% else %}
+                <p class="resenas-estado">No hay reseñas todavía.</p>
+            {% endfor %}
         </div>
     </div>
     <div class="resenas-columna">

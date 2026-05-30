@@ -1,36 +1,35 @@
 {% extends "admin/base_admin.html" %}
 
-{% block title %}Reseñas-admin{% endblock %}
+{% block title %}Reseñas - Admin{% endblock %}
 
 {% block estilos %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css') }}">
 {% endblock %}
 
 {% block admin_content %}
 
-<div class="seccion-resenas">
-    <h1>Gestion de Reseñas</h1>
-    <div class="caja-resenas-total">
-        {% for resena in Resenas %}
-        <div class="caja-resenas-ind">
-            <div class="txt-resenas-ind">
-                <h2>{{ resena.nombre }}</h2>
-                <p>"{{ resena.mensaje }}"</p>
-                <p><strong>Puntuacion:</strong> {{ resena.puntuacion }} estrellas</p>
-                <div class="precio-caja">
-                    <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
-                        <button type="submit" style="background-color: #ff4d4d; color: white; border: none; padding: 10px; cursor: pointer;">
-                            Eliminar
-                        </button>
-                    </form>
-                </div>
+<div class="abm-container">
+    <h1 class="abm-titulo">Gestion de Reseñas</h1>
+    <p class="abm-subtitulo">Revisa y elimina las reseñas de los clientes.</p>
+
+    <div class="resenas-lista">
+        {% for resena in resenas %}
+        <div class="resena-item">
+            <div class="resena-info">
+                <h3 class="resena-nombre">{{ resena.nombre_cliente }}</h3>
+                <p class="resena-puntuacion">Puntuación: {{ resena.puntuacion }} / 5 estrellas</p>
+                <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
+            </div>
+            <div class="resena-acciones">
+                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
             </div>
         </div>
         {% else %}
-            <p>No hay reseñas publicadas todavía</p>
+            <p class="abm-vacio">No hay reseñas registradas todavia.</p>
         {% endfor %}
-
     </div>
 </div>
-   
+
 {% endblock %}
