@@ -7,5 +7,61 @@
 {% endblock %}
 
 {% block admin_content %}
-    <h1 class="titulo-seccion">Tablero de Control</h1>
+   <div class="contenedor-menu">
+    <h1 class="titulo-seccion">Gestionar Menu</h1>
+    <p class="subtitulo">Añadir, editar o eliminar los platos disponibles en Altezza Ristorante.</p>
+
+    <section class="seccion-formulario">
+        <h2>Añadir / Editar Plato</h2>
+        <form action="{{ url_for('frontend.admin_menu') }}" method="POST" class="formulario-plato">
+            <div class="grupo-formulario">
+                <input type="text" name="nombre_plato" placeholder="Nombre del plato" required>
+                <input type="text" placeholder="Precio" required>
+            </div>
+            <div class="grupo-formulario">
+                <input type="text" name="seccion" placeholder="Seccion" required>
+                <input type="text" name="restricciones" placeholder="Restricciones">
+            </div>
+            <div class="grupo-formulario ancho-completo">
+                <textarea name="desc_plato" placeholder="Descripción del plato..." rows="3" required></textarea>
+            </div>
+            <button type="submit" class="boton-guardar">Guardar Plato</button>
+        </form>
+    </section>
+
+    <section class="seccion-tabla">
+        <h2>Platos Actuales</h2>
+        <div class="tabla-responsiva">
+            <table class="tabla-menu">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>nombre</th>
+                        <th>Seccion</th>
+                        <th>Precio</th>
+                        <th>Restricciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plato in platos %}
+                    <tr>
+                        <td>
+                            <strong>{{ plato.nombre_plato }}</strong>
+                            <small>{{ plato.desc_plato }}</small>
+                        </td>
+                        <td><span class="etiqueta-seccion">{{ plato.seccion }}</span></td>
+                        <td>${{ plato.precio }}</td>
+                        <td>{{ plato.restricciones or '-' }}</td>
+                        <td class="acciones">
+                            <a href="#" class="accion editar" title="Editar">editar</a>
+                            <a href="#" class="accion eliminar" title="Eliminar">eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 {% endblock %}
