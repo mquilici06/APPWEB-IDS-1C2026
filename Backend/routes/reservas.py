@@ -55,9 +55,9 @@ def crear_reserva():
             return jsonify({"error": f"Falta el campo '{campo}'"}), 400
  
     id_cliente = datos["id_cliente"]
-    personas   = datos["personas"]
-    fecha      = datos["fecha"]
-    hora       = datos["hora"]
+    personas = datos["personas"]
+    fecha = datos["fecha"]
+    hora = datos["hora"]
     
     try:
         conn   = get_connection()
@@ -77,6 +77,8 @@ def crear_reserva():
         conn.close()
         return jsonify({"error": "El horario seleccionado ya no tiene lugares disponibles"}), 409
 
+    
+
     cursor.execute("""
         INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado) 
         VALUES (%s, %s, %s, %s, %s)
@@ -88,7 +90,7 @@ def crear_reserva():
 
     return jsonify({"mensaje": "Reserva confirmada"}), 201
 
-@reservas_bp.route("/<int:id>", methods=["DELETE"])
+@reservas_bp.route("/<int:id>", methods=["POST"])
 def borrar_reserva(id):
     if id < 0:
         return jsonify({"error": "Ingresar id valido, id > 0"}), 409
@@ -98,6 +100,13 @@ def borrar_reserva(id):
         cursor = conn.cursor()
     except Exception:
         return jsonify({"error": "Error de conexión con la base de datos"}), 500
+
+    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (id,))
+    reserva = cursor.fetchone()
+    if not reserva:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Reserva no encontrada"}), 404 
     
     cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
         
