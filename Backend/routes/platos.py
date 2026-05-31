@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 from database.db import get_connection
 
 menu_bp = Blueprint("menu", __name__)
@@ -22,4 +22,4 @@ def listar_menu():
 
     cursor.close()
     conn.close()
-    return jsonify({"Menu": menu}), 200
+    return jsonify({"platos": menu}), 200

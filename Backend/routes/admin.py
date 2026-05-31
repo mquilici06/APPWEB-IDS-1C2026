@@ -25,7 +25,7 @@ def agregar_plato():
     data = request.json
 
     datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
-    secciones_validas = ["pastas", "salsas", "bebidas", "postres"]
+    secciones_validas = ["platos principales", "bebidas", "postres"]
 
     for campo in datos_requeridos:
         if campo not in data:
