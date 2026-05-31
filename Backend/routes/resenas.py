@@ -99,8 +99,8 @@ def crear_resena():
     conn.close()
     return jsonify({"mensaje": "Reseña enviada correctamente"}), 201
 
-@resenas_bp.route("/<int:id>", methods=["DELETE"])
-def delete_resena(id):
+@resenas_bp.route("/<int:id>", methods=["POST"])
+def eliminar_resena(id):
     if id < 1:
         return jsonify({"error": "Ingresar id valido, id > 0"}), 400
 
@@ -109,6 +109,14 @@ def delete_resena(id):
         cursor = conn.cursor(dictionary=True)
     except:
         return jsonify({"error": "Error de conexion con la base de datos"}), 500
+
+    cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id,))
+    resena = cursor.fetchone()
+    if not resena:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Reseña no encontrada"}), 404
+
     
     cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (id,))
 
