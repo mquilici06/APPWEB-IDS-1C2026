@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 from routes.routes import mis_rutas
 from routes.auth import auth_bp
+from routes.contacto import contacto_bp
 
 app = Flask(__name__)
 app.secret_key = "altezza_password"
 
 app.register_blueprint(mis_rutas, url_prefix="")
 app.register_blueprint(auth_bp)
+app.register_blueprint(contacto_bp)
 
 @app.errorhandler(404)
 def pagina_no_encontrada(e):

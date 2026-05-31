@@ -6,15 +6,18 @@ mis_rutas = Blueprint('frontend', __name__)
 
 @mis_rutas.route("/menu")
 def menu():
-    return render_template("menu.html")
+    try:
+        response = requests.get(f"{BACKEND_URL}/platos")
+        data = response.json()
+        platos = data.get("platos", [])
+    except:
+        platos = []
+    return render_template("menu.html", platos=platos)
+
 
 @mis_rutas.route("/")
 def index():
     return render_template("index.html")
-
-@mis_rutas.route("/contacto")
-def contacto():
-    return render_template("contacto.html")
 
 @mis_rutas.route("/reservas")
 def reservas():
