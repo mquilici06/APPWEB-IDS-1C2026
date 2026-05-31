@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS menu (
     desc_plato VARCHAR(200) NOT NULL,
     precio INTEGER NOT NULL,
     restricciones VARCHAR(50), 
-    seccion VARCHAR(20)
+    seccion VARCHAR(20),
+    imagen VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS estadisticas (
@@ -47,22 +48,44 @@ CREATE TABLE IF NOT EXISTS reservas (
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion) VALUES
-('Gnocchi de Calabaza', 'Ñoquis artesanales con crema de gorgonzola y semillas de calabaza tostadas.', 13500, 'Vegetariano', 'Platos Principales'),
-('Spaghetti Frutti di Mare', 'Pasta larga con calamares, langostinos y mejillones en salsa de vino blanco y tomate.', 17000, 'Mariscos', 'Platos Principales'),
-('Rigatoni al Pesto Genoves', 'Pasta corta con salsa de albahaca fresca, pinones, ajo y queso parmesano.', 12000, 'Contiene Frutos Secos / Vegetariano', 'Platos Principales'),
-('Pappardelle con Ragu de Cordero', 'Pasta ancha con estofado de cordero cocinado a fuego lento durante 8 horas.', 16500, 'Ninguna', 'Platos Principales'),
-('Fusilli Sin Gluten Primavera', 'Pasta de maiz con vegetales de temporada salteados en aceite de oliva y ajo.', 14000, 'Sin Gluten / Vegano', 'Platos Principales'),
-('Tiramisu Clasico', 'Bizcochos de soletilla empapados en cafe espresso, crema de mascarpone y cacao.', 7500, 'Vegetariano', 'Postres'),
-('Panna Cotta de Frutos Rojos', 'Crema cocida con vainilla natural y coulis de frambuesas frescas.', 6500, 'Sin Gluten', 'Postres'),
-('Cannoli Siciliani', 'Tubos de masa crujiente rellenos de crema de ricotta dulce y chispas de chocolate.', 5000, 'Vegetariano', 'Postres'),
-('Gelato Artesanal (3 bolas)', 'Seleccion de helados italianos: Vainilla, Chocolate amargo o Pistacho.', 6000, 'Sin Gluten / Vegetariano', 'Postres'),
-('Affogato al Caffe', 'Una bola de helado de vainilla ahogada en un shot de espresso caliente.', 5500, 'Sin Gluten / Vegetariano', 'Postres'),
-('Vino Chianti Classico (Copa)', 'Vino tinto italiano de la region de Toscana, ideal para carnes rojas y pastas.', 8000, 'Contiene Sulfitos', 'Bebidas'),
-('Limonata San Pellegrino', 'Bebida gaseosa tradicional italiana de limon natural.', 3500, 'Vegano / Sin Gluten', 'Bebidas'),
-('Cerveza Peroni Nastro Azzurro', 'Cerveza lager italiana premium, ligera y refrescante.', 4500, 'Contiene Gluten', 'Bebidas'),
-('Agua Mineral Acqua Panna', 'Agua mineral sin gas proveniente de los manantiales de la Toscana (500ml).', 3000, 'Ninguna', 'Bebidas'),
-('Aperol Spritz', 'Coctel refrescante con Aperol, Prosecco, soda y una rodaja de naranja.', 9000, 'Vegano', 'Bebidas');
+INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen) VALUES
+('Spaghetti alla carbonara', 'Queso pecorino, crema, panceta y yema de huevo', '32000', '', 'Platos Principales', 'carbonara.png'),
+('Bucatini con polpette di vitello', 'Pasta seca italiana, pomodoro, morrones, cebolla, ajo, albahaca y albóndigas de ternera', '32000', '', 'Platos Principales','bucatini.png'),
+('Trofie al pesto genovese', 'Receta original del pesto genovés', '32000', 'Vegetariano', 'Platos Principales','trofie.png'),
+('Tagliolini nere panna e gamberi', 'Crema y langostinos', '34500', '', 'Platos Principales','tagliolini.png'),
+('Spaghetti cacio e pepe', 'Queso pecorino estacionado y pimienta negra', '32000', 'Vegetariano', 'Platos Principales', 'cacio-e-pepe.png'),
+('Spaghetti alla napoletana', 'Pesto de pomodoro secos con pesto di basilico e burrata', '32000', 'Vegetariano', 'Platos Principales', 'spaghetti-napoletana.png'),
+('Spaghetti DE CECCO ai frutti di mare', 'Spaghetti seco italiano, pomodoro, langostinos, calamar, vieiras, chipirones, almejas y mejillones', '39000', '', 'Platos Principales', 'spaghetti-de-cecco.png'),
+('Cuerdas de guitarra pomodoro e basilico', 'Pomodoro y albahaca', '32000', 'Vegetariano', 'Platos Principales', 'cuerdas.png'),
+('Rigatoni DE CECCO all'' arrabbiata', 'Pomodoro, ajo, peperoncino, tomate concasse, oliva y perejil', '32000', 'Vegetariano/Vegano', 'Platos Principales','rigatoni.png'),
+('Malfatti di spinaci', 'Espinaca y ricota gratinado con crema, pomodoro y parmesano', '32000', 'Vegetariano', 'Platos Principales','malfatti.png'),
+('Fettuccine funghi e oleo di trufa', 'Crema di funghi e óleo de trufa', '32000', '', 'Platos Principales','fettuccine.png'),
+('Fettuccine Alfredo', 'Crema, parmesano y yema de huevo', '32000', '', 'Platos Principales','falfredo.png'),
+('Fusilli al fierrito don corleone', 'Pomodoro, oliva, ajo, aceitunas negras y alcaparras', '32000', 'Vegetariano', 'Platos Principales','fusilli.png'),
+('Penne Rigate pomodoro e basilico - sin tacc', 'Pomodoro y albahaca', '32000', 'Sin TACC', 'Platos Principales','penne.png'),
+('Flan de claras', 'Flan de claras con confitura de naranja, yogurt de vainilla, almendras y pasas de uva', '14500', 'Sin TACC', 'Postres','flan.png'),
+('Tiramisú al mascarpone', 'Clásico tiramisú con Mascarpone', '14500', '', 'Postres','tiramisu.png'),
+('Seduzione di cioccolato', 'Volcán de chocolate con helado de crema', '14500', '', 'Postres','volcan.png'),
+('Crepe de dulce de leche', 'Crepé de dulce de leche con helado de crema', '14500', '', 'Postres','crepe.png'),
+('Tatén di mela con gelato', 'Tarta tibia de manzana con helado de crema y crocante de nuez', '14500', '', 'Postres','taten.png'),
+('Merengatta', 'Merengue italiano, helado de crema y frutillas', '14500', '', 'Postres','merengata.png'),
+('Mousse di cioccolato - Sin tacc', 'Soufflé de chocolate con crema chantilly y prelinee de almendras', '14500', 'Sin TACC', 'Postres','mousse.png'),
+('Piccola torta di limone', 'Pequeña torta de limón con salsa de frutos del bosque', '14500', '', 'Postres','torta.png'),
+('Gelato', 'Helado de la casa', '14500', 'Vegetariano', 'Postres','helado.png'),
+('Gaseosas - (Linea pepsi)', '', '5000', '', 'Bebidas',NULL),
+('Agua Mineral', '', '5000', '', 'Bebidas',NULL),
+('We by Ser (Citrus - Lemon)', '', '5000', '', 'Bebidas',NULL),
+('Limonada', '', '6200', '', 'Bebidas',NULL),
+('Villa del Sur Levité', '', '5000', '', 'Bebidas',NULL),
+('Jugo Exprimido de Naranja', '', '6200', '', 'Bebidas',NULL),
+('Heineken (330 cc)', '', '6300', '', 'Bebidas',NULL),
+('Warsteiner (330 cc)', '', '6500', '', 'Bebidas',NULL),
+('Blue Moon (355 cc)', '', '6500', '', 'Bebidas',NULL),
+('Miller (355 cc)', '', '6250', '', 'Bebidas',NULL),
+('Heineken 0.0 - sin alcohol (355 cc)', '', '6300', '', 'Bebidas',NULL),
+('Ramazzotti Spritz', 'Aperitivo Ramazzotti rosato, Espumante y Rodaja de Limón', '10500', '', 'Bebidas',NULL),
+('Ramazzotti Tonic', 'Aperitivo Ramazzotti rosato, Agua tónica y Rodaja de Limón', '10500', '', 'Bebidas',NULL);
+
 
 INSERT INTO usuarios (id, nombre, email, celular, rol, contrasena) VALUES /*contraseña de los ususarios 123456*/
 (1, 'Juan Pérez', 'juan@email.com', '1152307414', 'cliente', '$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
@@ -79,3 +102,12 @@ INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, es
 (3, 3, '2026-06-05', '13:15', 6, 'pendiente'),
 (4, 4, '2026-06-07', '20:45', 2, 'confirmada'),
 (5, 5, '2026-06-12', '22:00', 5, 'cancelada');
+
+INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion) VALUES
+(1, 1, 'Excelente servicio, muy buena atención.', 5),
+(2, 2, 'La comida llegó fría, podría mejorar.', 3),
+(3, 3, 'Muy buena experiencia, volvería sin dudas.', 4),
+(4, 1, 'El lugar estaba limpio y el personal fue amable.', 5),
+(5, 4, 'Demoraron mucho en atender.', 2);
+
+ 
