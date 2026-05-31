@@ -16,7 +16,7 @@
     <div class="items-contacto">
       <p>Dirección: Av.Del Libertador 6820 (CABA)</p>
       <p>Teléfono: +(54) 11 5959-6780</p>
-      <p>E-mail: reservas@altezza.com</p>
+      <p>E-mail: altezzaadmin@gmail.com</p>
       <p>Horarios: Jue - Dom: 19:00 a 00:00</p>
     </div>
     <div class="caja-mapa">
@@ -27,7 +27,7 @@
 
   <div class="caja-mensaje">
     <h2 class="caja-titulo">Mandanos un mensaje</h2>
-    <form action={# {{ url_for('contacto') }} #}method="POST" class="form">
+    <form action="{{ url_for('contacto.contactanos') }}" method="POST" class="form">
       <div class="form-mensaje">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="fnombre" placeholder="nombre">
