@@ -1,20 +1,12 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from database.db import get_connection
-from functools import wraps
+from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
 
 admin_bp = Blueprint("admin", __name__)
 
-def admin_requerido(funcion):
-    @wraps(funcion)
-    def wrapper(*args, **kwargs):
-        if session.get("rol") != "admin":
-            return jsonify({"Error": "No autorizado"}), 401
-        return funcion(*args, **kwargs)
-    return wrapper
-
 @admin_bp.route("/menu", methods=['POST'])
-@admin_requerido
+@jwt_required()
 def agregar_plato():
     try:
         conn = get_connection()
@@ -72,7 +64,7 @@ def agregar_plato():
 
 
 @admin_bp.route("/menu/<int:id_plato>", methods=["PUT"])
-@admin_requerido
+@jwt_required()
 def editar_plato(id_plato):
 
     if id_plato < 1:
@@ -114,7 +106,7 @@ def editar_plato(id_plato):
     
 
 @admin_bp.route("/<int:eliminar_id>", methods=["DELETE"])
-@admin_requerido
+@jwt_required()
 def eliminar_plato(eliminar_id):
     try:
         conn = get_connection()
@@ -138,7 +130,7 @@ def eliminar_plato(eliminar_id):
 
 
 @admin_bp.route("/reservas", methods=["GET"])
-@admin_requerido
+@jwt_required()
 def mostrar_reservas():
     try:
         conn = get_connection()
@@ -225,7 +217,7 @@ def modificar_reserva(modificar_reserva):
 
 
 @admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
-@admin_requerido
+@jwt_required()
 def eliminar_resena(resena_id):
     if resena_id < 1:
         return jsonify({"error": "Ingresar id valido, id > 0"}), 409
@@ -256,10 +248,9 @@ def login():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
-        return jsonify({"ok": False, "mensaje": "Error de conexion"}), 500
+        return jsonify({"ok": False, "mensaje": "Error de conexión"}), 500
 
     data = request.get_json(silent=True)
-
     email = data.get("femail")
     contrasena = data.get("fcontrasena")
 
@@ -270,9 +261,11 @@ def login():
 
     cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
     usuario = cursor.fetchone()
-
     cursor.close()
     conn.close()
+
+    if not usuario:
+        return jsonify({"ok": False, "mensaje": "Usuario no encontrado"}), 404
 
     if not bcrypt.checkpw(contrasena.encode(), usuario["contrasena"].encode()):
         return jsonify({"ok": False, "mensaje": "Contraseña incorrecta"}), 401
@@ -280,10 +273,13 @@ def login():
     if usuario["rol"] != "admin":
         return jsonify({"ok": False, "mensaje": "No autorizado"}), 403
 
+    token = create_access_token(identity=str(usuario["id"]))
     return jsonify({
         "ok": True,
         "mensaje": "Login correcto",
-        "usuario": {
-            "id": usuario["id"],
-            "rol": usuario["rol"]
-        }}), 200
+        "token": token,
+        "usuario":{
+        "id": usuario["id"],
+        "rol": usuario["rol"]
+        }
+    }), 200
