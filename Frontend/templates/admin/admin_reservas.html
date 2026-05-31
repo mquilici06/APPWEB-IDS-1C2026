@@ -9,9 +9,8 @@
             <h2>{{ reserva.fecha }}</h2>
             <p>"{{ reserva.hora}}"</p>
             <p>"{{ reserva.cant_personas}}"</p>
-            <p><strong>Puntuacion:</strong> {{ reserva.puntuacion }} estrellas</p>
             <div class="precio-caja">
-                <form action="{{ url_for('Backend.borrar_reserva', id=reserva.id_reserva) }}" method="POST">
+                <form action="{{ url_for('reservas.borrar_reserva', id=reserva.id_reserva) }}" method="POST">
                     <button type="submit"
                         class="btn-eliminar"
                         onclick="return confirm('¿Estás seguro de que deseas eliminar esta reserva?')">
