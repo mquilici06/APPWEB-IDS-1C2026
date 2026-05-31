@@ -4,9 +4,12 @@ from routes.platos import menu_bp
 from routes.resenas import resenas_bp
 from routes.reservas import reservas_bp
 from routes.admin import admin_bp
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.secret_key = "altezza_password"  
+app.config["JWT_SECRET_KEY"] = "altezza_jwt_password"
+jwt = JWTManager(app)
 
 CORS(app)
 
