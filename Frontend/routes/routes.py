@@ -64,6 +64,16 @@ def admin_resenas():
         resenas = []
     return render_template("admin/admin_resenas.html", resenas=resenas)
 
+@mis_rutas.route("/admin/resenas/eliminar/<int:id>", methods=["POST"])
+@admin_requerido
+def eliminar_resena(id):
+    try:
+        token = session.get("jwt_token")
+        requests.delete(f"{BACKEND_URL}/admin/resenas/{id}", headers={"Authorization": f"Bearer {token}"})
+    except:
+        print("Error al eliminar reseña")
+    return redirect(url_for("frontend.admin_resenas"))
+
 @mis_rutas.route('/admin/estadisticas')
 @admin_requerido
 def admin_stats():
