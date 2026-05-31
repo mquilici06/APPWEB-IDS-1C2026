@@ -128,7 +128,7 @@ def eliminar_plato(eliminar_id):
     if not existe:
         cursor.close()
         conn.close()
-        return jsonify({"Mensaje": "El ID no existe en el menu"}), 404
+        return jsonify({"Mensaje": "El plato no existe en el menu"}), 404
 
     cursor.execute("DELETE FROM menu WHERE id_menu = %s", (eliminar_id,))
     conn.commit()
@@ -183,7 +183,7 @@ def mostrar_reservas():
     return jsonify({"Reservas": reservas_echas}), 200
 
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
-def modificar_plato(modificar_reserva):
+def modificar_reserva(modificar_reserva):
     if modificar_reserva < 1:
         return jsonify({"Error": "Ingrese un id valido"}),400
     
@@ -196,6 +196,13 @@ def modificar_plato(modificar_reserva):
     data = request.json
     
     campos_requeridos = ["id_reserva", "fecha", "hora", "cantidad_personas", "estado"]
+
+    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
+    reserva = cursor.fetchone()
+    if not reserva:
+        cursor.close()
+        conn.close()
+        return jsonify({"Error": "Reserva no encontrada"}), 404
 
     for campo in campos_requeridos:
         if campo not in data:
