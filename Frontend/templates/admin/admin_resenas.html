@@ -21,7 +21,7 @@
                 <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
             </div>
             <div class="resena-acciones">
-                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
+                <form action="{{ url_for('resenas.eliminar_resena', id=resena.id_resena) }}" method="POST">
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </div>
