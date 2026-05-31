@@ -8,12 +8,12 @@
 
 
 {% block content %}
-  <div class="main">
+<div class="main">
     <h1>NUESTRA CARTA</h1>
     <div id="box-nav-menu">
       <nav>
-        <a class="nav-menu" href="#pastas">Entrada</a>
-        <a class="nav-menu" href="#salsas-bebidas">Salsas y Bebidas</a>
+        <a class="nav-menu" href="#pastas">Principales</a>
+        <a class="nav-menu" href="#bebidas">Bebidas</a>
         <a class="nav-menu" href="#postre">Postre</a>
       </nav>
     </div>
@@ -21,147 +21,74 @@
     <div id="pastas">
       <h2 class="seccion">Nuestras Pastas:</h2>
       <div class="caja-platos">
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
+        {% for plato in platos %}
+            {% if plato.seccion == 'Platos Principales' %}
+            <div class="caja-plato-ind">
+                <div>
+                    <img class="img-platos" src="{{ url_for('static', filename='images/platos/'+ plato.imagen)}}">
+                </div>
+
+                <div class="texto-caja-ind">
+                    <h2>{{ plato.nombre_plato }}</h2>
+                    <p>{{ plato.desc_plato }}</p>
+
+                    <div class="restriccion-caja">
+                        <p>{{ plato.restricciones }}</p>
+                    </div>
+
+                    <div class ="precio-caja">
+                        <span>{{ plato.precio }}</span>
+                    </div>
+                </div>
             </div>
-          </div>
+            {% endif %}
+        {% endfor %}
         </div>
 
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
+    <div id="bebidas">
+        <h2 class="seccion">Bebidas</h2>
+        <div class="box-lista-b">
+              {% for plato in platos %}
+                    {% if plato.seccion == 'Bebidas' %}
+                      <div class="contenido-lista">
+                        <ul class="lista">
+                          <li>{{ plato.nombre_plato }}</li>
+                          <li>{{ plato.desc_plato }}</li>
+                          <li>{{ plato.restricciones }}</li>
+                          <li><span>{{ plato.precio }}</span></li>
+                        </ul>
+                      </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-          </div>
-        </div>
-
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="salsas-bebidas">
-        <h2 class="seccion">Salsas y Bebidas</h2>
-        <div class="box-salsas-bebidas">
-          <div class="box-lista-syb">
-            <h3>
-              Salsas
-            </h3>
-            <div class="contenido-listas">
-              <ul class="lista">
-                <li>contenido</li>
-                <li>contenido</li>
-                <li>contenido</li>
-                <li>contenido</li>
-              </ul>
-            </div>
-          </div>
-          <div class="box-lista-syb">
-            <h3>
-              Bebidas
-            </h3>
-            <div class="contenido-listas">
-              <ul class="lista">
-                <li>contenido</li>
-                <li>contenido</li>
-                <li>contenido</li>
-                <li>contenido</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        </div>         
     </div>
 
     <div id="postre">
       <h2 class="seccion">Postre:</h2>
-      <div class="caja-platos">
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
-        </div>
+        <div class="caja-platos">
+            {% for plato in platos %}
+                {% if plato.seccion == 'Postres' %}
+                    <div class="caja-plato-ind">
+                        <div>
+                            <img class="img-platos" src="{{ url_for('static', filename='images/platos/' + plato.imagen)}}">
+                        </div>
+                            <div class="texto-caja-ind">
+                                <h2>{{ plato.nombre_plato }}</h2>
+                                <p>{{ plato.desc_plato }}</p>
 
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
-        </div>
+                                <div class="restriccion-caja">
+                                    <p>{{ plato.restricciones }}</p>
+                                </div>
 
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
+                                <div class="precio-caja">
+                                    <span>{{ plato.precio }}</span>
+                                </div>
+                            </div>
+                    </div>
+                {% endif %}
+            {% endfor %} 
         </div>
-
-        <div class="caja-plato-ind">
-          <div>
-            <img class="img-platos" src="{{ url_for('static', filename='images/platos/platoTest.png')}}">
-          </div>
-          <div class="texto-caja-ind">
-            <h2>Pollo con verduras</h2>
-            <p>Pechuga de pollo con verduras salteadas</p>
-            <div class="precio-caja">
-              <span>$20000</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}
