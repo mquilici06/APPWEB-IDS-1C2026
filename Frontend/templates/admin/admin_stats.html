@@ -1,11 +1,86 @@
-{% extends "admin/base_admin.html" %}
+{% extends "/admin/base_admin.html" %}
 
-{% block title %}Admin-estadisticas{% endblock %}
+{% block title %}Admin - Estadísticas | Altezza{% endblock %}
 
 {% block estilos %}
-  {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-stats.css')}}">
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-stats.css') }}">
 {% endblock %}
 
 {% block admin_content %}
-    <h1 class="titulo-seccion">Tablero de Control</h1>
+<div class="contenedor-estadisticas">
+    
+    <div class="cabecera-stats">
+        <h1 class="titulo-seccion">Tablero de Control</h1>
+        
+        <form action="{{ url_for('frontend.admin_stats') }}" method="GET" class="formulario-filtro">
+            <label for="fecha_filtro">Filtrar por fecha:</label>
+            <input type="date" id="fecha_filtro" name="fecha_filtro">
+            <button type="submit" class="btn-filtrar">Consultar</button>
+            <a href="{{ url_for('frontend.admin_stats') }}" class="btn-limpiar">Limpiar</a>
+        </form>
+    </div>
+    
+    <div class="fila-metricas">
+        <div class="tarjeta-metrica">
+            <span class="etiqueta">Total de Reservas</span>
+            <p class="valor">{{ total_reservas }}</p>
+            <span class="subtexto">Histórico acumulado</span>
+        </div>
+        
+        <div class="tarjeta-metrica destacado">
+            <span class="etiqueta">Reservas para Hoy</span>
+            <p class="valor">{{ reservas_hoy }}</p>
+            <span class="subtexto">Pendientes de atención</span>
+        </div>
+
+        <div class="tarjeta-metrica">
+            <span class="etiqueta">Total Comensales</span>
+            <p class="valor">{{ total_personas }}</p>
+            <span class="subtexto">Personas recibidas</span>
+        </div>
+    </div>
+
+    <div class="seccion-detalles">
+        
+    <div class="panel-grafico">
+        <h3>Distribución Semanal</h3>
+        <ul class="lista-resumen">
+            {% for dia, cantidad in stats_dias.items() %}
+            <li class="item-resumen">
+                <span class="nombre-dia">{{ dia }}</span>
+                <span class="cantidad-datos"><strong>{{ cantidad }}</strong> reservas</span>
+            </li>
+            {% else %}
+            <li><p class="mensaje-vacio">No hay datos para esta fecha.</p></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+        <div class="panel-grafico">
+            <h3>Detalle por Horarios</h3>
+            <table class="tabla-stats">
+                <thead>
+                    <tr>
+                        <th>Franja Horaria</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hora, cant in stats_horas.items() %}
+                    <tr>
+                        <td>{{ hora }} hs</td>
+                        <td><strong>{{ cant }}</strong></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="mensaje-vacio">No hay datos para esta fecha.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
 {% endblock %}
