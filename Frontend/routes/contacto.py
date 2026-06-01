@@ -9,10 +9,10 @@ def contactanos():
 
         nombre = request.form.get("fnombre", "").strip()
         email = request.form.get("femail", "").strip()
-        mensaje = request.files.get("fmensaje", "").strip()
+        mensaje = request.form.get("fmensaje", "").strip()
 
-
-        return render_template("contacto.html")
+        if "@" not in email:
+            return {"error": "Ingrese un correo electrónico válido"}, 400
     
     return render_template("contacto.html")
 #no esta terminado falta que agregue la logica del mail con flask-mail
