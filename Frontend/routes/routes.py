@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, request
 import requests
 from routes.auth import admin_requerido, BACKEND_URL
 
@@ -74,7 +74,31 @@ def eliminar_resena(id):
         print("Error al eliminar reseña")
     return redirect(url_for("frontend.admin_resenas"))
 
+
+
 @mis_rutas.route('/admin/estadisticas')
 @admin_requerido
 def admin_stats():
-    return render_template('admin/admin_stats.html')
+    fecha_filtro = request.args.get('fecha_filtro')  
+    
+    try:
+        parametros = {'fecha': fecha_filtro} if fecha_filtro else {}
+        
+        respuesta = requests.get(f"{BACKEND_URL}/admin/stats/", params=parametros)
+        datos = respuesta.json()
+        
+    except Exception as e:
+        print(f"Error de conexión con el Backend: {e}")
+        datos = {}
+
+    try:
+        total_pers = int(datos.get('total_personas', 0))
+    except (ValueError, TypeError):
+        total_pers = 0
+
+    return render_template('admin/admin_stats.html', 
+                           total_reservas=datos.get('total_reservas', 0),
+                           reservas_hoy=datos.get('reservas_hoy', 0),
+                           total_personas=total_pers,
+                           stats_dias=datos.get('stats_dias', {}),
+                           stats_horas=datos.get('stats_horas', {}))

@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from database.db import get_connection
 from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
+from datetime import date
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -290,3 +291,61 @@ def login():
         "rol": usuario["rol"]
         }
     }), 200
+
+@admin_bp.route('/stats/', methods=['GET'])
+def obtener_estadisticas():
+    fecha_filtro = request.args.get('fecha')
+    
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500 
+
+    if fecha_filtro:
+            
+        cursor.execute("SELECT COUNT(*) FROM reservas WHERE fecha = %s", (fecha_filtro,))
+        total_res = cursor.fetchone()[0]
+        
+        cursor.execute("SELECT SUM(cantidad_personas) FROM reservas WHERE fecha = %s", (fecha_filtro,))
+        resultado_suma = cursor.fetchone()[0]
+        comensales = resultado_suma if resultado_suma is not None else 0
+        
+        res_hoy = total_res
+    
+    else:
+            
+        hoy_python = date.today().strftime('%Y-%m-%d')
+            
+        cursor.execute("SELECT COUNT(*) FROM reservas")
+        total_res = cursor.fetchone()[0]
+            
+        cursor.execute("SELECT SUM(cantidad_personas) FROM reservas")
+        resultado_suma = cursor.fetchone()[0]
+        comensales = resultado_suma if resultado_suma is not None else 0
+            
+        cursor.execute("SELECT COUNT(*) FROM reservas WHERE fecha = %s", (hoy_python,))
+        res_hoy = cursor.fetchone()[0]
+
+    cursor.execute("SELECT DAYNAME(fecha), COUNT(*) FROM reservas GROUP BY DAYNAME(fecha)")
+    filas_dias = cursor.fetchall()
+    dias_dict = {fila[0]: fila[1] for fila in filas_dias}
+
+    cursor.execute("SELECT hora, COUNT(*) FROM reservas GROUP BY hora")
+    filas_horas = cursor.fetchall()
+    # Convertimos a diccionario
+    horas_dict = {str(fila[0]): fila[1] for fila in filas_horas}
+
+
+    cursor.close()
+    conn.close()
+
+    respuesta_json = {
+            "total_reservas": total_res,
+            "reservas_hoy": res_hoy,
+            "total_personas": comensales,
+            "stats_dias": dias_dict,
+            "stats_horas": horas_dict
+        }
+
+    return jsonify(respuesta_json), 200
