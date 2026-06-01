@@ -3,7 +3,7 @@
 {% block title %}Reseñas - Admin{% endblock %}
 
 {% block estilos %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css') }}">
+ {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css') }}">
 {% endblock %}
 
 {% block admin_content %}
