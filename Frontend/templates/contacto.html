@@ -27,14 +27,21 @@
 
   <div class="caja-mensaje">
     <h2 class="caja-titulo">Mandanos un mensaje</h2>
+    {% if error %}
+      <div class="mensaje-error">{{ error }}</div>
+    {% endif %}
+    {% if exito %}
+      <div class="mensaje-exito">{{ exito }}</div>
+    {% endif %}
     <form action="{{ url_for('contacto.contactanos') }}" method="POST" class="form">
       <div class="form-mensaje">
-        <label for="nombre">Nombre:</label>
+        <label for="nombre">Nombre y apellido:</label>
         <input type="text" id="nombre" name="fnombre" placeholder="nombre">
         <label for="e-mail">E-mail:</label>
         <input type="text" id="e-mail" name="femail" placeholder="e-mail">
         <label for="mensaje">Mensaje:</label>
         <textarea id="mensaje" name="fmensaje" placeholder="mensaje"></textarea>
+        <p id="contador">0/500</p>
         </br>
         <button type="submit">Enviar Mensaje</button>
       </div>
@@ -43,4 +50,9 @@
 </div>
 
 {% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/contacto.js') }}"></script>
+{% endblock %}
+
 
