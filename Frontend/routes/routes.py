@@ -102,3 +102,27 @@ def admin_stats():
                            total_personas=total_pers,
                            stats_dias=datos.get('stats_dias', {}),
                            stats_horas=datos.get('stats_horas', {}))
+
+
+
+@mis_rutas.route('/admin/menu')
+@admin_requerido
+def admin_menu():
+    platos = []
+    plato_a_editar = None
+    editar_id = request.args.get('editar_id', type=int)
+
+    try:
+        response = requests.get(f"{BACKEND_URL}/platos")
+        if response.status_code == 200:
+            platos = response.json().get("platos", [])
+            
+            if editar_id:
+                for plato in platos:
+                    if plato.get('id_menu') == editar_id:
+                        plato_a_editar = plato
+                        
+    except:
+        platos = []
+
+    return render_template('admin/admin_menu.html', platos=platos, plato_a_editar=plato_a_editar)
