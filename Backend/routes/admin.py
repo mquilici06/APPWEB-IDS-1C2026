@@ -80,6 +80,13 @@ def editar_plato(id_plato):
 
     campos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
 
+    cursor.execute("SELECT * FROM menu WHERE id_menu = %s", (id_plato,))
+    plato = cursor.fetchone()  
+    if not plato:
+        cursor.close()
+        conn.close()
+        return jsonify({"Error": "Plato no encontrado"}), 404
+
     for campo in campos_requeridos:
         if campo not in data:
             cursor.close()
