@@ -23,15 +23,33 @@ def index():
 def reservas():
     return render_template("reservas.html")
 
-@mis_rutas.route("/resenas")
+
+@mis_rutas.route("/resenas", methods=["GET", "POST"])
 def resenas():
+    if request.method == "POST":
+        data = {
+            "nombre": request.form.get("f_nombre"),
+            "mensaje": request.form.get("f_mensaje"),
+            "puntuacion": request.form.get("f_puntuacion")
+        }
+        try:
+            response = requests.post(f"{BACKEND_URL}/resenas", json=data, timeout=5)
+            if response.status_code != 201:
+                error = response.json().get("error", "Error al enviar la reseña.")
+                return redirect(url_for("frontend.resenas", aviso=error, tipo="error"))
+            else:
+                return redirect(url_for("frontend.resenas", aviso="¡Reseña publicada!", tipo="exito"))
+        except:
+            return redirect(url_for("frontend.resenas", aviso="Error de conexion con el servidor", tipo="error"))
     try:
-        response = requests.get(f"{BACKEND_URL}/resenas")
+        response = requests.get(f"{BACKEND_URL}/resenas", timeout=5)
         data = response.json()
         resenas = data.get("resenas", [])
     except:
         resenas = []
-    return render_template("resenas.html", resenas=resenas)
+    aviso = request.args.get("aviso")
+    tipo = request.args.get("tipo")
+    return render_template("resenas.html", resenas=resenas, aviso=aviso, tipo=tipo)
 
 @mis_rutas.route("/logout", methods=["GET"])
 def logout():
