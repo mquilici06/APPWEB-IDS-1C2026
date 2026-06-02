@@ -69,6 +69,7 @@ def crear_resena():
         cursor.close()
         conn.close()
         return jsonify({"error": "El campo 'mensaje' es obligatorio"}), 400
+    puntuacion = int(puntuacion)
     if puntuacion is None:
         cursor.close()
         conn.close()
@@ -82,7 +83,7 @@ def crear_resena():
         conn.close()
         return jsonify({"error": "El mensaje no puede superar los 500 caracteres"}), 400
 
-    cursor.execute("SELECT id FROM clientes WHERE nombre = %s", (nombre,))
+    cursor.execute("SELECT id FROM usuarios WHERE nombre = %s", (nombre,))
     cliente = cursor.fetchone()
     if not cliente:
         cursor.close()
@@ -99,7 +100,7 @@ def crear_resena():
     conn.close()
     return jsonify({"mensaje": "Reseña enviada correctamente"}), 201
 
-@resenas_bp.route("/<int:id>", methods=["POST"])
+@resenas_bp.route("/<int:id>", methods=["DELETE"])
 def eliminar_resena(id):
     if id < 1:
         return jsonify({"error": "Ingresar id valido, id > 0"}), 400
