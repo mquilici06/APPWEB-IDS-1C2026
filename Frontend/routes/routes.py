@@ -107,7 +107,7 @@ def admin_stats():
 
 @mis_rutas.route('/admin/menu')
 @admin_requerido
-def admin_menu():
+def menu_del_admin():
     platos = []
     plato_a_editar = None
     editar_id = request.args.get('editar_id', type=int)
