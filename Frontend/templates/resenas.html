@@ -30,30 +30,37 @@
         <form action="{{ url_for('frontend.resenas') }}" method="post">
             <div class="campo">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                <input type="text" id="nombre" name="f_nombre" placeholder="Tu nombre" required>
             </div>
             <div class="campo">
                 <label>Puntuacion</label>
                 <div class="estrellas-radio">
-                    <input type="radio" id="star5" name="puntuacion" value="5" required>
+                    <input type="radio" id="star5" name="f_puntuacion" value="5" required>
                     <label for="star5">★</label>
-                    <input type="radio" id="star4" name="puntuacion" value="4">
+                    <input type="radio" id="star4" name="f_puntuacion" value="4">
                     <label for="star4">★</label>
-                    <input type="radio" id="star3" name="puntuacion" value="3">
+                    <input type="radio" id="star3" name="f_puntuacion" value="3">
                     <label for="star3">★</label>
-                    <input type="radio" id="star2" name="puntuacion" value="2">
+                    <input type="radio" id="star2" name="f_puntuacion" value="2">
                     <label for="star2">★</label>
-                    <input type="radio" id="star1" name="puntuacion" value="1">
+                    <input type="radio" id="star1" name="f_puntuacion" value="1">
                     <label for="star1">★</label>
                 </div>
             </div>
             <div class="campo">
                 <label for="mensaje">Escribi</label>
-                <textarea id="mensaje" name="mensaje" placeholder="Contanos tu experiencia..." rows="5" maxlength="500" required></textarea>
+                <textarea id="mensaje" name="f_mensaje" placeholder="Contanos tu experiencia..." rows="5" maxlength="500" required></textarea>
                 <span class="contador">0 / 500</span>
             </div>
             <button type="submit" class="btn-enviar">Publicar</button>
         </form>
     </div>
 </section>
+{% if aviso %}
+<div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/resenas.js') }}"></script>
 {% endblock %}
