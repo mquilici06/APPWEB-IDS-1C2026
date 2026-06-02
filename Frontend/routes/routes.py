@@ -48,10 +48,7 @@ def admin():
 def admin_reservas():
     return render_template("admin/admin_reservas.html")
 
-@mis_rutas.route('/admin/menu')
-@admin_requerido
-def admin_menu():
-    return render_template('admin/admin_menu.html')
+
 
 @mis_rutas.route("/admin/resenas", methods=["GET"])
 @admin_requerido
@@ -107,7 +104,7 @@ def admin_stats():
 
 @mis_rutas.route('/admin/menu')
 @admin_requerido
-def menu_del_admin():
+def admin_menu():
     platos = []
     plato_a_editar = None
     editar_id = request.args.get('editar_id', type=int)
