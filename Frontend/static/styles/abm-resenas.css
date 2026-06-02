@@ -1,6 +1,6 @@
 .abm-container {
     padding: 30px;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .abm-titulo {
@@ -77,7 +77,7 @@
     background-color: #6d071a;
     color: #fff;
     border: none;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
     cursor: pointer;
     transition: background-color 0.2s;

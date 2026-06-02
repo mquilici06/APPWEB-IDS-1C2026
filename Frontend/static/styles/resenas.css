@@ -169,3 +169,31 @@
 }
 
 .btn-enviar:hover { background-color: #8b0e22; }
+
+.aviso-fijo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 64px;
+    margin-left: -160px;
+    margin-top: -32px;
+    padding: 20px 32px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    text-align: center;
+    box-sizing: border-box;
+}
+.aviso-fijo.exito {
+    background-color: #e6f4ea;
+    color: #2d6a4f;
+    border: 1px solid #b7dfca;
+}
+.aviso-fijo.error {
+    background-color: #fdecea;
+    color: #6d071a;
+    border: 1px solid #f5c2c2;
+}
