@@ -55,6 +55,7 @@ h1 {
 .caja-plato-ind {
     background-color: #6d071a;
     margin: 12px;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     border: 4px solid #c5a059;
@@ -69,10 +70,14 @@ h1 {
 .texto-caja-ind {
     padding: 0 5% 5% 5%;
     color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .precio-caja {
     padding-top: 1rem;
+    margin-top: auto;  
 }
 
 .texto-caja-ind p{
@@ -92,6 +97,7 @@ h1 {
     font-family: 'Playfair Display', serif;
     border-bottom: 1px #fff solid;
     font-style: italic;
+    padding-bottom: 4px;
 }
 
 .box-lista-b {
@@ -115,4 +121,9 @@ h1 {
     padding: 0,5rem;
     border-left: 2px solid #fff;
     margin: 1rem;
+}
+
+.texto-bebida {
+    font-size: 1rem;
+    padding: 6px 0px;
 }

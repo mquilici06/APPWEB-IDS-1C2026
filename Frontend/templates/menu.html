@@ -37,7 +37,7 @@
                     </div>
 
                     <div class ="precio-caja">
-                        <span>{{ plato.precio }}</span>
+                        <span>{{ plato.precio }}$</span>
                     </div>
                 </div>
             </div>
@@ -53,9 +53,9 @@
                       <div class="contenido-lista">
                         <ul class="lista">
                           <li>{{ plato.nombre_plato }}</li>
-                          <li>{{ plato.desc_plato }}</li>
-                          <li>{{ plato.restricciones }}</li>
-                          <li><span>{{ plato.precio }}</span></li>
+                          <li class="texto-bebida">{{ plato.desc_plato }}</li>
+                          <li class="texto-bebida">{{ plato.restricciones }}</li>
+                          <li id="precio"><span>{{ plato.precio }}$</span></li>
                         </ul>
                       </div>
                     {% endif %}
@@ -82,7 +82,7 @@
                                 </div>
 
                                 <div class="precio-caja">
-                                    <span>{{ plato.precio }}</span>
+                                    <span>${{ plato.precio }}</span>
                                 </div>
                             </div>
                     </div>
