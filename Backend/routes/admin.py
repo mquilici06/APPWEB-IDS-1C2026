@@ -113,7 +113,7 @@ def editar_plato(id_plato):
 
     
 
-@admin_bp.route("/<int:eliminar_id>", methods=["DELETE"])
+@admin_bp.route("/menu/<int:eliminar_id>", methods=["DELETE"])
 @jwt_required()
 def eliminar_plato(eliminar_id):
     try:
