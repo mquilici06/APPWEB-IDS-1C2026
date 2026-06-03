@@ -138,8 +138,12 @@ def eliminar_plato(eliminar_id):
 
 
 @admin_bp.route("/reservas", methods=["GET"])
-@jwt_required()
 def mostrar_reservas():
+    #Atrapa params
+    buscar = request.args.get('buscar', '').lower()
+    fecha_filtro = request.args.get('fecha', '')
+    estado_filtro = request.args.get('estado', '').lower()
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -152,7 +156,7 @@ def mostrar_reservas():
     if total_reservas == 0:
         cursor.close()
         conn.close()
-        return jsonify({"mensaje": "No hay reservas registradas"}), 200
+        return jsonify({"mensaje": "No hay reservas registradas", "Reservas": []}), 200
 
     cursor.execute("SELECT * FROM reservas")
     lista_De_reservas = cursor.fetchall()
@@ -170,14 +174,30 @@ def mostrar_reservas():
         cliente = cursor.fetchone()
 
         if cliente:
+            nombre_cliente = cliente["nombre"]
+            email_cliente = cliente["email"]
+            fecha_reserva = str(reserva["fecha"])
+            estado_reserva = reserva.get("estado", "Pendiente")
+
+            # Filtros
+            if buscar and (buscar not in nombre_cliente.lower() and buscar not in email_cliente.lower()):
+                continue 
+            
+            if fecha_filtro and fecha_filtro != fecha_reserva:
+                continue 
+                
+            if estado_filtro and estado_filtro != estado_reserva.lower():
+                continue 
+
             reservas = {
                 "id_reserva": reserva["id_reserva"],
-                "nombre_Cliente": cliente["nombre"],
-                "email_cliente": cliente["email"],
+                "nombre_Cliente": nombre_cliente,
+                "email_cliente": email_cliente,
                 "celular_cliente": cliente["celular"],
-                "fecha": str(reserva["fecha"]),
+                "fecha": fecha_reserva,
                 "hora": str(reserva["hora"]),
-                "cantidad_personas": reserva["cantidad_personas"]
+                "cantidad_personas": reserva["cantidad_personas"],
+                "estado": estado_reserva
             }
 
             reservas_hechas.append(reservas)
@@ -186,7 +206,6 @@ def mostrar_reservas():
     conn.close()
 
     return jsonify({"Reservas": reservas_hechas}), 200
-
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
 def modificar_reserva(modificar_reserva):
     if modificar_reserva < 1:
