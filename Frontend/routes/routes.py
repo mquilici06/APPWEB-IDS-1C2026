@@ -141,3 +141,18 @@ def admin_menu():
         platos = []
 
     return render_template('admin/admin_menu.html', platos=platos, plato_a_editar=plato_a_editar)
+
+
+@mis_rutas.route("/admin/menu/eliminar/<int:id>", methods=["POST"])
+@admin_requerido
+def eliminar_plato(id):
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
+    
+    try:
+        requests.delete(f"{BACKEND_URL}/admin/menu/{id}", headers=headers)
+    except:
+         print("Error al eliminar menu")
+        
+        
+    return redirect(url_for("frontend.admin_menu"))
