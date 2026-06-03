@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from database.db import get_connection
 from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
-from datetime import date
+from datetime import date, datetime
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -206,45 +206,61 @@ def mostrar_reservas():
     conn.close()
 
     return jsonify({"Reservas": reservas_hechas}), 200
+
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
 def modificar_reserva(modificar_reserva):
     if modificar_reserva < 1:
         return jsonify({"Error": "Ingrese un id valido"}),400
     
+    data = request.json
+    
+    campos_requeridos = ["fecha", "hora", "cantidad_personas", "estado"]
+    for campo in campos_requeridos:
+        if campo not in data:
+            return jsonify({"Error": f"Falta el campo {campo}"}), 400
+
+    cantidad_personas = data["cantidad_personas"]
+    if not isinstance(cantidad_personas, int) or cantidad_personas <= 0:
+        return jsonify({"Error": "La cantidad de personas debe ser un número positivo"}), 400
+    
+    estado_nuevo = data["estado"].strip().lower()
+    if estado_nuevo not in ["pendiente", "confirmada", "cancelada"]:
+        return jsonify({"Error": "Estado inválido"}), 400
+    
+    try:
+        fecha_reserva = datetime.strptime(data["fecha"], "%Y-%m-%d").date()
+        if fecha_reserva < datetime.now().date():
+            return jsonify({"Error": "No se pueden programar reservas para fechas pasadas"}), 400
+    except ValueError:
+        return jsonify({"Error": "Formato de fecha inválido. Por favor, use el formato YYYY-MM-DD"}), 400
+    
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}),500
+    except Exception as e:
+      return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)} "}), 500
 
-    data = request.json
-    
-    campos_requeridos = ["id_reserva", "fecha", "hora", "cantidad_personas", "estado"]
-
-    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
-    reserva = cursor.fetchone()
-    if not reserva:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Reserva no encontrada"}), 404
-
-    for campo in campos_requeridos:
-        if campo not in data:
+    try:
+        cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
+        reserva = cursor.fetchone()
+        if not reserva:
             cursor.close()
             conn.close()
-            return jsonify({"Error": f"Falta el campo {campo}"}), 400
+            return jsonify({"Error": "Reserva no encontrada"}), 404
 
-    id_reserva_nuevo = data["id_reserva"]
-    fecha_nueva = data["fecha"]
-    hora_nueva = data["hora"]
-    cantidad_personas_nueva = data["cantidad_personas"]
-    estado_nuevo = data["estado"]
+        query = """UPDATE reservas SET fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s"""
+        valores = (data["fecha"], data["hora"], cantidad_personas, estado_nuevo, modificar_reserva)
+        cursor.execute(query, valores)
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+        return "el cambio se realizo correctamente", 200
 
-    cursor.execute("UPDATE reservas SET id_reserva = %s, fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s", (id_reserva_nuevo, fecha_nueva, hora_nueva, cantidad_personas_nueva, estado_nuevo, modificar_reserva))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return " ", 204 
+    except:
+        cursor.close()
+        conn.close()
+        return jsonify({"Error": "Error interno del servidor"}), 500 
 
 
 
