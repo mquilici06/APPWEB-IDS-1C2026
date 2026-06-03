@@ -31,8 +31,7 @@
                 <select name="seccion" required>
                     <option value="" disabled {% if not plato_a_editar %}selected{% endif %}>Selecciona una sección</option>
         
-                    <option value="Entradas" {% if plato_a_editar and plato_a_editar.seccion == 'Entradas' %}selected{% endif %}>Entradas</option>
-        
+    
                     <option value="Platos Principales" {% if plato_a_editar and plato_a_editar.seccion == 'Platos Principales' %}selected{% endif %}>Platos Principales</option>
         
                     <option value="Bebidas" {% if plato_a_editar and plato_a_editar.seccion == 'Bebidas' %}selected{% endif %}>Bebidas</option>
@@ -80,7 +79,7 @@
 </section>
 
     <section class="seccion-tabla">
-        <h2>Platos Actuales</h2>
+        <h2>Menu Actual</h2>
         <div class="tabla-responsiva">
             <table class="tabla-menu">
                 <tbody>
