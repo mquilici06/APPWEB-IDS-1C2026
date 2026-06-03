@@ -4,7 +4,7 @@ import requests
 
 auth_bp = Blueprint("auth", __name__)
 
-BACKEND_URL = "http://127.0.0.1:5000"
+BACKEND_URL = "http://backend:5000"
 
 def admin_requerido(funcion):
     @wraps(funcion)

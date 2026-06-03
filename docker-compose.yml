@@ -1,0 +1,51 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Backend/Dockerfile
+    container_name: altezza_backend
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./Backend:/app
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: Root123!
+      DB_NAME: altezza
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    container_name: altezza_frontend
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./Frontend:/app
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    container_name: altezza_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Root123!
+      MYSQL_DATABASE: altezza
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Backend/database/__init__.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pRoot123!"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
