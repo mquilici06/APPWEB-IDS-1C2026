@@ -1,0 +1,156 @@
+/*
+   ESTILOS DEL INICIO (index.html)
+*/
+
+/* SECCIÓN INICIO */
+.inicio-altezza {
+    position: relative;
+    height: 100vh;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    margin-top: -4rem;
+}
+
+.foto-fondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.difuminado {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+.cont-principal {
+    z-index: 1;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+}
+
+#inicio-bienvenida {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.marca {
+    font-family: 'Playfair Display', serif;
+    color: #c5a059;
+    font-size: 5rem;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+
+.slogan {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    color: #ccc;
+}
+
+/* BOTONES DEL INICIO */
+.botones-priales {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.btn {
+    padding: 12px 30px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.boton-prim {
+    background-color: #c5a059;
+    color: #1a1a1a;
+    border: 1px solid #c5a059;
+}
+
+.boron-prim:hover {
+    background-color: #a88544;
+    border-color: #a88544;
+}
+
+.boton-sec {
+    background-color: transparent;
+    color: #c5a059;
+    border: 1px solid #c5a059;
+}
+
+.boton-sec:hover {
+    background-color: rgba(197, 160, 89, 0.1);
+}
+
+/* SECCIÓN SOBRE NOSOTROS */
+.sobre-altezza {
+    background-color: #f4f4f4;
+    padding: 6rem 10%;
+    text-align: center;
+}
+
+.text-sobre-altezza h2 {
+    font-family: 'Playfair Display', serif;
+    color: #6d071a;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.text-sobre-altezza p {
+    font-family: 'Montserrat', sans-serif;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* SECCIÓN DESTACADOS */
+.caracts-altezza {
+    background-color: #636363;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 4rem 4%;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.caja-caract h3 {
+    font-family: 'Playfair Display', serif;
+    color: #c5a059;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    padding: 0 1rem;
+}
+
+.caja-caract p {
+    font-family: 'Montserrat', sans-serif;
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 0 1rem;
+}

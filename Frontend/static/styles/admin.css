@@ -1,0 +1,71 @@
+.dashboard-container {
+    padding: 30px;
+    font-family: 'Segoe UI';
+    color: #6d071a;
+}
+
+.titulo-seccion {
+    font-size: 3.0rem;
+    color: #6d071a;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.subtitulo {
+    font-size: 1.1rem;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.seccion-subtitulo {
+    font-size: 2.0rem;
+    color: #6d071a;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.grid-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.tarjeta-acceso {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 25px;
+    cursor: pointer;
+    align-items: stretch;
+}
+
+.tarjeta-acceso:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.tarjeta-icono {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.tarjeta-acceso h3 {
+    font-size: 1.5rem;
+    color: #6d071a;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.tarjeta-acceso p {
+    font-size: 1.0rem;
+    color: #040506;
+    line-height: 1.5;
+}
+
+.enlace-tarjeta {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}

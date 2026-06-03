@@ -1,0 +1,179 @@
+.titulo-seccion {
+    font-family: 'Playfair Display', serif;
+    color: #6d071a;
+    margin-bottom: 25px;
+}
+.contenedor-menu {
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.subtitulo { 
+    color: #666; 
+    margin-bottom: 15px; 
+    font-size: 14px; 
+}
+
+section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+section h2 { 
+    margin-bottom: 15px; 
+    padding-bottom: 4px; 
+}
+.agregar-foto {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.input-archivo-oculto {
+    display: none;
+}
+
+.formulario-superior {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+}
+.columna-textos {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 15px;
+}
+.armonia {
+    display: flex;
+    gap: 15px;
+    height: 70px;
+}
+
+.columna-imagen {
+    flex: 2;
+    display: flex;
+    height: 220px;
+}
+.formulario-plato { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    width: 100%;
+}
+
+.formulario-plato textarea { 
+    resize: none; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.boton-guardar {
+    background: #7d1c21;
+    color: rgba(255, 255, 255, 0.993);
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 50px;
+    text-align: center;
+}
+
+.tabla-responsiva { 
+    overflow-x: auto; 
+}
+.tabla-menu { 
+    width: 100%; 
+    border-collapse: collapse; 
+    text-align: left; 
+    font-size: 14px; 
+}
+.tabla-menu td { 
+    padding: 12px; 
+    border-bottom: 1px solid #eee; 
+}
+
+.tabla-menu small { 
+    color: #777; 
+    display: block; 
+    margin-top: 4px; 
+}
+
+.tabla-menu tbody td {
+    padding: 14px 18px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333333;
+}
+
+.celda-info {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.plato-nombre {
+    font-size: 1rem;
+    color: #111111;
+}
+
+.plato-descripcion {
+    font-size: 0.85rem;
+    color: #777777;
+    line-height: 1.3;
+}
+
+.celda-acciones {
+    white-space: nowrap;
+}
+
+.formulario-plato input, 
+.formulario-plato select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.celda-foto-tabla {
+    width: 60px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.miniatura-plato {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.vista-previa-formulario {
+    width: 98%;
+    height: 98%;
+    object-fit: contain; 
+    border-radius: 4px;
+}
+.boton-de-aciom {
+    display: inline-block;
+    border: 1px solid #000000;
+    border-radius: 3px;        
+    padding: 2px 6px;        
+    text-decoration: none; 
+    color: inherit;
+}
+.alineasion-perfecta {
+    display: inline;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin-login.css')}}">
+    
+</head>
+<body>
+    <div class="caja-centro">
+            <div class="caja-formulario">
+                <img id="foto" src="{{ url_for('static', filename='images/icon.png')}}" alt="Foto logo">
+
+                <form id="form-login" action="{{ url_for('auth.login_admin') }}" method="POST">
+                    <input class="em-psw" type="email" name="femail" placeholder="Email">
+                    <input class="em-psw" type="password" name="fcontrasena" placeholder="Contraseña">
+                    <button id="boton-enviar" type="submit">Iniciar sesión</button>
+                </form>
+        </div>
+    </div>
+</body>
+</html>

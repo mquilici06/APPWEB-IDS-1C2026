@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+}
+
+footer {
+    flex-direction: column;
+    text-align: center;
+    background-color: #1a1a1a; 
+    color: #fff;
+    padding: 2rem 4% 1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body{
+    color: #1a1a1a;
+    background-color: #ccc;
+    padding-top: 4rem;
+}
+
+/* Footer */
+.footer-caja-grande {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 2px solid rgba(255, 255, 255, 1);
+    padding-bottom: 0.5rem;
+    max-width: auto;
+}
+
+.titulo-footer {
+    font-family: 'Playfair Display', serif;
+    color: #c5a059;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.footer-caja-chica p {
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.footer-caja-chica h4 {
+    color: #c5a059;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-caja-chica a, 
+.footer-caja-chica address {
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    font-style: normal;
+}
+
+.footer-caja-chica {
+    color: #c5a059;
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 1rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+}
+
+/* HEADER */
+header {
+    background-color: #6d071a;
+    padding: 1rem 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    z-index: 1000
+}
+
+#header-titulo {
+    font-family: 'Playfair Display', serif;
+    color:#c5a059;
+    font-size: 2rem;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+.logo-altezza{ 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.logo-altezza span {
+    color:#c5a059;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 0.7rem;
+}
+
+/* NAV HEADER */
+nav ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 2.5rem; 
+}
+
+#link-logo,
+nav a {
+    text-decoration: none;
+    color:#ffffff;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+}
+
+nav a:hover { 
+    color:#c5a059;
+}
+

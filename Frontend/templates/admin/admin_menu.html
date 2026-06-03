@@ -1,0 +1,130 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Admin - Altezza{% endblock %}
+
+{% block estilos %}
+  {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_menu.css')}}">
+{% endblock %}
+
+{% block admin_content %}
+   <div class="contenedor-menu">
+    <h1 class="titulo-seccion">Gestionar Menu</h1>
+    <p class="subtitulo">Añadir, editar o eliminar los platos disponibles en Altezza Ristorante.</p>
+
+    <section>
+    {% if plato_a_editar %}
+    <h2>Editar Plato:      {{ plato_a_editar.nombre_plato }}</h2>
+    <form action="{{ url_for('frontend.admin_menu') }}?actualizar_id={{ plato_a_editar.id_menu }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
+    {% else %}
+        <h2>Añadir Plato</h2>
+    <form action="{{ url_for('frontend.admin_menu') }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
+    {% endif %}
+       <div class="formulario-superior">
+        <div class="columna-textos">
+            <div class="armonia">
+                <input type="text" name="nombre_plato" placeholder="Nombre del plato" required 
+                       value="{{ plato_a_editar.nombre_plato if plato_a_editar else '' }}">
+                <input type="text" name="precio" placeholder="Precio" required
+                       value="{{ plato_a_editar.precio if plato_a_editar else '' }}">
+            </div>
+            <div class="armonia">
+                <select name="seccion" required>
+                    <option value="" disabled {% if not plato_a_editar %}selected{% endif %}>Selecciona una sección</option>
+        
+    
+                    <option value="Platos Principales" {% if plato_a_editar and plato_a_editar.seccion == 'Platos Principales' %}selected{% endif %}>Platos Principales</option>
+        
+                    <option value="Bebidas" {% if plato_a_editar and plato_a_editar.seccion == 'Bebidas' %}selected{% endif %}>Bebidas</option>
+        
+                    <option value="Postres" {% if plato_a_editar and plato_a_editar.seccion == 'Postres' %}selected{% endif %}>Postres</option>
+                </select>
+                <select name="restricciones">
+                    <option value="" {% if not plato_a_editar or not plato_a_editar.restricciones %}selected{% endif %}>Restricciones</option>
+
+                    <option value="Celiaco" {% if plato_a_editar and plato_a_editar.restricciones == 'Celiaco' %}selected{% endif %}>Celiaco</option>
+                    <option value="Sin TACC" {% if plato_a_editar and plato_a_editar.restricciones == 'Sin TACC' %}selected{% endif %}>Sin TACC</option>
+                    <option value="Vegetariano" {% if plato_a_editar and plato_a_editar.restricciones == 'Vegetariano' %}selected{% endif %}>Vegetariano</option>
+                    <option value="Vegano" {% if plato_a_editar and plato_a_editar.restricciones == 'Vegano' %}selected{% endif %}>Vegano</option>
+                    <option value="Vegetariano/Vegano" {% if plato_a_editar and plato_a_editar.restricciones == 'Vegetariano/Vegano' %}selected{% endif %}>Vegetariano/Vegano</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="columna-imagen">
+            <input type="file" id="imagen_plato" name="imagen_plato" accept="image/*" class="input-archivo-oculto" required>
+            <label for="imagen_plato" class="agregar-foto">
+                {% if plato_a_editar and plato_a_editar.imagen %}
+                    <img src="{{ url_for('static', filename='images/platos/' ~ plato_a_editar.imagen) }}" alt="Vista previa" class="vista-previa-formulario">
+                {% else %}
+                    <span>selecciona una foto</span>
+                {% endif %}
+            </label>
+        </div>
+    </div>
+        
+                        
+        
+        <div class="grupo-formulario ancho-completo">
+            <textarea name="desc_plato" placeholder="Descripcion del Plato" rows="3" required>{{ plato_a_editar.desc_plato if plato_a_editar else '' }}</textarea>
+        </div>
+        
+        <button type="submit" class="boton-guardar">
+            {% if plato_a_editar %} Actualizar Cambios {% else %} Guardar Plato {% endif %}
+        </button>
+        
+        {% if plato_a_editar %}
+                <a href="{{ url_for('frontend.admin_menu') }}"  class="boton-guardar" >Cancelar Edición</a>
+        {% endif %}
+    </form>
+</section>
+
+    <section class="seccion-tabla">
+        <h2>Menu Actual</h2>
+        <div class="tabla-responsiva">
+            <table class="tabla-menu">
+                <tbody>
+                    {% for plato in platos %}
+                    <tr class="fila-plato">
+                        <td class="celda-id">{{ plato.id_menu }}</td>
+                        <td class="celda-foto-tabla">
+                            {% if plato.imagen %}
+                                <img src="{{ url_for('static', filename='images/platos/' ~ plato.imagen) }}" alt="{{ plato.nombre_plato }}" class="miniatura-plato">
+                            {% endif %}
+                        </td>
+
+                        <td class="celda-info">
+                            <strong class="plato-nombre">{{ plato.nombre_plato }}</strong>
+                            <small class="plato-descripcion">{{ plato.desc_plato }}</small>
+                        </td>
+
+                        <td class="celda-seccion">
+                            <span class="etiqueta-seccion">{{ plato.seccion }}</span>
+                        </td>
+
+                        <td class="celda-precio">${{ plato.precio }}</td>
+
+                        <td class="celda-restricciones">
+                            {{ plato.restricciones if plato.restricciones else '-' }}
+                        </td>
+                        <td class="celda-acciones">
+                            <a href="{{ url_for('frontend.admin_menu', editar_id=plato.id_menu) }}" class="boton-de-aciom" title="Editar">editar</a>
+                            
+                            <form action="{{ url_for('frontend.eliminar_plato', id=plato.id_menu) }}" method="POST" class="alineasion-perfecta">
+                                <button type="submit" class="boton-de-aciom" title="Eliminar">Eliminar</button>
+                            </form>
+                        </td>
+ 
+                    </tr>
+                    {% else %}
+                    <tr class="fila-vacia">
+                        <td colspan="7" class="mensaje-vacio">
+                            No hay platillos disponibles en el menú.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

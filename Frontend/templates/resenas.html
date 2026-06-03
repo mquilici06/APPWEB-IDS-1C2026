@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Reseñas{% endblock %}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/resenas.css') }}">
+{% endblock %}
+{% block content %}
+<section class="resenas-hero">
+    <p class="resenas-subtitulo">La experiencia de nuestros comensales</p>
+    <h1 class="resenas-titulo">Reseñas</h1>
+</section>
+<section class="resenas-contenido">
+    <div class="resenas-columna">
+        <h2 class="resenas-seccion-titulo">Reseñas:</h2>
+        <div class="resenas-lista">
+            {% for resena in resenas %}
+            <div class="resena-item">
+                <div class="resena-info">
+                    <h3 class="resena-nombre">{{ resena.nombre_cliente }}</h3>
+                    <p class="resena-puntuacion">{{ resena.puntuacion }} / 5 ★</p>
+                    <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
+                </div>
+            </div>
+            {% else %}
+                <p class="resenas-estado">No hay reseñas todavía.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="resenas-columna">
+        <h2 class="resenas-seccion-titulo">Deja tu reseña</h2>
+        <form action="{{ url_for('frontend.resenas') }}" method="post">
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="f_nombre" placeholder="Tu nombre" required>
+            </div>
+            <div class="campo">
+                <label>Puntuacion</label>
+                <div class="estrellas-radio">
+                    <input type="radio" id="star5" name="f_puntuacion" value="5" required>
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="f_puntuacion" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="f_puntuacion" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="f_puntuacion" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="f_puntuacion" value="1">
+                    <label for="star1">★</label>
+                </div>
+            </div>
+            <div class="campo">
+                <label for="mensaje">Escribi</label>
+                <textarea id="mensaje" name="f_mensaje" placeholder="Contanos tu experiencia..." rows="5" maxlength="500" required></textarea>
+                <span class="contador">0 / 500</span>
+            </div>
+            <button type="submit" class="btn-enviar">Publicar</button>
+        </form>
+    </div>
+</section>
+{% if aviso %}
+<div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/resenas.js') }}"></script>
+{% endblock %}

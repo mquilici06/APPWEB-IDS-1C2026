@@ -1,0 +1,7 @@
+Altezza Ristorante.
+
+Nombre: {{ nombre }}
+Email: {{ email }}
+
+Mensaje:
+{{ mensaje }}

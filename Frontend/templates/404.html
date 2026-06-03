@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/404.css') }}">
+{% endblock %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block content %}
+  <div class="box-404">
+    <h1>404 :/</h1>
+    <p id="parrafo">La página que buscás no existe.</p>
+  </div>
+{% endblock %}

@@ -1,0 +1,114 @@
+.caja-total-contacto{
+    position: relative;
+    justify-content: space-between;
+    display: flex;
+    padding: 4rem;  
+}
+
+.imagen-fondo{
+    position: absolute;
+    inset:0;
+    z-index: -2;
+}
+
+.imagen-fondo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.caja-titulo{
+    color:#6d071a;
+    font-size: 2rem;
+    padding-right: 3rem;
+    border-bottom: 2px solid #6d071a;
+}
+
+.caja-informacion h1{
+    color: #6d071a;
+    font-size: 3rem;
+    border-bottom: 2px solid #6d071a;
+}
+
+.caja-informacion .items-contacto{
+    font-size: 1.5rem;
+}
+
+.items-contacto p{
+    color:black;
+    border-bottom: 1px solid black;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.caja-mapa{
+    margin-top: 2rem;
+}
+
+.caja-mapa h2{
+    color:#6d071a;
+    font-size: 2rem;
+    border-bottom: 2px solid #6d071a;
+}
+
+.caja-mapa iframe{
+    margin-top: 2rem;
+    width: 100%;
+    height: 225px;
+}
+
+.caja-mensaje{
+    border: 1px solid #6d071a;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.form-mensaje{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.form-mensaje input{
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.form-mensaje textarea{
+    height: 200px;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.form-mensaje label{
+    border-bottom: 1px solid #6d071a;
+}
+
+.form-mensaje button{
+    padding: 14px;
+    background-color: #6d071a;
+    color: white;
+    font-size: 1rem;
+}
+
+.mensaje-error{
+    background: red;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.mensaje-exito{
+    background: green;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.form-mensaje button:disabled{
+    background-color: #8d5a63;
+    color: #e0e0e0;
+}

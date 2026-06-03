@@ -4,7 +4,7 @@ from database.db import get_connection
 menu_bp = Blueprint("menu", __name__)
 
 @menu_bp.route("", methods = ["GET"])
-def listar_usuarios():
+def listar_menu():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -22,4 +22,4 @@ def listar_usuarios():
 
     cursor.close()
     conn.close()
-    return jsonify({"Menu": menu}), 200
+    return jsonify({"platos": menu}), 200

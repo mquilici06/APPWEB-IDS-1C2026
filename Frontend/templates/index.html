@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Altezza Ristorante{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="inicio-altezza">
+        <div class="difuminado"></div>
+        <img src="{{ url_for('static', filename='images/index.png') }}" alt="Interior de Altezza Ristorante" class="foto-fondo">
+        
+        <div class="cont-principal">
+            <h1 id="inicio-bienvenida">Bienvenidos a nuestro mundo</h1>
+            <span class="marca">Altezza</span>
+            <p class="slogan">Apasionados por la cocina italiana auténtica</p>
+            <div class="botones-priales">
+                <a href="/reservas" class="btn boton-prim">Reservar una mesa</a>
+                <a href="/menu" class="btn boton-sec">Ver el menú</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="sobre-altezza">
+        <div class="text-sobre-altezza">
+            <h2>Tradición y Vanguardia</h2>
+            <p>En Altezza, cada plato cuenta una historia. Combinamos recetas heredadas de generaciones italianas con técnicas culinarias modernas para ofrecerte una experiencia gastronómica inigualable. Sentate a nuestra mesa y dejate llevar por los sabores de la verdadera <i>cucina italiana</i>.</p>
+        </div>
+    </section>
+
+    <section class="caracts-altezza">
+        <div class="caja-caract">
+            <h3>Pasta Fresca</h3>
+            <p>Elaborada a mano todos los días en nuestra cocina con sémola de grano duro importada.</p>
+        </div>
+        <div class="caja-caract">
+            <h3>Cava Exclusiva</h3>
+            <p>Una selección de los mejores vinos italianos y argentinos para maridar a la perfección.</p>
+        </div>
+        <div class="caja-caract">
+            <h3>Alta Cocina</h3>
+            <p>Ingredientes premium de productores locales seleccionados meticulosamente.</p>
+        </div>
+    </section>
+</main>
+{% endblock %}

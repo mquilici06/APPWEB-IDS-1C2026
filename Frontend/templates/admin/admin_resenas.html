@@ -1,0 +1,35 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Reseñas - Admin{% endblock %}
+
+{% block estilos %}
+ {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/abm-resenas.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+
+<div class="abm-container">
+    <h1 class="abm-titulo">Gestion de Reseñas</h1>
+    <p class="abm-subtitulo">Revisa y elimina las reseñas de los clientes.</p>
+
+    <div class="resenas-lista">
+        {% for resena in resenas %}
+        <div class="resena-item">
+            <div class="resena-info">
+                <h3 class="resena-nombre">{{ resena.nombre_cliente }}</h3>
+                <p class="resena-puntuacion">Puntuación: {{ resena.puntuacion }} / 5 estrellas</p>
+                <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
+            </div>
+            <div class="resena-acciones">
+                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+            <p class="abm-vacio">No hay reseñas registradas todavia.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
