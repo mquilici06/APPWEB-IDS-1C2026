@@ -1,28 +1,110 @@
-{% extends "admin/base_admin.html" %}
+{% extends "/admin/base_admin.html" %}
+
+{% block title %}Admin Reservas - Altezza Ristorante{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_reservas.css') }}">
+{% endblock %}
 
 {% block admin_content %}
-<h1 class="seccion">Gestion de Reservas</h1>
-<div class="caja-platos">
-    {% for reserva in Reservas %}
-    <div class="caja-plato-ind">
-        <div class="texto-caja-ind">
-            <h2>{{ reserva.fecha }}</h2>
-            <p>"{{ reserva.hora}}"</p>
-            <p>"{{ reserva.cant_personas}}"</p>
-            <div class="precio-caja">
-                <form action="{{ url_for('reservas.borrar_reserva', id=reserva.id_reserva) }}" method="POST">
-                    <button type="submit"
-                        class="btn-eliminar"
-                        onclick="return confirm('¿Estás seguro de que deseas eliminar esta reserva?')">
-                        Eliminar
-                    </button>
-                </form>
-            </div>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_reservas.css') }}">
+
+<div class="contenedor-administracion">
+    
+    <header class="cabecera-panel">
+        <h1 class="titulo-panel">Panel de Control: Gestión de Reservas</h1>
+        <p class="subtitulo-panel">Visualizá, confirmá o cancelá las solicitudes de mesas en tiempo real.</p>
+    </header>
+
+    <section class="seccion-metricas">
+        <div class="tarjeta-metrica">
+            <span class="metrica-titulo">Total Hoy</span>
+            <span class="metrica-numero">{{ metricas.total_hoy }}</span>
         </div>
-    </div>
-    {% else %}
-    <p>No hay reservas realizadas todavía</p>
-    {% endfor %}
+        <div class="tarjeta-metrica metrica-pendiente">
+            <span class="metrica-titulo">Pendientes</span>
+            <span class="metrica-numero">{{ metricas.pendientes }}</span>
+        </div>
+        <div class="tarjeta-metrica metrica-confirmada">
+            <span class="metrica-titulo">Confirmadas</span>
+            <span class="metrica-numero">{{ metricas.confirmadas }}</span>
+        </div>
+    </section>
+
+    <section class="seccion-filtros">
+        <form method="GET" action="{{ url_for('frontend.admin_reservas') }}" class="formulario-filtros">
+            <div class="grupo-filtro">
+                <label for="buscar_cliente">Buscar Cliente:</label>
+                <input type="text" id="buscar_cliente" name="buscar" placeholder="Nombre o e-mail..." value="{{ filtro_buscar }}">
+            </div>
+            <div class="grupo-filtro">
+                <label for="filtrar_fecha">Fecha:</label>
+                <input type="date" id="filtrar_fecha" name="fecha" value="{{ filtro_fecha }}">
+            </div>
+            <div class="grupo-filtro">
+                <label for="filtrar_estado">Estado:</label>
+                <select id="filtrar_estado" name="estado">
+                    <option value="">Todos los estados</option>
+                    <option value="Pendiente" {% if filtro_estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                    <option value="Confirmada" {% if filtro_estado == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                    <option value="Cancelada" {% if filtro_estado == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+                </select>
+            </div>
+            <button type="submit" class="boton-filtrar">Aplicar Filtros</button>
+        </form>
+    </section>
+
+    <section class="seccion-tabla">
+        <div class="contenedor-tabla-responsiva">
+            <table class="tabla-reservas">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Personas</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reservas %}
+                        {% for reserva in reservas %}
+                        <tr class="fila-reserva">
+                            <!-- Mapeo con las claves exactas de tu backend python -->
+                            <td class="celda-id">#{{ reserva.id_reserva }}</td>
+                            <td class="celda-cliente">
+                                <strong>{{ reserva.nombre_Cliente }}</strong>
+                                <span class="contacto-cliente">{{ reserva.email_cliente }}</span>
+                            </td>
+                            <td>{{ reserva.fecha }}</td>
+                            <td>{{ reserva.hora }} hs</td>
+                            <td class="texto-centrado">{{ reserva.cantidad_personas }}</td>
+                            <td>
+                                <span class="etiqueta-estado estado-{{ reserva.get('estado', 'Pendiente') | lower }}">
+                                    {{ reserva.get('estado', 'Pendiente') }}
+                                </span>
+                            </td>
+                            <td class="celda-acciones">
+                                <form action="#" method="POST" class="formulario-accion">
+                                    <button type="submit" class="boton-accion boton-confirmar" title="Confirmar">✓</button>
+                                </form>
+                                <form action="#" method="POST" class="formulario-accion">
+                                    <button type="submit" class="boton-accion boton-cancelar" title="Cancelar">✕</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="tabla-vacia">No se encontraron reservas cargadas en la base de datos.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
 </div>
 {% endblock %}
