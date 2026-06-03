@@ -25,7 +25,7 @@
         <div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
         {% endif %}
         <div class="fecha-selector">
-            <input type="date" id="fecha_reserva" name="fecha_reserva" form="form-reserva" class="colocar-calendario" required>
+            <input type="date" id="fecha_reserva" name="f_fecha_reserva" form="form-reserva" class="colocar-calendario" required>
         </div>
     </div>
  
@@ -34,7 +34,7 @@
         <form id="form-reserva" action="{{ url_for('frontend.reservas') }}" method="POST" novalidate>
             <div class="campo">
                 <label for="hora">Horario</label>
-                <select id="hora" name="hora" required>
+                <select id="hora" name="f_hora" required>
                     <option value="" disabled selected>Seleccioná un horario</option>
                     <option value="20:00">20:00</option>
                     <option value="20:30">20:30</option>
@@ -46,25 +46,25 @@
             
             <div class="campo">
                 <label for="nombre">Nombre completo</label>
-                <input type="text" id="nombre" name="nombre"
+                <input type="text" id="nombre" name="f_nombre"
                        placeholder="Tu nombre y apellido" required>
             </div>
  
             <div class="campo">
                 <label for="telefono">Teléfono</label>
-                <input type="tel" id="telefono" name="telefono"
+                <input type="tel" id="telefono" name="f_telefono"
                        placeholder="Ej: +54 11 9999-9999" required>
             </div>
  
             <div class="campo">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email"
+                <input type="email" id="email" name="f_email"
                        placeholder="tucorreo@email.com" required>
             </div>
  
             <div class="campo">
                 <label for="personas">Cantidad de personas</label>
-                <select id="personas" name="personas" required>
+                <select id="personas" name="f_personas" required>
                     <option value="" disabled selected>Seleccioná</option>
                     <option value="1">1 persona</option>
                     <option value="2">2 personas</option>
@@ -79,7 +79,7 @@
  
             <div class="campo">
                 <label for="notas">Notas especiales (opcional)</label>
-                <textarea id="notas" name="notas"
+                <textarea id="notas" name="f_notas"
                           placeholder="Alergias, ocasión especial, pedidos particulares..."
                           rows="4" maxlength="300"></textarea>
                 <span id="contador-notas">0 / 300</span>
