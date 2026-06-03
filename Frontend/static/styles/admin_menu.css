@@ -28,7 +28,7 @@ section h2 {
     margin-bottom: 15px; 
     padding-bottom: 4px; 
 }
-.zona-dropzone {
+.agregar-foto {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 100%;
@@ -173,4 +173,7 @@ section h2 {
     padding: 2px 6px;        
     text-decoration: none; 
     color: inherit;
+}
+.alineasion-perfecta {
+    display: inline;
 }

@@ -53,7 +53,7 @@
 
         <div class="columna-imagen">
             <input type="file" id="imagen_plato" name="imagen_plato" accept="image/*" class="input-archivo-oculto" required>
-            <label for="imagen_plato" class="zona-dropzone">
+            <label for="imagen_plato" class="agregar-foto">
                 {% if plato_a_editar and plato_a_editar.imagen %}
                     <img src="{{ url_for('static', filename='images/platos/' ~ plato_a_editar.imagen) }}" alt="Vista previa" class="vista-previa-formulario">
                 {% else %}
@@ -66,7 +66,7 @@
                         
         
         <div class="grupo-formulario ancho-completo">
-            <textarea name="desc_plato" placeholder="Descripción del plato..." rows="3" required>{{ plato_a_editar.desc_plato if plato_a_editar else '' }}</textarea>
+            <textarea name="desc_plato" placeholder="Descripcion del Plato" rows="3" required>{{ plato_a_editar.desc_plato if plato_a_editar else '' }}</textarea>
         </div>
         
         <button type="submit" class="boton-guardar">
@@ -81,7 +81,6 @@
 
     <section class="seccion-tabla">
         <h2>Platos Actuales</h2>
-        <button>fila</button>
         <div class="tabla-responsiva">
             <table class="tabla-menu">
                 <tbody>
@@ -111,7 +110,9 @@
                         <td class="celda-acciones">
                             <a href="{{ url_for('frontend.admin_menu', editar_id=plato.id_menu) }}" class="boton-de-aciom" title="Editar">editar</a>
                             
-                            <a href="#" class="boton-de-aciom" title="Eliminar">eliminar</a>
+                            <form action="{{ url_for('frontend.eliminar_plato', id=plato.id_menu) }}" method="POST" class="alineasion-perfecta">
+                                <button type="submit" class="boton-de-aciom" title="Eliminar">Eliminar</button>
+                            </form>
                         </td>
  
                     </tr>
