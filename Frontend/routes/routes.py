@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 import requests
 from routes.auth import admin_requerido, BACKEND_URL
+from datetime import datetime
 
 mis_rutas = Blueprint('frontend', __name__)
 
@@ -61,12 +62,59 @@ def logout():
 def admin():
     return render_template("admin/admin.html")
 
-@mis_rutas.route("/admin/reservas")
+@mis_rutas.route("/admin/reservas", methods=['GET'])
 @admin_requerido
 def admin_reservas():
-    return render_template("admin/admin_reservas.html")
-
-
+    buscar = request.args.get('buscar', '')
+    fecha = request.args.get('fecha', '')
+    estado = request.args.get('estado', '')
+    
+    parametros = {
+        'buscar': buscar,
+        'fecha': fecha,
+        'estado': estado
+    }
+    
+    reservas = []
+    try:
+        respuesta = requests.get(f"{BACKEND_URL}/admin/reservas", params=parametros)
+        
+        if respuesta.status_code == 200:
+            datos = respuesta.json()
+            reservas = datos.get("Reservas", [])
+    except Exception:
+        reservas = []
+        
+    hoy = datetime.now().strftime('%Y-%m-%d')
+    total_hoy = 0
+    pendientes = 0
+    confirmadas = 0
+    
+    for reserva in reservas:
+        if reserva.get('fecha') == hoy:
+            total_hoy += 1
+        
+        estado_reserva = reserva.get('estado', 'Pendiente').lower()
+        if estado_reserva == 'pendiente':
+            pendientes += 1
+        elif estado_reserva == 'confirmada':
+            confirmadas += 1
+            
+    indicadores = {
+        'total_hoy': total_hoy,
+        'pendientes': pendientes,
+        'confirmadas': confirmadas
+    }
+    
+    return render_template(
+        '/admin/admin_reservas.html',
+        reservas=reservas,
+        indicadores=indicadores,
+        filtro_buscar=buscar,
+        filtro_fecha=fecha,
+        filtro_estado=estado
+    )
+        
 
 @mis_rutas.route("/admin/resenas", methods=["GET"])
 @admin_requerido
