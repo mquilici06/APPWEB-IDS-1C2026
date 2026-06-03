@@ -48,6 +48,13 @@ CREATE TABLE IF NOT EXISTS reservas (
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS servicios_extras (
+    id_servicio INTEGER AUTO_INCREMENT PRIMARY KEY,
+    nombre_servicio VARCHAR(100) NOT NULL UNIQUE,
+    descripcion_servicio VARCHAR(255) NOT NULL,
+    estado_servicio VARCHAR(20) DEFAULT 'activo'
+);
+
 INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen) VALUES
 ('Spaghetti alla carbonara', 'Queso pecorino, crema, panceta y yema de huevo', '32000', '', 'Platos Principales', 'carbonara.png'),
 ('Bucatini con polpette di vitello', 'Pasta seca italiana, pomodoro, morrones, cebolla, ajo, albahaca y albóndigas de ternera', '32000', '', 'Platos Principales','bucatini.png'),
