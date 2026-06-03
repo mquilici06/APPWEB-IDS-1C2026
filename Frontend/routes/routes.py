@@ -19,10 +19,31 @@ def menu():
 def index():
     return render_template("index.html")
 
-@mis_rutas.route("/reservas")
+@mis_rutas.route('/reservas', methods=['GET', 'POST'])
 def reservas():
-    return render_template("reservas.html")
+    if request.method == 'POST':
+        datos_reserva = {
+            "nombre": request.form.get('f_nombre'),
+            "email": request.form.get('f_email'),
+            "telefono": request.form.get('f_telefono'),
+            "personas": request.form.get('f_personas'),
+            "fecha": request.form.get('f_fecha_reserva'),
+            "hora": request.form.get('f_hora')
+        }
+        try:
+            respuesta = requests.post(f"{BACKEND_URL}/reservas", json=datos_reserva, timeout=5)
+            if respuesta.status_code != 201:
+                mensaje_error = respuesta.json().get('error', 'Error al procesar la reserva.')
+                return redirect(url_for("frontend.reservas", aviso=mensaje_error, tipo="error"))
+            else:
+                return redirect(url_for("frontend.reservas", aviso="¡Reserva confirmada con exito!", tipo="exito"))
+                
+        except requests.exceptions.RequestException:
+            return redirect(url_for("frontend.reservas", aviso="Error de conexión con el servidor", tipo="error"))
+    aviso = request.args.get("aviso")
+    tipo = request.args.get("tipo")
 
+    return render_template('reservas.html', aviso=aviso, tipo=tipo)
 
 @mis_rutas.route("/resenas", methods=["GET", "POST"])
 def resenas():
