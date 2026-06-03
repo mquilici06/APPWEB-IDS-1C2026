@@ -143,7 +143,7 @@ def mostrar_reservas():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
+    except Exception as e:
         return jsonify({"error": "Error de conexion con la base de datos"}), 500
 
     cursor.execute("SELECT COUNT(*) AS total FROM reservas")
@@ -154,16 +154,19 @@ def mostrar_reservas():
         conn.close()
         return jsonify({"mensaje": "No hay reservas registradas"}), 200
 
-    
     cursor.execute("SELECT * FROM reservas")
     lista_De_reservas = cursor.fetchall()
 
-    reservas_echas = []
+    reservas_hechas = []
 
     for reserva in lista_De_reservas:
         id_del_cliente = reserva["id_cliente"]
 
-        cursor.execute("SELECT nombre, email, celular FROM usuarios WHERE id = %s", (id_del_cliente,))
+        cursor.execute(
+            "SELECT nombre, email, celular FROM usuarios WHERE id = %s",
+            (id_del_cliente,)
+        )
+
         cliente = cursor.fetchone()
 
         if cliente:
@@ -172,15 +175,17 @@ def mostrar_reservas():
                 "nombre_Cliente": cliente["nombre"],
                 "email_cliente": cliente["email"],
                 "celular_cliente": cliente["celular"],
-                "fecha": reserva["fecha"],
-                "hora": reserva["hora"],
+                "fecha": str(reserva["fecha"]),
+                "hora": str(reserva["hora"]),
                 "cantidad_personas": reserva["cantidad_personas"]
             }
-            reservas_echas.append(reservas)
+
+            reservas_hechas.append(reservas)
 
     cursor.close()
     conn.close()
-    return jsonify({"Reservas": reservas_echas}), 200
+
+    return jsonify({"Reservas": reservas_hechas}), 200
 
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
 def modificar_reserva(modificar_reserva):
