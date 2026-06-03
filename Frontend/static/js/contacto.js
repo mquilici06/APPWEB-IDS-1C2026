@@ -7,8 +7,18 @@ function actualizar_contador(){
     })
 }
 
-actualizar_contador()
+function pausar_boton_envio(){
+    const formulario = document.querySelector(".form")
+    const boton = document.getElementById("boton-enviar")
 
+    formulario.addEventListener("submit", function() {
+        boton.disabled = true
+        boton.textContent = "Enviando Mensaje"
+    })
+}
+
+actualizar_contador()
+pausar_boton_envio()
 
 
 

@@ -107,3 +107,8 @@
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+.form-mensaje button:disabled{
+    background-color: #8d5a63;
+    color: #e0e0e0;
+}
