@@ -21,18 +21,29 @@
  
     <div class="reservas-columna">
         <h2 class="seccion-titulo">Elegí tu fecha</h2>
+        {% if aviso %}
+        <div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
+        {% endif %}
         <div class="fecha-selector">
-            <input type="date" name="fecha_reserva" class="colocar-calendario" >
+            <input type="date" id="fecha_reserva" name="fecha_reserva" form="form-reserva" class="colocar-calendario" required>
         </div>
     </div>
  
     <div class="reservas-columna">
         <h2 class="seccion-titulo">Completá tus datos</h2>
- 
-        <div id="form-mensaje" class="form-mensaje oculto"></div>
- 
-        <form id="form-reserva" novalidate>
- 
+        <form id="form-reserva" action="{{ url_for('frontend.reservas') }}" method="POST" novalidate>
+            <div class="campo">
+                <label for="hora">Horario</label>
+                <select id="hora" name="hora" required>
+                    <option value="" disabled selected>Seleccioná un horario</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                    <option value="22:00">22:00</option>
+                </select>
+            </div>
+            
             <div class="campo">
                 <label for="nombre">Nombre completo</label>
                 <input type="text" id="nombre" name="nombre"
@@ -73,10 +84,14 @@
                           rows="4" maxlength="300"></textarea>
                 <span id="contador-notas">0 / 300</span>
             </div>
- 
-            <button type="submit" class="boton-enviar" id="btn-enviar" disabled>Confirmar reserva</button>
+            
+            <button type="submit" class="boton-enviar" id="btn-enviar">Confirmar reserva</button>
         </form>
     </div>
  
 </section>
+
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}
