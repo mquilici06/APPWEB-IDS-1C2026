@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from database.db import get_connection
+from datetime import datetime
 
 reservas_bp = Blueprint("reservas", __name__)
 
@@ -43,52 +44,65 @@ def consultar_disponibilidad():
     conn.close()
 
     return jsonify(disponibilidad), 200
-    
 
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
     datos = request.get_json()
- 
-    campos_requeridos = ["id_cliente", "personas", "fecha", "hora"]
+    campos_requeridos = ["nombre", "email", "telefono", "personas", "fecha", "hora"]
     for campo in campos_requeridos:
         if not datos or not datos.get(campo):
             return jsonify({"error": f"Falta el campo '{campo}'"}), 400
  
-    id_cliente = datos["id_cliente"]
+    nombre = datos["nombre"]
+    email = datos["email"]
+    telefono = datos["telefono"]
     personas = datos["personas"]
     fecha = datos["fecha"]
     hora = datos["hora"]
+    try:
+        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+        if fecha_obj < datetime.now().date():
+            return jsonify({"error": "no podés realizar una reserva en una fecha pasada"}), 400
+    except ValueError:
+        return jsonify({"error": "formato de fecha inválido"}), 400
     
     try:
         conn   = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
         return jsonify({"Error": "Error de conexion con la base de datos"}), 500
-
     cursor.execute("""
         SELECT COUNT(*) as total FROM reservas 
         WHERE fecha = %s AND hora = %s AND estado = %s
     """, (fecha, hora, "confirmada"))
-
     ocupacion = cursor.fetchone()["total"]
 
-    if ocupacion >= 10:
+    if ocupacion + int(personas) > 10: 
         cursor.close()
         conn.close()
-        return jsonify({"error": "El horario seleccionado ya no tiene lugares disponibles"}), 409
+        return jsonify({"error": "El horario seleccionado excede la capacidad disponible"}), 409
 
-    
+    cursor.execute("SELECT id FROM usuarios WHERE email = %s", (email,))
+    usuario_existente = cursor.fetchone()
 
+    if usuario_existente:
+        id_cliente = usuario_existente["id"]
+    else:
+        cursor.execute(
+            "INSERT INTO usuarios (nombre, email, celular, rol) VALUES (%s, %s, %s, 'cliente')",
+            (nombre, email, telefono)
+        )
+        id_cliente = cursor.lastrowid 
     cursor.execute("""
         INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado) 
         VALUES (%s, %s, %s, %s, %s)
-    """, (id_cliente, fecha, hora, personas, "confirmada")) # <-- Agregado "confirmada" aquí
+    """, (id_cliente, fecha, hora, personas, "confirmada"))
  
     conn.commit()
     cursor.close()
     conn.close()
 
-    return jsonify({"mensaje": "Reserva confirmada"}), 201
+    return jsonify({"mensaje": "Reserva confirmada exitosamente"}), 201
 
 @reservas_bp.route("/<int:id>", methods=["POST"])
 def borrar_reserva(id):
