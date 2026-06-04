@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, flash
 import requests
 from routes.auth import admin_requerido, BACKEND_URL
 from datetime import datetime
@@ -141,7 +141,7 @@ def admin_reservas():
 @admin_requerido
 def admin_resenas():
     try:
-        response = requests.get(f"{BACKEND_URL}/resenas")
+        response = requests.get(f"{BACKEND_URL}/resenas/todas") 
         data = response.json()
         resenas = data.get("resenas", [])
     except:
@@ -225,3 +225,19 @@ def eliminar_plato(id):
         
         
     return redirect(url_for("frontend.admin_menu"))
+
+@mis_rutas.route("/admin/resenas/<int:id>/estado", methods=["POST"])
+@admin_requerido
+def cambiar_estado_resena(id):
+    nuevo_estado = request.form.get("estado")
+    
+    try:
+        requests.put(
+            f"{BACKEND_URL}/resenas/{id}/estado", 
+            json={"estado": nuevo_estado},
+            timeout=10
+        )
+    except requests.exceptions.RequestException:
+        flash("Error al conectar con el servidor para cambiar estado", "error")
+        
+    return redirect(url_for('frontend.admin_resenas'))
