@@ -183,14 +183,21 @@ def admin_menu():
             "restricciones": request.form.get("restricciones")
         }
 
+       
+        archivo = request.files.get("imagen_plato")
+        files = {}
+        if archivo and archivo.filename != '':
+
+            files = {'imagen_plato': (archivo.filename, archivo.read(), archivo.content_type)}
+    
         actualizar_id = request.args.get('actualizar_id', type=int)
 
         try:
             if actualizar_id:
-                respuesta = requests.put(f"{BACKEND_URL}/platos/{actualizar_id}", json=datos_plato, headers=headers, timeout=5)
+                respuesta = requests.put(f"{BACKEND_URL}/platos/{actualizar_id}", data=datos_plato, files=files, headers=headers, timeout=10)
                 mensaje_ok = "Plato actualizado correctamente"
             else:
-                respuesta = requests.post(f"{BACKEND_URL}/platos", json=datos_plato, headers=headers, timeout=5)
+                respuesta = requests.post(f"{BACKEND_URL}/platos", data=datos_plato, files=files, headers=headers, timeout=10)
                 mensaje_ok = "Plato guardado correctamente"
             
             if respuesta.status_code in [200, 201]:
@@ -201,22 +208,21 @@ def admin_menu():
             flash("Error de conexión con el Backend", "error")
             
         return redirect(url_for('frontend.admin_menu'))
-    platos = []
-    plato_a_editar = None
-    editar_id = request.args.get('editar_id', type=int)
 
+    
     try:
-        response = requests.get(f"{BACKEND_URL}/platos", timeout=5)
-        if response.status_code == 200:
-            platos = response.json().get("platos", [])
-            
-            if editar_id:
-                for plato in platos:
-                    if plato.get('id_menu') == editar_id:
-                        plato_a_editar = plato
+        response = requests.get(f"{BACKEND_URL}/platos")
+        platos = response.json().get("platos", [])
     except:
         platos = []
 
+    editar_id = request.args.get('editar_id', type=int)
+    plato_a_editar = None
+    if editar_id:
+        plato_a_editar = next((p for p in platos if p['id_menu'] == editar_id), None)
+    
+    
+    
     return render_template('admin/admin_menu.html', platos=platos, plato_a_editar=plato_a_editar)
 
 @mis_rutas.route("/admin/menu/eliminar/<int:id>", methods=["POST"])
@@ -238,6 +244,8 @@ def eliminar_plato(id):
         
     return redirect(url_for("frontend.admin_menu"))
 
+
+
 @mis_rutas.route("/admin/resenas/<int:id>/estado", methods=["POST"])
 @admin_requerido
 def cambiar_estado_resena(id):
@@ -253,6 +261,8 @@ def cambiar_estado_resena(id):
         flash("Error al conectar con el servidor para cambiar estado", "error")
         
     return redirect(url_for('frontend.admin_resenas'))
+
+    
 
 @mis_rutas.route('/admin/estadisticas')
 @admin_requerido
