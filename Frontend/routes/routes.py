@@ -168,15 +168,45 @@ def eliminar_resena(id):
     return redirect(url_for("frontend.admin_resenas"))
 
 
-@mis_rutas.route('/admin/menu')
+@mis_rutas.route('/admin/menu', methods=['GET', 'POST'])
 @admin_requerido
 def admin_menu():
+    if request.method == 'POST':
+        token = session.get("jwt_token")
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        datos_plato = {
+            "nombre": request.form.get("nombre_plato"),
+            "descripcion": request.form.get("desc_plato"),
+            "precio": request.form.get("precio"),
+            "seccion": request.form.get("seccion"),
+            "restricciones": request.form.get("restricciones")
+        }
+
+        actualizar_id = request.args.get('actualizar_id', type=int)
+
+        try:
+            if actualizar_id:
+                respuesta = requests.put(f"{BACKEND_URL}/platos/{actualizar_id}", json=datos_plato, headers=headers, timeout=5)
+                mensaje_ok = "Plato actualizado correctamente"
+            else:
+                respuesta = requests.post(f"{BACKEND_URL}/platos", json=datos_plato, headers=headers, timeout=5)
+                mensaje_ok = "Plato guardado correctamente"
+            
+            if respuesta.status_code in [200, 201]:
+                flash(mensaje_ok, "exito")
+            else:
+                flash(f"Error al procesar: {respuesta.text}", "error")
+        except requests.exceptions.RequestException:
+            flash("Error de conexión con el Backend", "error")
+            
+        return redirect(url_for('frontend.admin_menu'))
     platos = []
     plato_a_editar = None
     editar_id = request.args.get('editar_id', type=int)
 
     try:
-        response = requests.get(f"{BACKEND_URL}/platos")
+        response = requests.get(f"{BACKEND_URL}/platos", timeout=5)
         if response.status_code == 200:
             platos = response.json().get("platos", [])
             
@@ -184,12 +214,10 @@ def admin_menu():
                 for plato in platos:
                     if plato.get('id_menu') == editar_id:
                         plato_a_editar = plato
-                        
     except:
         platos = []
 
     return render_template('admin/admin_menu.html', platos=platos, plato_a_editar=plato_a_editar)
-
 
 @mis_rutas.route("/admin/menu/eliminar/<int:id>", methods=["POST"])
 @admin_requerido
@@ -198,9 +226,15 @@ def eliminar_plato(id):
     headers = {"Authorization": f"Bearer {token}"}
     
     try:
-        requests.delete(f"{BACKEND_URL}/admin/menu/{id}", headers=headers)
-    except:
-         print("Error al eliminar menu")
+        response = requests.delete(f"{BACKEND_URL}/platos/{id}", headers=headers, timeout=5)
+        
+        if response.status_code == 200:
+            flash("Plato eliminado correctamente", "exito")
+        else:
+            flash("Error al eliminar el plato", "error")
+            
+    except requests.exceptions.RequestException:
+        flash("Error de conexión con el servidor al intentar eliminar", "error")
         
     return redirect(url_for("frontend.admin_menu"))
 
