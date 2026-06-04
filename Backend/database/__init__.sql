@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS altezza;
 CREATE DATABASE IF NOT EXISTS altezza;
 USE altezza;
 
+
 CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -11,6 +12,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     contrasena VARCHAR(255)
 );
 
+
 CREATE TABLE IF NOT EXISTS resenas (
     id_resena INTEGER AUTO_INCREMENT PRIMARY KEY,
     id_cliente INTEGER,
@@ -19,6 +21,7 @@ CREATE TABLE IF NOT EXISTS resenas (
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE IF NOT EXISTS menu (
     id_menu INTEGER AUTO_INCREMENT PRIMARY KEY,
     nombre_plato VARCHAR(50) NOT NULL,
@@ -26,8 +29,9 @@ CREATE TABLE IF NOT EXISTS menu (
     precio INTEGER NOT NULL,
     restricciones VARCHAR(50), 
     seccion VARCHAR(20),
-    imagen VARCHAR(50)
+    imagen LONGTEXT  
 );
+
 
 CREATE TABLE IF NOT EXISTS estadisticas (
     id_cliente INTEGER PRIMARY KEY,
@@ -37,6 +41,7 @@ CREATE TABLE IF NOT EXISTS estadisticas (
     cant_resenas INTEGER,
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS reservas (
     id_reserva INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -48,12 +53,14 @@ CREATE TABLE IF NOT EXISTS reservas (
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE IF NOT EXISTS servicios_extras (
     id_servicio INTEGER AUTO_INCREMENT PRIMARY KEY,
     nombre_servicio VARCHAR(100) NOT NULL UNIQUE,
     descripcion_servicio VARCHAR(255) NOT NULL,
     estado_servicio VARCHAR(20) DEFAULT 'activo'
 );
+
 
 INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen) VALUES
 ('Spaghetti alla carbonara', 'Queso pecorino, crema, panceta y yema de huevo', '32000', '', 'Platos Principales', 'carbonara.png'),
@@ -103,6 +110,7 @@ INSERT INTO usuarios (id, nombre, email, celular, rol, contrasena) VALUES /*cont
 (6, 'Ana Rodríguez', 'ana@email.com', '1146756807', 'cliente','$2b$12$FlVTkmP6BkjRtN7./D/gR.lhY6w1gPJiywd9vfHs8adIhH4dqYGZC'),
 (7, 'Admin', 'admin@altezza.com', '1111111111', 'admin', '$2b$12$QLqWGYxA94vIYOiBYZqmkOTzsIgs.G8/gWOJZbDBgM9m9nXCVfG/6');
 
+
 INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, estado) VALUES
 (1, 1, '2026-05-25', '12:30', 2, 'confirmada'),
 (2, 2, '2026-05-28', '21:00', 4, 'confirmada'),
@@ -110,11 +118,24 @@ INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, es
 (4, 4, '2026-06-07', '20:45', 2, 'confirmada'),
 (5, 5, '2026-06-12', '22:00', 5, 'cancelada');
 
+
 INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion) VALUES
 (1, 1, 'Excelente servicio, muy buena atención.', 5),
 (2, 2, 'La comida llegó fría, podría mejorar.', 3),
 (3, 3, 'Muy buena experiencia, volvería sin dudas.', 4),
 (4, 1, 'El lugar estaba limpio y el personal fue amable.', 5),
 (5, 4, 'Demoraron mucho en atender.', 2);
+
+ 
+
+
+
+
+
+
+
+
+
+
 
  
