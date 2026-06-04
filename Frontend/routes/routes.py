@@ -152,42 +152,20 @@ def admin_resenas():
 @mis_rutas.route("/admin/resenas/eliminar/<int:id>", methods=["POST"])
 @admin_requerido
 def eliminar_resena(id):
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
     try:
-        token = session.get("jwt_token")
-        requests.delete(f"{BACKEND_URL}/admin/resenas/{id}", headers={"Authorization": f"Bearer {token}"})
-    except:
+        response = requests.delete(f"{BACKEND_URL}/resenas/{id}", headers=headers, timeout=5)
+        
+        if response.status_code != 200:
+            flash("Error al eliminar la reseña", "error")
+        else:
+            flash("Reseña eliminada correctamente", "exito")
+            
+    except requests.exceptions.RequestException:
         print("Error al eliminar reseña")
+        flash("Error de conexión con el servidor", "error")
     return redirect(url_for("frontend.admin_resenas"))
-
-
-
-@mis_rutas.route('/admin/estadisticas')
-@admin_requerido
-def admin_stats():
-    fecha_filtro = request.args.get('fecha_filtro')  
-    
-    try:
-        parametros = {'fecha': fecha_filtro} if fecha_filtro else {}
-        
-        respuesta = requests.get(f"{BACKEND_URL}/admin/stats/", params=parametros)
-        datos = respuesta.json()
-        
-    except Exception as e:
-        print(f"Error de conexión con el Backend: {e}")
-        datos = {}
-
-    try:
-        total_pers = int(datos.get('total_personas', 0))
-    except (ValueError, TypeError):
-        total_pers = 0
-
-    return render_template('admin/admin_stats.html', 
-                           total_reservas=datos.get('total_reservas', 0),
-                           reservas_hoy=datos.get('reservas_hoy', 0),
-                           total_personas=total_pers,
-                           stats_dias=datos.get('stats_dias', {}),
-                           stats_horas=datos.get('stats_horas', {}))
-
 
 
 @mis_rutas.route('/admin/menu')
@@ -224,7 +202,6 @@ def eliminar_plato(id):
     except:
          print("Error al eliminar menu")
         
-        
     return redirect(url_for("frontend.admin_menu"))
 
 @mis_rutas.route("/admin/resenas/<int:id>/estado", methods=["POST"])
@@ -242,3 +219,36 @@ def cambiar_estado_resena(id):
         flash("Error al conectar con el servidor para cambiar estado", "error")
         
     return redirect(url_for('frontend.admin_resenas'))
+
+@mis_rutas.route('/admin/estadisticas')
+@admin_requerido
+def admin_stats():
+    fecha_filtro = request.args.get('fecha_filtro')  
+    
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
+    
+    try:
+        parametros = {'fecha': fecha_filtro} if fecha_filtro else {}
+        respuesta = requests.get(f"{BACKEND_URL}/admin/stats", params=parametros, headers=headers, timeout=5)
+        datos = respuesta.json()
+        
+    except requests.exceptions.RequestException:
+        print("Error de conexión con el Backend al cargar estadísticas")
+        datos = {}
+    except ValueError:
+        print("Error al decodificar el JSON de las estadísticas")
+        datos = {}
+
+    try:
+        total_pers = int(datos.get('total_personas', 0))
+    except (ValueError, TypeError):
+        total_pers = 0
+
+    return render_template('admin/admin_stats.html', 
+                           total_reservas=datos.get('total_reservas', 0),
+                           reservas_hoy=datos.get('reservas_hoy', 0),
+                           total_personas=total_pers,
+                           stats_dias=datos.get('stats_dias', {}),
+                           stats_horas=datos.get('stats_horas', {}))
+
