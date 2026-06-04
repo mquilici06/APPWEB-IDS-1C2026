@@ -22,6 +22,7 @@ def index():
 
 @mis_rutas.route('/reservas', methods=['GET', 'POST'])
 def reservas():
+    return render_template("404.html")
     if request.method == 'POST':
         datos_reserva = {
             "nombre": request.form.get('f_nombre'),
