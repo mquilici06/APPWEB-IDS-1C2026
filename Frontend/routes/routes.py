@@ -240,6 +240,22 @@ def admin_stats():
         print("Error al decodificar el JSON de las estadísticas")
         datos = {}
 
+    dias_ingles = datos.get('stats_dias', {})
+    stats_dias_castellano = {}
+    DIAS_TRADUCCION = {
+        'Monday': 'Lunes',
+        'Tuesday': 'Martes',
+        'Wednesday': 'Miércoles',
+        'Thursday': 'Jueves',
+        'Friday': 'Viernes',
+        'Saturday': 'Sábado',
+        'Sunday': 'Domingo'
+    }
+    
+    for dia_en, valor in dias_ingles.items():
+        dia_es = DIAS_TRADUCCION.get(dia_en, dia_en)
+        stats_dias_castellano[dia_es] = valor
+
     try:
         total_pers = int(datos.get('total_personas', 0))
     except (ValueError, TypeError):
@@ -249,6 +265,5 @@ def admin_stats():
                            total_reservas=datos.get('total_reservas', 0),
                            reservas_hoy=datos.get('reservas_hoy', 0),
                            total_personas=total_pers,
-                           stats_dias=datos.get('stats_dias', {}),
+                           stats_dias=stats_dias_castellano,  
                            stats_horas=datos.get('stats_horas', {}))
-
