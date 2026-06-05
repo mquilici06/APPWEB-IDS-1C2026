@@ -441,4 +441,64 @@ def agregar_servicio_extra():
         conn.close()
         return jsonify({"Error": "Error de conexion con la base de datos o consulta rota"}), 500
     
+    
 @admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["PUT"])
+def editar_servicio_extra(id_servicio):
+    if id_servicio < 1:
+        return jsonify({"Mensaje": "Por favor ingrese un id valido"}), 400
+    
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        data = request.json
+        
+        if not data:
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "No se recibieron los datos necesarios"}), 400
+        
+        nombre_servicio_act = data.get("nombre_servicio")
+        descripcion_servicio_act = data.get("descripcion_servicio")
+        estado_servicio_act = data.get("estado_servicio")
+        
+        if not nombre_servicio_act or not descripcion_servicio_act or not estado_servicio_act:
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "Faltan datos requeridos para la actualización"}), 400
+    
+        cursor.execute("SELECT * FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        servicio = cursor.fetchone()
+        
+        if not servicio:
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "El servicio extra no existe"}), 404
+        
+        if (nombre_servicio_act == servicio["nombre_servicio"] and 
+            descripcion_servicio_act == servicio["descripcion_servicio"] and 
+            estado_servicio_act == servicio["estado_servicio"]):
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "Para modificar el servicio debe ingresar valores nuevos"}), 400
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total 
+            FROM servicios_extras WHERE nombre_servicio = %s AND id_servicio != %s""", (nombre_servicio_act, id_servicio))
+        
+        duplicado = cursor.fetchone()["total"]
+        if duplicado > 0:
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "Ya existe otro servicio con ese nombre"}), 409
+        
+        cursor.execute("""
+            UPDATE servicios_extras SET nombre_servicio = %s, descripcion_servicio = %s, estado_servicio = %s 
+            WHERE id_servicio = %s""", (nombre_servicio_act, descripcion_servicio_act, estado_servicio_act, id_servicio))
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+        return jsonify({"Mensaje": "Servicio extra actualizado"}), 200
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
