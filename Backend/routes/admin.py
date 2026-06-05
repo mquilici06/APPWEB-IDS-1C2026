@@ -237,32 +237,24 @@ def modificar_reserva(modificar_reserva):
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except Exception as e:
-      return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)} "}), 500
+    except:
+      return jsonify({"Mensaje": "Error de conexion con la base de datos"}), 500
 
-    try:
-        cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
-        reserva = cursor.fetchone()
-        if not reserva:
+    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
+    reserva = cursor.fetchone()
+    if not reserva:
             cursor.close()
             conn.close()
             return jsonify({"Error": "Reserva no encontrada"}), 404
 
-        query = """UPDATE reservas SET fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s"""
-        valores = (data["fecha"], data["hora"], cantidad_personas, estado_nuevo, modificar_reserva)
-        cursor.execute(query, valores)
-        conn.commit()
+    query = """UPDATE reservas SET fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s"""
+    valores = (data["fecha"], data["hora"], cantidad_personas, estado_nuevo, modificar_reserva)
+    cursor.execute(query, valores)
+    conn.commit()
         
-        cursor.close()
-        conn.close()
-        return "el cambio se realizo correctamente", 200
-
-    except:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Error interno del servidor"}), 500 
-
-
+    cursor.close()
+    conn.close()
+    return "el cambio se realizo correctamente", 200
 
 @admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
 @jwt_required()
