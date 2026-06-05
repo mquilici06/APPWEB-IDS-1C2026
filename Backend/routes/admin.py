@@ -405,7 +405,6 @@ def agregar_servicio_extra():
         cursor = conn.cursor(dictionary=True)
         
         data = request.json
-        
         if not data:
             cursor.close()
             conn.close()
@@ -431,13 +430,13 @@ def agregar_servicio_extra():
         cursor.execute("""
             INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, estado_servicio) 
             VALUES (%s, %s, %s)
-        """, (nombre_servicio, descripcion_servicio, estado_servicio))    
+        """, (nombre_servicio, descripcion_servicio, estado_servicio))
+        
         conn.commit()
         cursor.close()
         conn.close()
-    
         return jsonify({"Mensaje": "Servicio extra agregado correctamente"}), 201
     except:
         cursor.close()
         conn.close()
-        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
+        return jsonify({"Error": "Error de conexion con la base de datos o consulta rota"}), 500
