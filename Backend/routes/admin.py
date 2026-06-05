@@ -396,3 +396,7 @@ def mostrar_servicios_extras():
         return jsonify({"servicios_extras": servicios}), 200
     except:
         return jsonify({"Mensaje": "Error con la base de daatos"}), 500
+    
+    
+@admin_bp.route("/servicios_extras", methods=["POST"])
+        

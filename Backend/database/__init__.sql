@@ -133,7 +133,7 @@ INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, estado_serv
 ('Espacio de Juegos para Niños', 'Sector infantil supervisado con juegos didácticos y actividades para los más chicos.', 'activo'),
 ('Conectividad Wi-Fi de Alta Velocidad', 'Red de internet simétrica de uso libre para clientes en todo el establecimiento.', 'activo'),
 ('Mesas al Aire Libre / Terraza', 'Opción de reserva de mesas en sectores exteriores climatizados (patio o terraza).', 'activo'),
-('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.', 'activo');
+('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.', 'inactivo');
 
 
 
