@@ -399,4 +399,45 @@ def mostrar_servicios_extras():
     
     
 @admin_bp.route("/servicios_extras", methods=["POST"])
+def agregar_servicio_extra():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
         
+        data = request.json
+        
+        if not data:
+            cursor.close()
+            conn.close()
+            return jsonify({"Error": "No se recibieron datos"}), 400
+            
+        nombre_servicio = data.get("nombre_servicio")
+        descripcion_servicio = data.get("descripcion_servicio")
+        estado_servicio = data.get("estado_servicio")
+
+        if not nombre_servicio or not descripcion_servicio or not estado_servicio:
+            cursor.close()
+            conn.close()
+            return jsonify({"Error": "Faltan datos requeridos"}), 400
+    
+        cursor.execute("SELECT COUNT(*) AS total FROM servicios_extras WHERE nombre_servicio = %s", (nombre_servicio,))
+        existente = cursor.fetchone()["total"]
+
+        if existente > 0:
+            cursor.close()
+            conn.close()
+            return jsonify({"Error": "Servicio extra ya existente"}), 409
+
+        cursor.execute("""
+            INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, estado_servicio) 
+            VALUES (%s, %s, %s)
+        """, (nombre_servicio, descripcion_servicio, estado_servicio))    
+        conn.commit()
+        cursor.close()
+        conn.close()
+    
+        return jsonify({"Mensaje": "Servicio extra agregado correctamente"}), 201
+    except:
+        cursor.close()
+        conn.close()
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
