@@ -440,3 +440,5 @@ def agregar_servicio_extra():
         cursor.close()
         conn.close()
         return jsonify({"Error": "Error de conexion con la base de datos o consulta rota"}), 500
+    
+@admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["PUT"])
