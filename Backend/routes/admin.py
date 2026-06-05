@@ -381,3 +381,5 @@ def obtener_estadisticas():
         }
 
     return jsonify(respuesta_json), 200
+
+@admin_bp.route("/servicios_extras", methods=["GET"])
