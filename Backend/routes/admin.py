@@ -502,3 +502,5 @@ def editar_servicio_extra(id_servicio):
         return jsonify({"Mensaje": "Servicio extra actualizado"}), 200
     except:
         return jsonify({"Error": "Error de conexion con la base de datos"}), 500
+    
+@admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["DELETE"])
