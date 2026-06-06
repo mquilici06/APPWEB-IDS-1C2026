@@ -504,3 +504,27 @@ def editar_servicio_extra(id_servicio):
         return jsonify({"Error": "Error de conexion con la base de datos"}), 500
     
 @admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["DELETE"])
+def eliminar_servicio_extra(id_servicio):
+    if id_servicio < 1:
+        return jsonify({"Mensaje": "Por favor ingrese un id valido"}), 400
+    
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("SELECT * FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        servicio = cursor.fetchone()
+        
+        if not servicio:
+            cursor.close()
+            conn.close()
+            return jsonify({"Mensaje": "El servicio extra no existe"}), 404
+        
+        cursor.execute("DELETE FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+        return jsonify({"Mensaje": "Servicio extra eliminado"}), 200
+    except:
+        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
