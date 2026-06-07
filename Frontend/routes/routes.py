@@ -312,7 +312,7 @@ def admin_stats():
                            stats_dias=stats_dias_castellano,  
                            stats_horas=datos.get('stats_horas', {}))
     
-@mis_rutas.route("/servicios_extras", methods=["GET"])
+@mis_rutas.route("/accesibilidad", methods=["GET"])
 def servicios_extras():
     try:
         respuesta = requests.get(f"{BACKEND_URL}/servicios_extras", timeout=5)
