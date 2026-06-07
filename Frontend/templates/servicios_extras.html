@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Servicios Extras{% endblock %}
+
+{% block content %}
+<div class="titulo">
+    <h1>Servicios extras disponibles</h1>
+
+    <div class="servicios-contenedor">
+        {% for servicio in servicios_extras %}
+        <div class="servicios">
+            <h2>{{ servicio.nombre_servicio }}</h2>
+            <p>{{ servicio.descripcion_servicio }}</p>
+        </div>
+        {% else %}
+        <p>No hay servicios disponibles</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
