@@ -57,8 +57,7 @@ CREATE TABLE IF NOT EXISTS reservas (
 CREATE TABLE IF NOT EXISTS servicios_extras (
     id_servicio INTEGER AUTO_INCREMENT PRIMARY KEY,
     nombre_servicio VARCHAR(100) NOT NULL UNIQUE,
-    descripcion_servicio VARCHAR(255) NOT NULL,
-    estado_servicio VARCHAR(20) DEFAULT 'activo'
+    descripcion_servicio VARCHAR(255) NOT NULL
 );
 
 
@@ -127,13 +126,13 @@ INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion) VALUES
 (5, 4, 'Demoraron mucho en atender.', 2);
 
  
-INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, estado_servicio) VALUES
-('Playa de Estacionamiento', 'Estacionamiento exclusivo y gratuito para clientes durante su estadía en el local.', 'activo'),
-('Acceso para Discapacitados', 'Rampas de acceso, pasillos amplios y baños totalmente adaptados para movilidad reducida.', 'activo'),
-('Espacio de Juegos para Niños', 'Sector infantil supervisado con juegos didácticos y actividades para los más chicos.', 'activo'),
-('Conectividad Wi-Fi de Alta Velocidad', 'Red de internet simétrica de uso libre para clientes en todo el establecimiento.', 'activo'),
-('Mesas al Aire Libre / Terraza', 'Opción de reserva de mesas en sectores exteriores climatizados (patio o terraza).', 'activo'),
-('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.', 'inactivo');
+INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio) VALUES
+('Playa de Estacionamiento', 'Estacionamiento exclusivo y gratuito para clientes durante su estadía en el local.'),
+('Acceso para Discapacitados', 'Rampas de acceso, pasillos amplios y baños totalmente adaptados para movilidad reducida.'),
+('Espacio de Juegos para Niños', 'Sector infantil supervisado con juegos didácticos y actividades para los más chicos.'),
+('Conectividad Wi-Fi de Alta Velocidad', 'Red de internet simétrica de uso libre para clientes en todo el establecimiento.'),
+('Mesas al Aire Libre / Terraza', 'Opción de reserva de mesas en sectores exteriores climatizados (patio o terraza).'),
+('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.');
 
 
 

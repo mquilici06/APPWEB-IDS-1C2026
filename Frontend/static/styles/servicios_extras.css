@@ -1,0 +1,53 @@
+.servicios-pagina {
+    padding: 40px 30px;
+    font-family: 'Segoe UI';
+    min-height: calc(100vh - 200px);
+}
+
+.servicios-titulo {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #6d071a;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.servicios-contenedor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.servicio-tarjeta {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.servicio-info {
+    padding: 20px;
+}
+
+.servicio-info h2 {
+    font-size: 1.2rem;
+    color: #6d071a;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.servicio-info p {
+    font-size: 0.95rem;
+    color: #333333;
+    line-height: 1.5;
+}
+
+.sin-servicios {
+    text-align: center;
+    color: #000000;
+    font-size: 1rem;
+    grid-column: 1 / -1;
+}

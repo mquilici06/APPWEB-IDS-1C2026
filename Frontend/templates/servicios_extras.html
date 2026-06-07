@@ -2,18 +2,24 @@
 
 {% block title %}Servicios Extras{% endblock %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/servicios_extras.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="titulo">
-    <h1>Servicios extras disponibles</h1>
+<div class="servicios-pagina">
+    <h1 class="servicios-titulo">Servicios disponibles</h1>
 
     <div class="servicios-contenedor">
         {% for servicio in servicios_extras %}
-        <div class="servicios">
-            <h2>{{ servicio.nombre_servicio }}</h2>
-            <p>{{ servicio.descripcion_servicio }}</p>
+        <div class="servicio-tarjeta">
+            <div class="servicio-info">
+                <h2>{{ servicio.nombre_servicio }}</h2>
+                <p>{{ servicio.descripcion_servicio }}</p>
+            </div>
         </div>
         {% else %}
-        <p>No hay servicios disponibles</p>
+        <p class="sin-servicios">No hay servicios disponibles</p>
         {% endfor %}
     </div>
 </div>
