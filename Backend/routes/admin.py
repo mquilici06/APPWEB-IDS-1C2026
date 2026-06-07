@@ -412,9 +412,8 @@ def agregar_servicio_extra():
             
         nombre_servicio = data.get("nombre_servicio")
         descripcion_servicio = data.get("descripcion_servicio")
-        estado_servicio = data.get("estado_servicio")
 
-        if not nombre_servicio or not descripcion_servicio or not estado_servicio:
+        if not nombre_servicio or not descripcion_servicio:
             cursor.close()
             conn.close()
             return jsonify({"Error": "Faltan datos requeridos"}), 400
@@ -428,9 +427,9 @@ def agregar_servicio_extra():
             return jsonify({"Error": "Servicio extra ya existente"}), 409
 
         cursor.execute("""
-            INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, estado_servicio) 
-            VALUES (%s, %s, %s)
-        """, (nombre_servicio, descripcion_servicio, estado_servicio))
+            INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio) 
+            VALUES (%s, %s)
+        """, (nombre_servicio, descripcion_servicio))
         
         conn.commit()
         cursor.close()
@@ -460,9 +459,8 @@ def editar_servicio_extra(id_servicio):
         
         nombre_servicio_act = data.get("nombre_servicio")
         descripcion_servicio_act = data.get("descripcion_servicio")
-        estado_servicio_act = data.get("estado_servicio")
         
-        if not nombre_servicio_act or not descripcion_servicio_act or not estado_servicio_act:
+        if not nombre_servicio_act or not descripcion_servicio_act:
             cursor.close()
             conn.close()
             return jsonify({"Mensaje": "Faltan datos requeridos para la actualización"}), 400
@@ -476,8 +474,7 @@ def editar_servicio_extra(id_servicio):
             return jsonify({"Mensaje": "El servicio extra no existe"}), 404
         
         if (nombre_servicio_act == servicio["nombre_servicio"] and 
-            descripcion_servicio_act == servicio["descripcion_servicio"] and 
-            estado_servicio_act == servicio["estado_servicio"]):
+            descripcion_servicio_act == servicio["descripcion_servicio"]):
             cursor.close()
             conn.close()
             return jsonify({"Mensaje": "Para modificar el servicio debe ingresar valores nuevos"}), 400
@@ -493,8 +490,8 @@ def editar_servicio_extra(id_servicio):
             return jsonify({"Mensaje": "Ya existe otro servicio con ese nombre"}), 409
         
         cursor.execute("""
-            UPDATE servicios_extras SET nombre_servicio = %s, descripcion_servicio = %s, estado_servicio = %s 
-            WHERE id_servicio = %s""", (nombre_servicio_act, descripcion_servicio_act, estado_servicio_act, id_servicio))
+            UPDATE servicios_extras SET nombre_servicio = %s, descripcion_servicio = %s 
+            WHERE id_servicio = %s""", (nombre_servicio_act, descripcion_servicio_act, id_servicio))
         conn.commit()
         
         cursor.close()

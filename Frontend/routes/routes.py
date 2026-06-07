@@ -311,3 +311,14 @@ def admin_stats():
                            total_personas=total_pers,
                            stats_dias=stats_dias_castellano,  
                            stats_horas=datos.get('stats_horas', {}))
+    
+@mis_rutas.route("/servicios_extras", methods=["GET"])
+def servicios_extras():
+    try:
+        respuesta = requests.get(f"{BACKEND_URL}/servicios_extras", timeout=5)
+        servicios = respuesta.json().get("servicios_extras", [])
+    except requests.exceptions.RequestException:
+        flash("Error de conexión con el Backend", "error")
+        servicios = []
+
+    return render_template('servicios_extras.html', servicios_extras=servicios)

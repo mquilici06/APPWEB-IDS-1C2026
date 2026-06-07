@@ -9,7 +9,7 @@ def mostrar_servicios_extras():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         
-        cursor.execute("SELECT nombre_servicio, descripcion_servicio FROM servicios_extras WHERE estado_servicio = 'activo'")
+        cursor.execute("SELECT * FROM servicios_extras")
         servicios = cursor.fetchall()
         cursor.close()
         conn.close()
