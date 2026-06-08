@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 import requests
+import os
 
 auth_bp = Blueprint("auth", __name__)
 
-BACKEND_URL = "http://backend:5000"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:5000")
 
 def admin_requerido(funcion):
     @wraps(funcion)

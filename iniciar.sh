@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#revisar los puertos, me daba error aveces el puerto 5000 por la mac
 # hacer chmod +x iniciar.sh
-
 
 set -e
 
@@ -10,13 +8,18 @@ echo "Levantando Altezza sin Docker"
 
 cd "$(dirname "$0")"
 
-BACKEND_PORT=5000
+BACKEND_PORT=5002
 FRONTEND_PORT=5001
 
 mkdir -p logs
 
 if ! command -v python3 >/dev/null 2>&1; then
     echo "ERROR: No se encontró python3"
+    exit 1
+fi
+
+if ! command -v lsof >/dev/null 2>&1; then
+    echo "ERROR: No se encontró lsof"
     exit 1
 fi
 
@@ -36,11 +39,13 @@ if [ ! -f "Frontend/app.py" ]; then
 fi
 
 if [ ! -d ".venv" ]; then
+    echo "Creando entorno virtual..."
     python3 -m venv .venv
 fi
 
 source .venv/bin/activate
 
+echo "Instalando dependencias..."
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
@@ -52,28 +57,10 @@ export DB_NAME="${DB_NAME:-altezza}"
 
 export BACKEND_URL="http://127.0.0.1:$BACKEND_PORT"
 
-python - <<PY
-from pathlib import Path
+echo "Apagando procesos anteriores si existen..."
 
-archivos = [
-    Path("Frontend/routes/auth.py"),
-    Path("Frontend/routes/mis_rutas.py"),
-    Path("Frontend/routes/routes.py"),
-]
-
-for archivo in archivos:
-    if archivo.exists():
-        texto = archivo.read_text()
-        texto = texto.replace("http://backend:5000", "http://127.0.0.1:$BACKEND_PORT")
-        texto = texto.replace("http://127.0.0.1:5000", "http://127.0.0.1:$BACKEND_PORT")
-        texto = texto.replace("http://localhost:5000", "http://127.0.0.1:$BACKEND_PORT")
-        archivo.write_text(texto)
-PY
-
-if command -v lsof >/dev/null 2>&1; then
-    kill -9 $(lsof -ti tcp:$BACKEND_PORT) 2>/dev/null || true
-    kill -9 $(lsof -ti tcp:$FRONTEND_PORT) 2>/dev/null || true
-fi
+kill -9 $(lsof -ti tcp:$BACKEND_PORT) 2>/dev/null || true
+kill -9 $(lsof -ti tcp:$FRONTEND_PORT) 2>/dev/null || true
 
 echo "Levantando backend en http://127.0.0.1:$BACKEND_PORT"
 
@@ -92,8 +79,6 @@ if ! lsof -i tcp:$BACKEND_PORT >/dev/null 2>&1; then
     cat logs/backend.log
     exit 1
 fi
-
-echo "Backend OK"
 
 echo "Levantando frontend en http://127.0.0.1:$FRONTEND_PORT"
 
@@ -114,6 +99,7 @@ if ! lsof -i tcp:$FRONTEND_PORT >/dev/null 2>&1; then
 fi
 
 echo ""
-echo "Proyecto levantado"
+echo "Proyecto levantado correctamente"
+echo ""
 echo "Frontend: http://127.0.0.1:$FRONTEND_PORT"
 echo "Backend:  http://127.0.0.1:$BACKEND_PORT"
