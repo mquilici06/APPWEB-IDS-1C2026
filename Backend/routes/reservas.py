@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from database.db import get_connection
 from datetime import datetime
+from flask_mail import Message
 import qrcode
 import io
 
@@ -47,7 +48,7 @@ def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, 
         recipients=[email],
     )
  
-    msg.body = (
+    mensaje.body = (
         f"Hola {nombre},\n\n"
         f"Tu reserva fue confirmada con éxito.\n\n"
         f"  Reserva N°: {id_reserva}\n"
