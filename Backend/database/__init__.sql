@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS resenas (
     id_cliente INTEGER,
     mensaje VARCHAR(500),
     puntuacion INTEGER,
+    estado VARCHAR(20) DEFAULT 'Pendiente',
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
@@ -120,12 +121,12 @@ INSERT INTO reservas (id_reserva, id_cliente, fecha, hora, cantidad_personas, es
 (5, 5, '2026-06-12', '22:00', 5, 'cancelada');
 
 
-INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion) VALUES
-(1, 1, 'Excelente servicio, muy buena atención.', 5),
-(2, 2, 'La comida llegó fría, podría mejorar.', 3),
-(3, 3, 'Muy buena experiencia, volvería sin dudas.', 4),
-(4, 1, 'El lugar estaba limpio y el personal fue amable.', 5),
-(5, 4, 'Demoraron mucho en atender.', 2);
+INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion, estado) VALUES
+(1, 1, 'Excelente servicio, muy buena atención.', 5, 'Pendiente'),
+(2, 2, 'La comida llegó fría, podría mejorar.', 3, 'Publicada'),
+(3, 3, 'Muy buena experiencia, volvería sin dudas.', 4, 'Publicada'),
+(4, 1, 'El lugar estaba limpio y el personal fue amable.', 5, 'Publicada'),
+(5, 4, 'Demoraron mucho en atender.', 2, 'Pendiente');
 
  
 INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio) VALUES
