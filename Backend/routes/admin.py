@@ -138,6 +138,7 @@ def eliminar_plato(eliminar_id):
 
 
 @admin_bp.route("/reservas", methods=["GET"])
+@jwt_required()
 def mostrar_reservas():
     #Atrapa params
     buscar = request.args.get('buscar', '').lower()
@@ -208,6 +209,7 @@ def mostrar_reservas():
     return jsonify({"Reservas": reservas_hechas}), 200
 
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
+@jwt_required()
 def modificar_reserva(modificar_reserva):
     if modificar_reserva < 1:
         return jsonify({"Error": "Ingrese un id valido"}),400
@@ -325,6 +327,7 @@ def login():
     }), 200
 
 @admin_bp.route('/stats/', methods=['GET'])
+@jwt_required()
 def obtener_estadisticas():
     fecha_filtro = request.args.get('fecha')
     
