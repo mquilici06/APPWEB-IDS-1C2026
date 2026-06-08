@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS reservas (
     hora TIME NOT NULL,
     cantidad_personas INT NOT NULL,
     estado VARCHAR(20) DEFAULT 'confirmada',
+    notas VARCHAR(300),
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
