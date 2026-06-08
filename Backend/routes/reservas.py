@@ -112,6 +112,7 @@ def consultar_disponibilidad():
 
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
+    patron = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$"
     datos = request.get_json()
     campos_requeridos = ["nombre", "email", "telefono", "personas", "fecha", "hora"]
     for campo in campos_requeridos:
@@ -125,6 +126,11 @@ def crear_reserva():
     fecha = datos["fecha"]
     hora = datos["hora"]
     notas = datos.get("notas")
+    
+    email = email.strip()
+    
+    if not re.match(patron,email):
+            return jsonify({"error": "ingrese un email valido"}), 400
 
     try:
         fecha_= datetime.strptime(fecha, '%Y-%m-%d').date()
@@ -176,6 +182,8 @@ def crear_reserva():
     conn.commit()
     cursor.close()
     conn.close()
+
+    return render_template("reservas.html",exito="Mensaje enviado correctamente")
  
     return jsonify({"mensaje": "Reserva confirmada exitosamente", "id_reserva": id_reserva}), 201
 
