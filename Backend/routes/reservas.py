@@ -125,9 +125,11 @@ def crear_reserva():
     notas = datos.get("notas")
 
     try:
-        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
-        if fecha_obj < datetime.now().date():
+        fecha_= datetime.strptime(fecha, '%Y-%m-%d').date()
+        if fecha_ < datetime.now().date():
             return jsonify({"error": "no podés realizar una reserva en una fecha pasada"}), 400
+        if fecha_.weekday() not in [3, 4, 5, 6]:
+            return jsonify({"error": "Solo aceptamos reservas de jueves a domingo."}), 400
     except ValueError:
         return jsonify({"error": "formato de fecha inválido"}), 400
     
