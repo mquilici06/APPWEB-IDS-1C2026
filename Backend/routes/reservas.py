@@ -6,7 +6,7 @@ import io
 
 reservas_bp = Blueprint("reservas", __name__)
 
-def _generar_qr(datos: str) -> bytes:
+def generar_qr(datos: str) -> bytes:
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_M,
@@ -20,7 +20,7 @@ def _generar_qr(datos: str) -> bytes:
     img.save(buf, format="PNG")
     return buf.getvalue()
 
-def _enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas=""):
+def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas=""):
 
     qr_texto = (
         f"----ALTEZZA RISTORANTE----\n"
@@ -37,7 +37,7 @@ def _enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva,
 
 
  
-    qr_bytes = _generar_qr(qr_texto)
+    qr_bytes = generar_qr(qr_texto)
  
     mensaje = Message(
         subject=f"Tu reserva en Altezza - #{id_reserva}",
@@ -159,7 +159,7 @@ def crear_reserva():
         id_cliente = cursor.lastrowid 
     
     try:
-     _enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas)
+     enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas)
     except:
         cursor.close()
         conn.close()
