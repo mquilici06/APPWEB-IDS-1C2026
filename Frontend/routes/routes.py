@@ -361,7 +361,6 @@ def admin_servicios_extras():
 
         return redirect(url_for("frontend.admin_servicios_extras"))
 
-    # GET
     try:
         respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", timeout=5)
         servicios = respuesta.json().get("servicios_extras", [])
