@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block links %}
     <title>{% block title %}Altezza{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display:ital@0;1&display=swap"
-        rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css')}}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     {% endblock %}
-    {% block estilos %}{% endblock %}
+	{% block estilos %}{% endblock %}
 </head>
 
 <body>
@@ -28,39 +26,36 @@
                 <li><a href="/menu">Menú</a></li>
                 <li><a href="/reservas">Reservas</a></li>
                 <li><a href="/resenas">Reseñas</a></li>
-                <li><a href="/accesibilidad">ACCESIBILIDAD</a></li>
                 <li><a href="/contacto">Contáctanos</a></li>
             </ul>
         </nav>
     </header>
 
     {% block content %}{% endblock %}
-
-    <footer id="contacto">
-        <div class="footer-caja-grande">
-            <div class="footer-caja-chica">
-                <h2 class="titulo-footer">Altezza</h2>
-                <p>Apasionados por la cocina italiana auténtica. <br> Te esperamos para vivir una velada inolvidable.
-                </p>
-            </div>
-
-            <div class="footer-caja-chica">
-                <h4>Horarios</h4>
-                <p>Jue - Dom: 19:00 a 00:00</p>
-            </div>
-            <div class="footer-caja-chica">
-                <h4>Contacto</h4>
-                <a href="tel:+541159596780">✆ +54 11 5959-6780</a>
-                <a href="mailto:altezzaadmin@gmail.com">✉ altezzaadmin@gmail.com</a>
-                <address>📍 Av. Del Libertador, 6820 CABA</address>
-            </div>
+  
+	<footer id="contacto">
+    <div class="footer-caja-grande">
+        <div class="footer-caja-chica">
+            <h2 class="titulo-footer">Altezza</h2>
+            <p>Apasionados por la cocina italiana auténtica. <br> Te esperamos para vivir una velada inolvidable.</p>
         </div>
-
-        <div class="copyright">
-            <p>&copy; 2026 Altezza Ristorante</p>
+		
+        <div class="footer-caja-chica">
+			<h4>Horarios</h4>
+            <p>Jue - Dom: 19:00 a 00:00</p>
         </div>
-    </footer>
+		<div class="footer-caja-chica">
+			<h4>Contacto</h4>
+			<a href="tel:+541159596780">✆ +54 11 5959-6780</a>
+			<a href="mailto:altezzaadmin@gmail.com">✉ altezzaadmin@gmail.com</a>
+			<address>📍 Av. Del Libertador, 6820 CABA</address>
+		</div>
+	</div>
+
+    <div class="copyright">
+        <p>&copy; 2026 Altezza Ristorante</p>
+    </div>
+</footer>
     {% block scripts %}{% endblock %}
 </body>
-
 </html>

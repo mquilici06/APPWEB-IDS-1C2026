@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from routes.servicios_extras import servicios_extras_bp
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.secret_key = "altezza_password"  
 app.config["JWT_SECRET_KEY"] = "altezza_jwt_password"
 jwt = JWTManager(app)

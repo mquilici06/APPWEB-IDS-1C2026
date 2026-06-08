@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, session, redirect, url_for, reques
 import requests
 from routes.auth import admin_requerido, BACKEND_URL
 from datetime import datetime
+import base64
+import os
 
 mis_rutas = Blueprint('frontend', __name__)
 
@@ -168,79 +170,77 @@ def eliminar_resena(id):
     return redirect(url_for("frontend.admin_resenas"))
 
 
-@mis_rutas.route('/admin/menu', methods=['GET', 'POST'])
+@mis_rutas.route('/admin/menu', methods=["GET", "POST"])
 @admin_requerido
 def admin_menu():
-    if request.method == 'POST':
+    platos = []
+    plato_a_editar = None
+    editar_id = request.args.get('editar_id', type=int)
+    
+    if request.method == "POST":
         token = session.get("jwt_token")
         headers = {"Authorization": f"Bearer {token}"}
-        
-        datos_plato = {
-            "nombre": request.form.get("nombre_plato"),
-            "descripcion": request.form.get("desc_plato"),
-            "precio": request.form.get("precio"),
-            "seccion": request.form.get("seccion"),
-            "restricciones": request.form.get("restricciones")
-        }
 
-       
-        archivo = request.files.get("imagen_plato")
-        files = {}
-        if archivo and archivo.filename != '':
+        imagen_b64 = None
+        if 'imagen_plato' in request.files:
+            img = request.files['imagen_plato']
+            if img.filename:
+                contenido = img.read()                                      #  aca loque hace es leer la imagn como archivo binario de imagen a binario                          
+                extension = img.filename.rsplit('.', 1)[-1].lower()
+                b64 = base64.b64encode(contenido).decode('utf-8')             # y aqui convierte el binario a texto base64 y lo manda al backend del admin.py para guardar en la base de datos
+                imagen_b64 = f"data:image/{extension};base64,{b64}"       
 
-            files = {'imagen_plato': (archivo.filename, archivo.read(), archivo.content_type)}
-    
+        form_data = dict(request.form)
+        if imagen_b64:
+            form_data['imagen'] = imagen_b64
+
         actualizar_id = request.args.get('actualizar_id', type=int)
 
-        try:
-            if actualizar_id:
-                respuesta = requests.put(f"{BACKEND_URL}/platos/{actualizar_id}", data=datos_plato, files=files, headers=headers, timeout=10)
-                mensaje_ok = "Plato actualizado correctamente"
-            else:
-                respuesta = requests.post(f"{BACKEND_URL}/platos", data=datos_plato, files=files, headers=headers, timeout=10)
-                mensaje_ok = "Plato guardado correctamente"
-            
-            if respuesta.status_code in [200, 201]:
-                flash(mensaje_ok, "exito")
-            else:
-                flash(f"Error al procesar: {respuesta.text}", "error")
-        except requests.exceptions.RequestException:
-            flash("Error de conexión con el Backend", "error")
-            
+        if actualizar_id:
+            token = session.get("jwt_token")
+            print(f"TOKEN PUT: {token}")
+            response = requests.put(
+                f"{BACKEND_URL}/admin/menu/{actualizar_id}",
+                json=form_data,
+                headers=headers
+            )
+        else:
+            response = requests.post(
+                f"{BACKEND_URL}/admin/menu",
+                json=form_data,
+                headers=headers
+            )
+
         return redirect(url_for('frontend.admin_menu'))
 
-    
+    # de aqui en adelate trae platos
     try:
         response = requests.get(f"{BACKEND_URL}/platos")
-        platos = response.json().get("platos", [])
+        if response.status_code == 200:
+            platos = response.json().get("platos", [])
+            
+            if editar_id:
+                for plato in platos:
+                    if plato.get('id_menu') == editar_id:
+                        plato_a_editar = plato
+                        
     except:
         platos = []
 
-    editar_id = request.args.get('editar_id', type=int)
-    plato_a_editar = None
-    if editar_id:
-        plato_a_editar = next((p for p in platos if p['id_menu'] == editar_id), None)
-    
-    
-    
     return render_template('admin/admin_menu.html', platos=platos, plato_a_editar=plato_a_editar)
 
-@mis_rutas.route("/admin/menu/eliminar/<int:id>", methods=["POST"])
+ 
+@mis_rutas.route("/admin/menu/eliminar/<int:id>", methods=["POST"])      # el delete de un inicio es el mismo que esta en main 
 @admin_requerido
 def eliminar_plato(id):
     token = session.get("jwt_token")
     headers = {"Authorization": f"Bearer {token}"}
     
     try:
-        response = requests.delete(f"{BACKEND_URL}/platos/{id}", headers=headers, timeout=5)
+        requests.delete(f"{BACKEND_URL}/admin/menu/{id}", headers=headers)
+    except:
+         print("Error al eliminar menu")
         
-        if response.status_code == 200:
-            flash("Plato eliminado correctamente", "exito")
-        else:
-            flash("Error al eliminar el plato", "error")
-            
-    except requests.exceptions.RequestException:
-        flash("Error de conexión con el servidor al intentar eliminar", "error")
         
     return redirect(url_for("frontend.admin_menu"))
 
@@ -312,7 +312,7 @@ def admin_stats():
                            stats_dias=stats_dias_castellano,  
                            stats_horas=datos.get('stats_horas', {}))
     
-@mis_rutas.route("/accesibilidad", methods=["GET"])
+@mis_rutas.route("/servicios_extras", methods=["GET"])
 def servicios_extras():
     try:
         respuesta = requests.get(f"{BACKEND_URL}/servicios_extras", timeout=5)

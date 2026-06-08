@@ -31,15 +31,6 @@
  
     <div class="reservas-columna">
         <h2 class="seccion-titulo">Completá tus datos</h2>
-        
-        {% if error %}
-        <div class="error">{{ error }}</div>
-        {% endif %}
-
-        {% if exito %}
-        <div class="exito">{{ exito }}</div>
-        {% endif %}
-
         <form id="form-reserva" action="{{ url_for('frontend.reservas') }}" method="POST" novalidate>
             <div class="campo">
                 <label for="hora">Horario</label>
@@ -103,5 +94,4 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/reservas.js') }}"></script>
 {% endblock %}
