@@ -12,7 +12,7 @@ def contactanos():
         nombre = request.form.get("fnombre", "").strip()
         email = request.form.get("femail", "").strip()
         mensaje = request.form.get("fmensaje", "").strip()
-        patron = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+.[A-Za-z]{2,}$"
+        patron = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$"
         
         if not nombre or not email or not mensaje:
             return render_template("contacto.html", error="Por favor complete todos los campos")
