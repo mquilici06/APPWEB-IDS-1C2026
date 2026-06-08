@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+#revisar los puertos, me daba error aveces el puerto 5000 por la mac
 # hacer chmod +x iniciar.sh
 
 

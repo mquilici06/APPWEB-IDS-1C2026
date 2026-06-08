@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # hacer chmod +x apagar.sh
 
 echo "Apagando Altezza sin Docker..."
