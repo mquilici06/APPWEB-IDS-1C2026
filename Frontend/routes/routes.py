@@ -322,3 +322,81 @@ def servicios_extras():
         servicios = []
 
     return render_template('servicios_extras.html', servicios_extras=servicios)
+
+@mis_rutas.route("/admin/accesibilidad", methods=["GET", "POST"])
+@admin_requerido
+def admin_servicios_extras():
+
+    if request.method == "POST":
+        datos = {
+            "nombre_servicio": request.form.get("nombre_servicio"),
+            "descripcion_servicio": request.form.get("descripcion_servicio")
+        }
+        editar_id = request.args.get("editar_id")
+
+        try:
+            if editar_id:
+                respuesta = requests.put(
+                    f"{BACKEND_URL}/admin/servicios_extras/{editar_id}",
+                    json=datos,
+                    timeout=5
+                )
+                if respuesta.status_code == 200:
+                    flash("Servicio actualizado correctamente", "exito")
+                else:
+                    flash(respuesta.json().get("Mensaje", "Error al actualizar"), "error")
+            else:
+                respuesta = requests.post(
+                    f"{BACKEND_URL}/admin/servicios_extras",
+                    json=datos,
+                    timeout=5
+                )
+                if respuesta.status_code == 201:
+                    flash("Servicio agregado correctamente", "exito")
+                else:
+                    flash(respuesta.json().get("Error", "Error al agregar"), "error")
+
+        except requests.exceptions.RequestException:
+            flash("Error de conexión con el servidor", "error")
+
+        return redirect(url_for("frontend.admin_servicios_extras"))
+
+    # GET
+    try:
+        respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", timeout=5)
+        servicios = respuesta.json().get("servicios_extras", [])
+    except:
+        servicios = []
+        flash("Error al cargar los servicios", "error")
+
+    servicio_a_editar = None
+    editar_id = request.args.get("editar_id")
+    if editar_id:
+        servicio_a_editar = next(
+            (s for s in servicios if str(s["id_servicio"]) == editar_id),
+            None
+        )
+
+    return render_template(
+        "admin/admin_servicios_extras.html",
+        servicios=servicios,
+        servicio_a_editar=servicio_a_editar
+    )
+
+
+@mis_rutas.route("/admin/servicios_extras/eliminar/<int:id>", methods=["POST"])
+@admin_requerido
+def eliminar_servicio(id):
+    try:
+        respuesta = requests.delete(
+            f"{BACKEND_URL}/admin/servicios_extras/{id}",
+            timeout=5
+        )
+        if respuesta.status_code == 200:
+            flash("Servicio eliminado correctamente", "exito")
+        else:
+            flash("Error al eliminar el servicio", "error")
+    except requests.exceptions.RequestException:
+        flash("Error de conexión con el servidor", "error")
+
+    return redirect(url_for("frontend.admin_servicios_extras"))

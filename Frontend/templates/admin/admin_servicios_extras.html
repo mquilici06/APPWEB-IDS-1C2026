@@ -1,0 +1,86 @@
+{% extends "/admin/base_admin.html" %}
+
+{% block title %}Admin Servicios Extra - Altezza Ristorante{% endblock %}
+
+{% block estilos %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_servicios_extras.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="contenedor-servicios-admin">
+
+    <div class="cabecera-seccion-servicios text-center">
+        <h1 class="titulo-seccion-servicios">Gestionar Servicios Extras</h1>
+        <p class="subtitulo-servicios">Añadir, editar o eliminar los servicios disponibles en Altezza Ristorante.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="contenedor-mensajes-servicios">
+        {% for category, message in messages %}
+        <div class="mensaje-flash-servicio {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <section class="seccion-formulario-servicios">
+        {% if servicio_a_editar %}
+        <h2 class="titulo-formulario">Editar Servicio: {{ servicio_a_editar.nombre_servicio }}</h2>
+        <form action="{{ url_for('frontend.admin_servicios_extras') }}?editar_id={{ servicio_a_editar.id_servicio }}"
+            method="POST" class="formulario-servicio">
+            {% else %}
+            <h2 class="titulo-formulario">Añadir Servicio</h2>
+            <form action="{{ url_for('frontend.admin_servicios_extras') }}" method="POST" class="formulario-servicio">
+                {% endif %}
+
+                <input type="text" name="nombre_servicio" placeholder="Nombre del servicio" required
+                    value="{{ servicio_a_editar.nombre_servicio if servicio_a_editar else '' }}">
+
+                <textarea name="descripcion_servicio" placeholder="Descripción del servicio" rows="5"
+                    required>{{ servicio_a_editar.descripcion_servicio if servicio_a_editar else '' }}</textarea>
+
+                <div class="botones-formulario">
+                    <button type="submit" class="boton-guardar-servicio">
+                        {% if servicio_a_editar %}Actualizar Cambios{% else %}Guardar Servicio{% endif %}
+                    </button>
+                    {% if servicio_a_editar %}
+                    <a href="{{ url_for('frontend.admin_servicios_extras') }}" class="boton-cancelar-servicio">Cancelar
+                        Edición</a>
+                    {% endif %}
+                </div>
+
+            </form>
+    </section>
+
+    <section class="seccion-servicios-lista">
+        <h2>Servicios Actuales</h2>
+        <div class="contenedor-tarjetas-servicios">
+            {% for servicio in servicios %}
+            <div class="tarjeta-servicio-item">
+                <div class="contenido-servicio-item">
+                    <h3>{{ servicio.nombre_servicio }}</h3>
+                    <p class="texto-descripcion-servicio">"{{ servicio.descripcion_servicio }}"</p>
+                    <p class="id-servicio-item">ID: {{ servicio.id_servicio }}</p>
+                </div>
+                <div class="acciones-servicio-item">
+                    <a href="{{ url_for('frontend.admin_servicios_extras', editar_id=servicio.id_servicio) }}"
+                        class="boton-editar-servicio">Editar</a>
+                    <form action="{{ url_for('frontend.eliminar_servicio', id=servicio.id_servicio) }}" method="POST"
+                        class="form-inline-servicio">
+                        <button type="submit" class="boton-eliminar-servicio"
+                            onclick="return confirm('¿Seguro que querés eliminar este servicio?');">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="tarjeta-servicio-item vacia">
+                <p>No hay servicios registrados.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

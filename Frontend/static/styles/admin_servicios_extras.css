@@ -1,0 +1,198 @@
+.contenedor-servicios-admin {
+    padding: 20px;
+    font-family: 'Montserrat';
+}
+
+.cabecera-seccion-servicios.text-center {
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.titulo-seccion-servicios {
+    font-size: 32px;
+    font-weight: bold;
+    color: #7d1c21;
+    margin-bottom: 8px;
+}
+
+.subtitulo-servicios {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+.titulo-formulario {
+    color: #333;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.contenedor-mensajes-servicios {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.mensaje-flash-servicio {
+    padding: 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.mensaje-flash-servicio.exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensaje-flash-servicio.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.formulario-servicio {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 5px;
+}
+
+.formulario-servicio input[type="text"],
+.formulario-servicio textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: #fcfcfc;
+}
+
+.botones-formulario {
+    display: flex;
+    gap: 15px;
+}
+
+.boton-guardar-servicio {
+    flex-grow: 1;
+    background-color: #7d1c21;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.boton-guardar-servicio:hover {
+    background-color: #5c1317;
+}
+
+.boton-cancelar-servicio {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 1px solid #7d1c21;
+    border-radius: 4px;
+    color: #7d1c21;
+    text-decoration: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.boton-cancelar-servicio:hover {
+    background-color: #7d1c21;
+    color: white;
+}
+
+.contenedor-tarjetas-servicios {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 25px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.tarjeta-servicio-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #7d1c21;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.contenido-servicio-item h3 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.texto-descripcion-servicio {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-style: italic;
+    font-size: 15px;
+}
+
+.id-servicio-item {
+    margin: 0;
+    font-size: 13px;
+    color: #888;
+}
+
+.acciones-servicio-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.form-inline-servicio {
+    display: inline;
+}
+
+.boton-editar-servicio {
+    display: inline-block;
+    background-color: #4caf50;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.boton-eliminar-servicio {
+    background-color: #7d1c21;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.tarjeta-servicio-item.vacia {
+    justify-content: center;
+    border-left: 5px solid #ccc;
+    color: #666;
+}

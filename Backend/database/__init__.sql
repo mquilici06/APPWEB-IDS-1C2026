@@ -59,8 +59,7 @@ CREATE TABLE IF NOT EXISTS reservas (
 CREATE TABLE IF NOT EXISTS servicios_extras (
     id_servicio INTEGER AUTO_INCREMENT PRIMARY KEY,
     nombre_servicio VARCHAR(100) NOT NULL UNIQUE,
-    descripcion_servicio VARCHAR(255) NOT NULL,
-    imagen VARCHAR(100)
+    descripcion_servicio VARCHAR(255) NOT NULL
 );
 
 
@@ -129,10 +128,10 @@ INSERT INTO resenas (id_resena, id_cliente, mensaje, puntuacion) VALUES
 (5, 4, 'Demoraron mucho en atender.', 2);
 
  
-INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio, imagen) VALUES
-('Playa de Estacionamiento', 'Estacionamiento exclusivo y gratuito para clientes durante su estadía en el local.', 'estacionamiento.png'),
-('Acceso para Discapacitados', 'Rampas de acceso, pasillos amplios y baños totalmente adaptados para movilidad reducida.', 'acceso_discapacitados.png'),
-('Conectividad Wi-Fi de Alta Velocidad', 'Red de internet simétrica de uso libre para clientes en todo el establecimiento.', 'wifi.png'),
-('Mesas al Aire Libre / Terraza', 'Opción de reserva de mesas en sectores exteriores climatizados (patio o terraza).', 'terraza.png'),
-('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.', 'qr.png');
+INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio) VALUES
+('Playa de Estacionamiento', 'Estacionamiento exclusivo y gratuito para clientes durante su estadía en el local.'),
+('Acceso para Discapacitados', 'Rampas de acceso, pasillos amplios y baños totalmente adaptados para movilidad reducida.'),
+('Conectividad Wi-Fi de Alta Velocidad', 'Red de internet simétrica de uso libre para clientes en todo el establecimiento.'),
+('Mesas al Aire Libre / Terraza', 'Opción de reserva de mesas en sectores exteriores climatizados (patio o terraza).'),
+('Menú Digital QR en Mesa', 'Acceso al menú completo con filtros interactivos para alérgenos y restricciones desde el celular.');
  
