@@ -1,8 +1,71 @@
 from flask import Blueprint, request, jsonify
 from database.db import get_connection
 from datetime import datetime
+import qrcode
+import io
 
 reservas_bp = Blueprint("reservas", __name__)
+
+def _generar_qr(datos: str) -> bytes:
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=8,
+        border=4,
+    )
+    qr.add_data(datos)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="#6d071a", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
+
+def _enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas=""):
+
+    qr_texto = (
+        f"----ALTEZZA RISTORANTE----\n"
+        f"Reserva #{id_reserva}\n"
+        f"Nombre: {nombre}\n"
+        f"Fecha: {fecha}\n"
+        f"Hora: {hora}\n"
+        f"Personas: {personas}"
+    )
+    if notas:
+        qr_texto += f"\nNotas: {notas}"
+    else :
+        qr_texto += "\nSin notas adicionales"
+
+
+ 
+    qr_bytes = _generar_qr(qr_texto)
+ 
+    mensaje = Message(
+        subject=f"Tu reserva en Altezza - #{id_reserva}",
+        recipients=[email],
+    )
+ 
+    mensaje.body = (
+        f"Hola {nombre},\n\n"
+        f"Tu reserva fue confirmada con éxito.\n\n"
+        f" -Reserva N°: {id_reserva}\n"
+        f" -Fecha:      {fecha}\n"
+        f" -Hora:       {hora}\n"
+        f" -Personas:   {personas}\n"
+        if notas:
+            f" -Notas:      {notas}\n"
+        + f"\nPresentá el QR adjunto al llegar al restaurante.\n\n"
+        f"¡Te esperamos!\n"
+        f"Altezza Ristorante · Av. Del Libertador 6820, CABA"
+    )
+ 
+    mensaje.attach(
+        filename=f"reserva_{id_reserva}_qr.png",
+        content_type="image/png",
+        data=qr_bytes,
+        disposition="attachment",
+    )
+ 
+    mail.send(mensaje)
 
 @reservas_bp.route("/disponibilidad", methods=["GET"])
 def consultar_disponibilidad():
@@ -59,6 +122,8 @@ def crear_reserva():
     personas = datos["personas"]
     fecha = datos["fecha"]
     hora = datos["hora"]
+    notas = datos.get("notas")
+
     try:
         fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
         if fecha_obj < datetime.now().date():
@@ -77,7 +142,7 @@ def crear_reserva():
     """, (fecha, hora, "confirmada"))
     ocupacion = cursor.fetchone()["total"]
 
-    if ocupacion + int(personas) > 10: 
+    if ocupacion + int(personas) > capacidad_max: 
         cursor.close()
         conn.close()
         return jsonify({"error": "El horario seleccionado excede la capacidad disponible"}), 409
@@ -86,23 +151,29 @@ def crear_reserva():
     usuario_existente = cursor.fetchone()
 
     if usuario_existente:
-        id_cliente = usuario_existente["id"]
-    else:
+        id_cliente = usuario_existente["id"]   
+    else:  
         cursor.execute(
-            "INSERT INTO usuarios (nombre, email, celular, rol) VALUES (%s, %s, %s, 'cliente')",
-            (nombre, email, telefono)
-        )
+        "INSERT INTO usuarios (nombre, email, celular, rol) VALUES (%s, %s, %s, 'cliente')",
+        (nombre, email, telefono))
         id_cliente = cursor.lastrowid 
+    
+    try:
+     _enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas)
+    except:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "No se pudo enviar el mail de confirmación. La reserva no fue guardada."}), 500
+
     cursor.execute("""
         INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado) 
         VALUES (%s, %s, %s, %s, %s)
-    """, (id_cliente, fecha, hora, personas, "confirmada"))
- 
+        """, (id_cliente, fecha, hora, personas, "confirmada"))
     conn.commit()
     cursor.close()
     conn.close()
-
-    return jsonify({"mensaje": "Reserva confirmada exitosamente"}), 201
+ 
+    return jsonify({"mensaje": "Reserva confirmada exitosamente", "id_reserva": id_reserva}), 201
 
 @reservas_bp.route("/<int:id>", methods=["POST"])
 def borrar_reserva(id):
