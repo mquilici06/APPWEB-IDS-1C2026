@@ -6,6 +6,8 @@ import io
 
 reservas_bp = Blueprint("reservas", __name__)
 
+capacidad_max = 10
+
 def generar_qr(datos: str) -> bytes:
     qr = qrcode.QRCode(
         version=1,
@@ -45,19 +47,18 @@ def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, 
         recipients=[email],
     )
  
-    mensaje.body = (
+    msg.body = (
         f"Hola {nombre},\n\n"
         f"Tu reserva fue confirmada con éxito.\n\n"
-        f" -Reserva N°: {id_reserva}\n"
-        f" -Fecha:      {fecha}\n"
-        f" -Hora:       {hora}\n"
-        f" -Personas:   {personas}\n"
-        if notas:
-            f" -Notas:      {notas}\n"
+        f"  Reserva N°: {id_reserva}\n"
+        f"  Fecha: {fecha}\n"
+        f"  Hora: {hora}\n"
+        f"  Personas: {personas}\n"
+        + (f"  Notas: {notas}\n" if notas else "")
         + f"\nPresentá el QR adjunto al llegar al restaurante.\n\n"
         f"¡Te esperamos!\n"
         f"Altezza Ristorante · Av. Del Libertador 6820, CABA"
-    )
+)
  
     mensaje.attach(
         filename=f"reserva_{id_reserva}_qr.png",
@@ -77,7 +78,7 @@ def consultar_disponibilidad():
         return jsonify({"error": "Falta el parámetro 'fecha'"}), 400
 
     horarios_disp = ["20:00", "20:30", "21:00", "21:30", "22:00"]
-    capacidad_max = 10
+    
     
     try:
         conn = get_connection()
