@@ -41,6 +41,7 @@ def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, 
  
     mensaje = Message(
         subject=f"Tu reserva en Altezza - #{id_reserva}",
+        sender="altezzaadmin@gmail.com",
         recipients=[email],
     )
  
