@@ -10,23 +10,18 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <div style="margin-bottom: 20px;">
+        <div class="contenedor-mensajes">
         {% for category, message in messages %}
-            
             {% if category == 'exito' %}
-                <div style="padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 5px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
-                    {{ message }}
-                </div>
+                <div class="mensaje-exito">{{ message }}</div>
             {% else %}
-                <div style="padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 5px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
-                    {{ message }}
-                </div>
+                <div class="mensaje-error">{{ message }}</div>
             {% endif %}
-
         {% endfor %}
         </div>
     {% endif %}
 {% endwith %}
+
 <div class="abm-container">
     <h1 class="abm-titulo">Gestion de Reseñas</h1>
     <p class="abm-subtitulo">Revisa y elimina las reseñas de los clientes.</p>
@@ -39,33 +34,28 @@
                 <p class="resena-puntuacion">Puntuación: {{ resena.puntuacion }} / 5 estrellas</p>
                 <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
                 
-                <p class="resena-estado" style="margin-top: 10px; font-size: 0.9em;">
+                <p class="resena-estado">
                     Estado: 
                     {% if resena.estado == 'Publicada' %}
-                        <strong style="color: #28a745;">{{ resena.estado }}</strong>
+                        <strong class="estado-publicada">{{ resena.estado }}</strong>
                     {% else %}
-                        <strong style="color: #ff9800;">{{ resena.estado }}</strong>
+                        <strong class="estado-pendiente">{{ resena.estado }}</strong>
                     {% endif %}
                 </p>
             </div>
             
-            <div class="resena-acciones" style="display: flex; gap: 10px; align-items: center;">
-                <form action="{{ url_for('frontend.cambiar_estado_resena', id=resena.id_resena) }}" method="POST" style="margin: 0;">
+            <div class="resena-acciones">
+               <form action="{{ url_for('frontend.cambiar_estado_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
                     {% if resena.estado == 'Pendiente' %}
                         <input type="hidden" name="estado" value="Publicada">
-                        <button type="submit" class="btn-aprobar" style="background-color: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            Aprobar
-                        </button>
+                        <button type="submit" class="btn-aprobar">Aprobar</button>
                     {% else %}
                         <input type="hidden" name="estado" value="Pendiente">
-                        <button type="submit" class="btn-ocultar" style="background-color: #ffc107; color: black; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            Ocultar
-                        </button>
+                        <button type="submit" class="btn-ocultar">Ocultar</button>
                     {% endif %}
                 </form>
-
-                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST" style="margin: 0;">
-                    <button type="submit" class="btn-eliminar" style="padding: 6px 12px;">Eliminar</button>
+                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </div>
         </div>
