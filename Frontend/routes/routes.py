@@ -155,9 +155,9 @@ def eliminar_resena(id):
     token = session.get("jwt_token")
     headers = {"Authorization": f"Bearer {token}"}
     try:
-        response = requests.delete(f"{BACKEND_URL}/resenas/{id}", headers=headers, timeout=5)
+        response = requests.delete(f"{BACKEND_URL}/admin/resenas/{id}", headers=headers, timeout=5)
         
-        if response.status_code != 200:
+        if response.status_code != 204:
             flash("Error al eliminar la reseña", "error")
         else:
             flash("Reseña eliminada correctamente", "exito")
