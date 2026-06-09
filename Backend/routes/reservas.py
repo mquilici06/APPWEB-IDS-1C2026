@@ -71,7 +71,7 @@ def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, 
     mail.send(mensaje)
 
 @reservas_bp.route("/disponibilidad", methods=["GET"])
-def consultar_disponibilidad():
+def esta_disponible():
     #se manda la fecha como query params
     fecha = request.args.get('fecha')
     
@@ -79,7 +79,6 @@ def consultar_disponibilidad():
         return jsonify({"error": "Falta el parámetro 'fecha'"}), 400
 
     horarios_disp = ["20:00", "20:30", "21:00", "21:30", "22:00"]
-    
     
     try:
         conn = get_connection()
@@ -89,27 +88,19 @@ def consultar_disponibilidad():
     
     cursor.execute("""SELECT hora, COUNT(*) as total
                    FROM reservas WHERE fecha = %s AND estado = %s 
-                   GROUP BY hora""", (fecha, "confirmada"))
+                   GROUP BY hora""", (fecha, "pendiente"))
     resultados = cursor.fetchall()
 
-    ocupacion = {}
-    for fila in resultados: #Por cada Fila que trajo (ej: {'hora': 20:00:00, 'total': 5})
-        hora_limpia = str(fila['hora'])[:5]
-        ocupacion[hora_limpia] = fila['total']
+    if resultados >= 10:
+        esta_disponible = False
+    else:
+        esta_disponible = True
 
-    disponibilidad = []
-    for h in horarios_disp:
-        cantidad = ocupacion.get(h, 0)#consulta disponibilidad en c/u horario, si no hay devuelve 0
-        disponibilidad.append({
-            "hora": h,
-            "estado": "disponible" if cantidad < capacidad_max else "agotado",
-            "lugares_libres": capacidad_max - cantidad
-        })
-    
     cursor.close()
     conn.close()
 
-    return jsonify(disponibilidad), 200
+    rdo = {"esta_disp": f"{esta_disponible}"}
+    return jsonify(rdo), 200
 
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
