@@ -2,6 +2,7 @@
     font-family: 'Montserrat', sans-serif;
     color: #1a1a1a;
     padding: 10px;
+    transform: translate(20px);
 }
 
 .cabecera-stats {
