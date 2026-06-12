@@ -1,3 +1,5 @@
+x-db-password: &db-password ${DB_PASSWORD}
+
 services:
   backend:
     build:
@@ -11,7 +13,7 @@ services:
     environment:
       DB_HOST: db
       DB_USER: root
-      DB_PASSWORD: Root123!
+      DB_PASSWORD: *db-password
       DB_NAME: altezza
     depends_on:
       db:
@@ -35,7 +37,7 @@ services:
     restart: always
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD: Root123!
+      MYSQL_ROOT_PASSWORD: *db-password
       MYSQL_DATABASE: altezza
     ports:
       - "3307:3306"
@@ -43,7 +45,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./Backend/database/__init__.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pRoot123!"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 10
