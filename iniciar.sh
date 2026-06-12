@@ -6,9 +6,9 @@ set -e
 
 echo "Levantando Altezza sin Docker"
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" #cd $0 para entrar a la direccion del script
 
-BACKEND_PORT=5002
+BACKEND_PORT=5000
 FRONTEND_PORT=5001
 
 mkdir -p logs
@@ -51,22 +51,26 @@ pip install -r requirements.txt
 
 export DB_HOST="${DB_HOST:-127.0.0.1}"
 export DB_PORT="${DB_PORT:-3306}"
-export DB_USER="${DB_USER:-root}"
-export DB_PASSWORD="${DB_PASSWORD:-Root123!}"
+export DB_USER="${DB_USER:-root}" #cambiar usuario
+export DB_PASSWORD="${DB_PASSWORD:-Root123!}" #ver contraseña
 export DB_NAME="${DB_NAME:-altezza}"
 
 export BACKEND_URL="http://127.0.0.1:$BACKEND_PORT"
 
 echo "Apagando procesos anteriores si existen..."
 
-kill -9 $(lsof -ti tcp:$BACKEND_PORT) 2>/dev/null || true
+#List Open Files(lsof), para listar los archivos abiertos y asi poder cerrar los procesos para liberar puertos
+
+kill -9 $(lsof -ti tcp:$BACKEND_PORT) 2>/dev/null || true 
 kill -9 $(lsof -ti tcp:$FRONTEND_PORT) 2>/dev/null || true
 
 echo "Levantando backend en http://127.0.0.1:$BACKEND_PORT"
 
 cd Backend
 
-nohup ../.venv/bin/python -u -c "from appBack import app; app.run(host='127.0.0.1', port=$BACKEND_PORT, debug=False)" > ../logs/backend.log 2>&1 &
+#nohup (no hang up), para que cuando cierre la terminal no mate todos los procesos hijos.
+
+nohup ../.venv/bin/python -u -c "from appBack import app; app.run(host='127.0.0.1', port=$BACKEND_PORT, debug=False)" > ../logs/backend.log 2>&1 & #arranca el servidor del back
 
 cd ..
 

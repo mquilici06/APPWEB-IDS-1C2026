@@ -6,7 +6,7 @@ echo "Apagando Altezza sin Docker"
 
 cd "$(dirname "$0")"
 
-BACKEND_PORT=5002
+BACKEND_PORT=5000
 FRONTEND_PORT=5001
 
 if ! command -v lsof >/dev/null 2>&1; then
