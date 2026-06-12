@@ -56,9 +56,13 @@ h1 {
     border-radius: 8px;
 }
 
-.img-platos {
-    width: 90%;
-    padding: 5%;
+.imagen-platos {
+    width: 95%;
+    height: 250px; 
+    object-fit: cover;
+    display: block;
+    margin: 15px auto;
+    border-radius: 8px;
 }
 
 .texto-caja-ind {

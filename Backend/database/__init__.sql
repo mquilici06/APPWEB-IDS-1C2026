@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS altezza;
 CREATE DATABASE IF NOT EXISTS altezza;
 USE altezza;
 SET NAMES utf8mb4;
