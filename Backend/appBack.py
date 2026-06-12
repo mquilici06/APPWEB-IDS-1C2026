@@ -6,10 +6,14 @@ from routes.reservas import reservas_bp
 from routes.admin import admin_bp
 from flask_jwt_extended import JWTManager
 from routes.servicios_extras import servicios_extras_bp
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "altezza_password"  
-app.config["JWT_SECRET_KEY"] = "altezza_jwt_password"
+app.secret_key = os.getenv("SECRET_KEY")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 CORS(app)
