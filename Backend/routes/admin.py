@@ -17,20 +17,21 @@ def agregar_plato():
     
     data = request.json
 
-    datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
+    datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion","imagen"]
     secciones_validas = ["platos principales", "bebidas", "postres"]
 
     for campo in datos_requeridos:
         if campo not in data:
             cursor.close()
             conn.close()
-            return jsonify({"Error": "Falta Completar algun campo"}), 400
+            return jsonify({"Error": "Falta Completar algun campo obligatorio"}), 400
     
     nombre_plato = data.get("nombre_plato")
     descripcion_plato = data.get("desc_plato")
     precio_plato = data.get("precio")
     restricciones_plato = data.get("restricciones")
     seccion_plato = data.get("seccion")
+    imagen = data.get("imagen")
 
     cursor.execute("""
                    SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
@@ -53,9 +54,9 @@ def agregar_plato():
         return jsonify({"Error": "Seccion del menu invalida"}), 400
     
     cursor.execute("""
-                   INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion)
-                   VALUES (%s,%s,%s,%s,%s)
-                   """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize())
+                   INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen)
+                   VALUES (%s,%s,%s,%s,%s,%s)
+                   """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize(),imagen)
                    )
     conn.commit()
     cursor.close()
@@ -100,10 +101,14 @@ def editar_plato(id_plato):
     precio_act = data["precio"]
     restr_act = data["restricciones"]
     seccion_act = data["seccion"]
+    imagen_act = data["imagen"]
+
+    if imagen_act is None:
+        imagen_act = plato["imagen"]
     
     cursor.execute("""
-                    UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s WHERE id_menu = %s;
-                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act, id_plato))
+                    UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s, imagen = %s WHERE id_menu = %s;
+                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act,imagen_act, id_plato))
     conn.commit()
 
     cursor.close()
