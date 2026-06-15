@@ -1,4 +1,4 @@
-x-db-password: &db-password ${DB_PASSWORD}
+x-db-password: &db-password ${DB_PASSWORD:-rootpassword}
 
 services:
   backend:
@@ -45,7 +45,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./Backend/database/__init__.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD" ]
       interval: 5s
       timeout: 5s
       retries: 10
