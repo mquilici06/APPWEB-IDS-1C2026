@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-import requests  
+import requests
+import os
  
  
 reservas_bp = Blueprint("reservas", __name__)
@@ -7,7 +8,7 @@ reservas_bp = Blueprint("reservas", __name__)
 BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:5000")
  
 @reservas_bp.route("/", methods=["GET", "POST"])
-def reservas():
+def crear_reserva():
     if request.method == "GET":
         return render_template("reservas.html")
  
@@ -38,5 +39,5 @@ def reservas():
     else:
         return render_template(
             "reservas.html",
-            error=resultado.get("error", "Ocurrió un error inesperado.")
+            error=resultado.get("error", "Verifica que los campos esten completos y sean correctos e intentá de nuevo.")
         )
