@@ -18,6 +18,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - ./Backend/.env
 
   frontend:
     build:
@@ -30,6 +32,8 @@ services:
       - ./Frontend:/app
     depends_on:
       - backend
+    env_file:
+      - ./Frontend/.env
 
   db:
     image: mysql:8.0
