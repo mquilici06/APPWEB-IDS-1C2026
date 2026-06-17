@@ -218,6 +218,37 @@ def mostrar_reservas():
 
     return jsonify({"Reservas": reservas_hechas}), 200
 
+@admin_bp.route("/reservas/<int:id_reserva>/estado", methods=["PUT"])
+@jwt_required()
+def actualizar_estado_reserva(id_reserva):
+    data = request.json
+    nuevo_estado = data.get("estado")
+
+    if nuevo_estado not in ["confirmada", "cancelada", "pendiente"]:
+        return jsonify({"Error": "Estado no válido"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE reservas 
+            SET estado = %s 
+            WHERE id_reserva = %s
+        """, (nuevo_estado, id_reserva))
+        
+        conn.commit()
+        return jsonify({"Mensaje": "Estado de la reserva actualizado"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": f"Error en BD: {str(e)}"}), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 @admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
 @jwt_required()
 def modificar_reserva(modificar_reserva):

@@ -139,6 +139,32 @@ def admin_reservas():
         filtro_estado=estado
     )
         
+@mis_rutas.route("/admin/reservas/estado/<int:id>", methods=["POST"])
+@admin_requerido
+def cambiar_estado_reserva(id):
+    nuevo_estado = request.form.get("nuevo_estado")
+    
+    token = session.get("jwt_token")    
+    headers = {"Authorization": f"Bearer {token}"}
+    
+    try:
+        respuesta = requests.put(
+            f"{BACKEND_URL}/admin/reservas/{id}/estado",
+            json={"estado": nuevo_estado},
+            headers=headers,
+            timeout=5
+        )
+        
+        if respuesta.status_code == 200:
+            flash(f"Reserva {nuevo_estado} exitosamente.", "success")
+        else:
+            flash("Error al actualizar la reserva en el backend.", "error")
+            
+    except requests.exceptions.RequestException:
+        flash("Error de conexión con el servidor.", "error")
+        
+    return redirect(url_for("frontend.admin_reservas"))
+
 
 @mis_rutas.route("/admin/resenas", methods=["GET"])
 @admin_requerido
