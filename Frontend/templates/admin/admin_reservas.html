@@ -87,10 +87,13 @@
                                 </span>
                             </td>
                             <td class="celda-acciones">
-                                <form action="#" method="POST" class="formulario-accion">
+                                <form action="{{ url_for('frontend.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                    <input type="hidden" name="nuevo_estado" value="confirmada">
                                     <button type="submit" class="boton-accion boton-confirmar" title="Confirmar">✓</button>
                                 </form>
-                                <form action="#" method="POST" class="formulario-accion">
+
+                                <form action="{{ url_for('frontend.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                    <input type="hidden" name="nuevo_estado" value="cancelada">
                                     <button type="submit" class="boton-accion boton-cancelar" title="Cancelar">✕</button>
                                 </form>
                             </td>
