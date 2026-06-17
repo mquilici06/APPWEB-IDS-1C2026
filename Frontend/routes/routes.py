@@ -96,11 +96,13 @@ def admin_reservas():
         'fecha': fecha,
         'estado': estado
     }
+
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
     
     reservas = []
     try:
-        respuesta = requests.get(f"{BACKEND_URL}/admin/reservas", params=parametros)
-        
+        respuesta = requests.get(f"{BACKEND_URL}/admin/reservas", params=parametros, headers=headers)
         if respuesta.status_code == 200:
             datos = respuesta.json()
             reservas = datos.get("Reservas", [])
