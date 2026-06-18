@@ -59,20 +59,18 @@ def resenas():
             response = requests.post(f"{BACKEND_URL}/resenas", json=data, timeout=5)
             if response.status_code != 201:
                 error = response.json().get("error", "Error al enviar la reseña.")
-                return redirect(url_for("frontend.resenas", aviso=error, tipo="error"))
+                flash(error, "error")
             else:
-                return redirect(url_for("frontend.resenas", aviso="¡Reseña publicada!", tipo="exito"))
-        except:
-            return redirect(url_for("frontend.resenas", aviso="Error de conexion con el servidor", tipo="error"))
+                flash("¡Reseña enviada! Quedara visible una vez aprobada.", "exito")
+        except requests.exceptions.RequestException:
+            flash("Error de conexión con el servidor", "error")
     try:
         response = requests.get(f"{BACKEND_URL}/resenas", timeout=5)
         data = response.json()
         resenas = data.get("resenas", [])
-    except:
+    except requests.exceptions.RequestException:
         resenas = []
-    aviso = request.args.get("aviso")
-    tipo = request.args.get("tipo")
-    return render_template("resenas.html", resenas=resenas, aviso=aviso, tipo=tipo)
+    return render_template("resenas.html", resenas=resenas)
 
 @mis_rutas.route("/logout", methods=["GET"])
 def logout():
@@ -170,7 +168,9 @@ def cambiar_estado_reserva(id):
 @admin_requerido
 def admin_resenas():
     try:
-        response = requests.get(f"{BACKEND_URL}/resenas/todas") 
+        token = session.get("jwt_token")
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(f"{BACKEND_URL}/admin/resenas", headers=headers, timeout=5)
         data = response.json()
         resenas = data.get("resenas", [])
     except:
@@ -278,13 +278,20 @@ def eliminar_plato(id):
 @admin_requerido
 def cambiar_estado_resena(id):
     nuevo_estado = request.form.get("estado")
-    
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
+
     try:
-        requests.put(
-            f"{BACKEND_URL}/resenas/{id}/estado", 
+        response = requests.put(
+            f"{BACKEND_URL}/admin/resenas/{id}/estado", 
             json={"estado": nuevo_estado},
+            headers=headers,
             timeout=10
         )
+        if response.status_code == 200:
+            flash(f"Reseña marcada como {nuevo_estado}", "exito")
+        else:
+            flash("Error al cambiar el estado", "error")
     except requests.exceptions.RequestException:
         flash("Error al conectar con el servidor para cambiar estado", "error")
         
