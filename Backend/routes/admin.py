@@ -331,6 +331,72 @@ def eliminar_resena(resena_id):
     conn.close()
     return '', 204
 
+@admin_bp.route("/resenas/<int:id>/estado", methods=["PUT"])
+@jwt_required()
+def cambiar_estado_resena(id):
+    if id < 1:
+        return jsonify({"error": "ID invalido"}), 400
+
+    data = request.get_json(silent=True)
+    nuevo_estado = data.get("estado") if data else None
+
+    if nuevo_estado not in ["Publicada", "Pendiente"]:
+        return jsonify({"error": "Estado invalido, debe ser Publicada o Pendiente"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+    
+    cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id,))
+
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Reseña no encontrada"}), 404
+    
+    cursor.execute("UPDATE resenas SET estado = %s WHERE id_resena = %s", (nuevo_estado, id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": f"Reseña marcada como {nuevo_estado}"}), 200
+
+@admin_bp.route("/resenas", methods=["GET"])
+@jwt_required()
+def listar_todas_resenas():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+
+    cursor.execute("SELECT * FROM resenas")
+    lista_resenas = cursor.fetchall()
+
+    if not lista_resenas:
+        cursor.close()
+        conn.close()
+        return jsonify({"resenas": []}), 200
+
+    resenas_armadas = []
+    for resena in lista_resenas:
+        cursor.execute("SELECT nombre FROM usuarios WHERE id = %s", (resena["id_cliente"],))
+        cliente = cursor.fetchone()
+        if cliente:
+            resena_completa = {
+                "id_resena": resena["id_resena"],
+                "nombre_cliente": cliente["nombre"],
+                "mensaje": resena["mensaje"],
+                "puntuacion": resena["puntuacion"],
+                "estado": resena.get("estado", "Pendiente")
+            }
+            resenas_armadas.append(resena_completa)
+
+    cursor.close()
+    conn.close()
+    return jsonify({"resenas": resenas_armadas}), 200
+
 @admin_bp.route("/login", methods=["POST"])
 def login():
     try:
