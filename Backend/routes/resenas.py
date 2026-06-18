@@ -8,7 +8,7 @@ def listar_resenas():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
+    except Exception:
         return jsonify({"error": "Error de conexion con la base de datos"}), 500
 
     cursor.execute("SELECT * FROM resenas WHERE estado = 'Publicada'")
@@ -28,42 +28,7 @@ def listar_resenas():
                 "id_resena": resena["id_resena"],
                 "nombre_cliente": cliente["nombre"],
                 "mensaje": resena["mensaje"],
-                "puntuacion": resena["puntuacion"],
-                "estado": resena.get("estado", "Pendiente")
-            }
-            resenas_armadas.append(resena_completa)
-
-    cursor.close()
-    conn.close()
-    return jsonify({"resenas": resenas_armadas}), 200
-
-@resenas_bp.route("/todas", methods=["GET"])
-def listar_todas_resenas():
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"error": "Error de conexion con la base de datos"}), 500
-
-    cursor.execute("SELECT * FROM resenas")
-    lista_resenas = cursor.fetchall()
-
-    if not lista_resenas:
-        cursor.close()
-        conn.close()
-        return jsonify({"resenas": []}), 200
-
-    resenas_armadas = []
-    for resena in lista_resenas:
-        cursor.execute("SELECT nombre FROM usuarios WHERE id = %s", (resena["id_cliente"],))
-        cliente = cursor.fetchone()
-        if cliente:
-            resena_completa = {
-                "id_resena": resena["id_resena"],
-                "nombre_cliente": cliente["nombre"],
-                "mensaje": resena["mensaje"],
-                "puntuacion": resena["puntuacion"],
-                "estado": resena.get("estado", "Pendiente")
+                "puntuacion": resena["puntuacion"]
             }
             resenas_armadas.append(resena_completa)
 
@@ -76,7 +41,7 @@ def crear_resena():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
+    except Exception:
         return jsonify({"error": "Error de conexion con la base de datos"}), 500
 
     data = request.get_json(silent=True)
@@ -85,16 +50,30 @@ def crear_resena():
         conn.close()
         return jsonify({"error": "Body vacio"}), 400
 
-    nombre = data.get("nombre")
-    mensaje = data.get("mensaje")
-    puntuacion = data.get("puntuacion")
+    nombre = data.get("nombre", "").strip()
+    mensaje = data.get("mensaje", "").strip()
+    puntuacion_str = data.get("puntuacion")
 
-    if not nombre or not mensaje or puntuacion is None:
+    if not nombre:
         cursor.close()
         conn.close()
-        return jsonify({"error": "faltan datos obligatorios"}), 400
+        return jsonify({"error": "El campo 'nombre' es obligatorio"}), 400
+    if not mensaje:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "El campo 'mensaje' es obligatorio"}), 400
+    if puntuacion_str is None:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "El campo 'puntuacion' es obligatorio"}), 400
     
-    puntuacion = int(puntuacion)
+    try:
+        puntuacion = int(puntuacion_str)
+    except (ValueError, TypeError):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "La puntuacion debe ser un numero"}), 400
+
     if puntuacion < 1 or puntuacion > 5:
         cursor.close()
         conn.close()
@@ -120,58 +99,3 @@ def crear_resena():
     cursor.close()
     conn.close()
     return jsonify({"mensaje": "Reseña enviada correctamente"}), 201
-
-@resenas_bp.route("/<int:id>/estado", methods=["PUT"])
-def cambiar_estado_resena(id):
-    if id < 1:
-        return jsonify({"error": "ID invalido"}), 400
-
-    data = request.get_json(silent=True)
-    nuevo_estado = data.get("estado") if data else None
-
-    if nuevo_estado not in ["Publicada", "Pendiente"]:
-        return jsonify({"error": "Estado invalido, debe ser Publicada o Pendiente"}), 400
-
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id,))
-        if not cursor.fetchone():
-            cursor.close()
-            conn.close()
-            return jsonify({"error": "Reseña no encontrada"}), 404
-
-        cursor.execute("UPDATE resenas SET estado = %s WHERE id_resena = %s", (nuevo_estado, id))
-        conn.commit()
-        
-        cursor.close()
-        conn.close()
-        return jsonify({"mensaje": f"Reseña marcada como {nuevo_estado}"}), 200
-
-    except:
-        return jsonify({"error": "Error de conexion con la base de datos"}), 500
-
-@resenas_bp.route("/<int:id>", methods=["DELETE"])
-def eliminar_resena(id):
-    if id < 1:
-        return jsonify({"error": "Ingresar id valido, id > 0"}), 400
-
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id,))
-        if not cursor.fetchone():
-            cursor.close()
-            conn.close()
-            return jsonify({"error": "Reseña no encontrada"}), 404
-
-        cursor.execute("DELETE FROM resenas WHERE id_resena = %s", (id,))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        
-        return jsonify({"mensaje": "Reseña eliminada"}), 200
-    except:
-        return jsonify({"error": "Error de conexion"}), 500
