@@ -3,66 +3,68 @@ from database.db import get_connection
 from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
 from datetime import date, datetime
+from utils.auxiliar import errores
 
 admin_bp = Blueprint("admin", __name__)
 
 @admin_bp.route("/menu", methods=['POST'])
 @jwt_required()
 def agregar_plato():
+    conn = None
+    cursor = None
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}),500
     
-    data = request.json
+        data = request.json
 
-    datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion","imagen"]
-    secciones_validas = ["platos principales", "bebidas", "postres"]
+        datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion","imagen"]
+        secciones_validas = ["platos principales", "bebidas", "postres"]
 
-    for campo in datos_requeridos:
-        if campo not in data:
+        for campo in datos_requeridos:
+            if campo not in data:
+                return errores(400,"Datos incompletos","Falta Completar algun campo obligatorio")
+    
+        nombre_plato = data.get("nombre_plato")
+        descripcion_plato = data.get("desc_plato")
+        precio_plato = data.get("precio")
+        restricciones_plato = data.get("restricciones")
+        seccion_plato = data.get("seccion")
+        imagen = data.get("imagen")
+
+        cursor.execute("""
+                    SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
+        existente = cursor.fetchone()["total"]
+
+        if existente > 0:
+            return errores(409,"Plato existente","Ya existe un plato con ese nombre o descripcion") 
+        
+
+        if not isinstance(precio_plato,(int,float)) or precio_plato <= 0:
+            return errores(400,"Precio establecido invalido","El precio debe ser un entero mayor a 0 ")
+
+        if seccion_plato.lower() not in secciones_validas:
+            return errores(400,"Seccion del menu invalida", "la seccion indicada no existe")
+        
+        cursor.execute("""
+                    INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen)
+                    VALUES (%s,%s,%s,%s,%s,%s)
+                    """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize(),imagen)
+                    )
+        conn.commit()
+    
+        return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
+    
+    except Exception as e:
+        return errores(500, "Error interno", str(e))
+    
+    finally:
+        if cursor is not None:
             cursor.close()
+        if conn is not None:
             conn.close()
-            return jsonify({"Error": "Falta Completar algun campo obligatorio"}), 400
     
-    nombre_plato = data.get("nombre_plato")
-    descripcion_plato = data.get("desc_plato")
-    precio_plato = data.get("precio")
-    restricciones_plato = data.get("restricciones")
-    seccion_plato = data.get("seccion")
-    imagen = data.get("imagen")
-
-    cursor.execute("""
-                   SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
-    existente = cursor.fetchone()["total"]
-
-    if existente > 0:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Plato ya existente"}), 409
-    
-
-    if not isinstance(precio_plato,(int,float)) or precio_plato <= 0:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Precio establecido invalido"}), 400
-
-    if seccion_plato.lower() not in secciones_validas:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Seccion del menu invalida"}), 400
-    
-    cursor.execute("""
-                   INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen)
-                   VALUES (%s,%s,%s,%s,%s,%s)
-                   """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize(),imagen)
-                   )
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
 
 
 @admin_bp.route("/menu/<int:id_plato>", methods=["PUT"])
