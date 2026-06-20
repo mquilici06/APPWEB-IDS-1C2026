@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from database.db import get_connection
+from flask_jwt_extended import jwt_required
 import base64
 
 menu_bp = Blueprint("menu", __name__)
@@ -33,6 +34,7 @@ def listar_menu():
 
 
 @menu_bp.route("", methods=["POST"])
+@jwt_required()
 def crear_plato():
     try:
         conn = get_connection()
@@ -83,6 +85,7 @@ def crear_plato():
 
 
 @menu_bp.route("/<int:id>", methods=["PUT"])
+@jwt_required()
 def editar_plato(id):
     try:
         conn = get_connection()
@@ -134,6 +137,7 @@ def editar_plato(id):
 
 
 @menu_bp.route("/<int:id>", methods=["DELETE"])
+@jwt_required()
 def borrar_plato(id):
     try:
         conn = get_connection()
