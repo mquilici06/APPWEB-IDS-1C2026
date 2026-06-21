@@ -6,8 +6,18 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_reservas.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_reservas.css') }}">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="contenedor-mensajes">
+            {% for category, message in messages %}
+                <div class="{{ 'mensaje-exito' if category == 'exito' else 'mensaje-error' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
 <div class="contenedor-administracion">
     
