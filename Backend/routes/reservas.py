@@ -1,89 +1,43 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from database.db import get_connection
 from datetime import datetime
-from flask_mail import Message
-import qrcode
-import io
+from flask_mail import Mail
+from utils.auxiliar import enviar_mail_reserva
+from utils.auxiliar import errores
 import re
 
 reservas_bp = Blueprint("reservas", __name__)
 
 capacidad_max = 10
 
-def generar_qr(datos: str) -> bytes:
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_M,
-        box_size=8,
-        border=4,
-    )
-    qr.add_data(datos)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color="#6d071a", back_color="white")
-    buf = io.BytesIO()
-    img.save(buf, format="PNG")
-    return buf.getvalue()
-
-def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas=""):
-    qr_texto = (
-        f"----ALTEZZA RISTORANTE----\n"
-        f"Reserva #{id_reserva}\n"
-        f"Nombre: {nombre}\n"
-        f"Fecha: {fecha}\n"
-        f"Hora: {hora}\n"
-        f"Personas: {personas}"
-    )
-    qr_texto += f"\nNotas: {notas}" if notas else "\nSin notas adicionales"
- 
-    qr_bytes = generar_qr(qr_texto)
- 
-    mensaje = Message(
-        subject=f"Tu reserva en Altezza - #{id_reserva}",
-        sender="altezzaadmin@gmail.com",
-        recipients=[email],
-    )
-    mensaje.body = (
-        f"Hola {nombre},\n\n"
-        f"Tu reserva fue confirmada con éxito.\n\n"
-        f"  Reserva N°: {id_reserva}\n"
-        f"  Fecha: {fecha}\n"
-        f"  Hora: {hora}\n"
-        f"  Personas: {personas}\n"
-        + (f"  Notas: {notas}\n" if notas else "")
-        + f"\nPresentá el QR adjunto al llegar al restaurante.\n\n"
-        f"¡Te esperamos!\n"
-        f"Altezza Ristorante · Av. Del Libertador 6820, CABA"
-    )
-    mensaje.attach(
-        filename=f"reserva_{id_reserva}_qr.png",
-        content_type="image/png",
-        data=qr_bytes,
-        disposition="attachment",
-    )
-    mail.send(mensaje)
 
 @reservas_bp.route("/disponibilidad", methods=["GET"])
 def esta_disponible():
     #se manda la fecha como query params
     fecha = request.args.get('fecha')
+    capacidad = 0
     
     if not fecha:
-        return jsonify({"error": "Falta el parámetro 'fecha'"}), 400
-
-    horarios_disp = ["20:00", "20:30", "21:00", "21:30", "22:00"]
+        return errores(400,"Bad request","Falta el parámetro 'fecha'")
     
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}),500
+        return errores(500,"Internal server error", "Error de conexion con la base de datos")
     
-    cursor.execute("""SELECT hora, COUNT(*) as total
-                   FROM reservas WHERE fecha = %s AND estado = %s 
-                   GROUP BY hora""", (fecha, "pendiente"))
-    resultados = cursor.fetchall()
+    cursor.execute("""
+        SELECT COALESCE(SUM(cantidad_personas),0) AS total
+        FROM reservas
+        WHERE fecha = %s
+        AND estado = 'confirmada'
+    """, (fecha,))
 
-    if resultados >= 10:
+    total_personas = cursor.fetchone()
+    capacidad = total_personas["total"]
+
+
+    if capacidad >= capacidad_max:
         esta_disponible = False
     else:
         esta_disponible = True
@@ -94,56 +48,23 @@ def esta_disponible():
     rdo = {"esta_disp": f"{esta_disponible}"}
     return jsonify(rdo), 200
 
-reservas_bp.route("/disponibilidad", methods=["GET"])
-def esta_disponible():
-    # se manda la fecha como query param
-    fecha = request.args.get('fecha')
- 
-    if not fecha:
-        return jsonify({"error": "Falta el parámetro 'fecha'"}), 400
- 
-    horarios_disp = ["20:00", "20:30", "21:00", "21:30", "22:00"]
- 
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-    except Exception:
-        return jsonify({"error": "Error de conexión con la base de datos"}), 500
- 
-    cursor.execute("""
-        SELECT hora, COALESCE(SUM(cantidad_personas), 0) AS ocupacion
-        FROM reservas WHERE fecha = %s AND estado = 'confirmada'
-        GROUP BY hora
-    """, (fecha,))
-    resultados = cursor.fetchall()
- 
-    cursor.close()
-    conn.close()
- 
-    ocupacion_por_hora = {fila["hora"]: fila["ocupacion"] for fila in resultados}
- 
-    disponibilidad = {
-        horario: (ocupacion_por_hora.get(horario, 0) < capacidad_max)
-        for horario in horarios_disp
-    }
- 
-    return jsonify({"disponibilidad": disponibilidad}), 200
- 
+
+
 @reservas_bp.route("/", methods=["POST"])
 def crear_reserva():
     patron = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$"
     datos = request.get_json()
- 
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
     except Exception:
-        return jsonify({"error": "Error de conexión con la base de datos"}), 500
- 
+        return errores(500,"Internal server error", "Error de conexion con la base de datos")
+
     for campo in ["nombre", "email", "telefono", "personas", "fecha", "hora"]:
         if not datos or not datos.get(campo):
-            return jsonify({"error": f"Falta el campo '{campo}'"}), 400
- 
+            return errores(400,"Bad request",f"Falta el campo '{campo}'")
+
     nombre = datos["nombre"]
     email = datos["email"].strip()
     telefono = datos["telefono"]
@@ -151,32 +72,32 @@ def crear_reserva():
     fecha = datos["fecha"]
     hora = datos["hora"]
     notas = datos.get("notas", "")
- 
+
     if not re.match(patron, email):
-        return jsonify({"error": "Ingresá un email válido"}), 400
- 
+        return errores(400,"Bad request","Ingresá un email válido")
+
     try:
         fecha_ = datetime.strptime(fecha, "%Y-%m-%d").date()
         if fecha_ < datetime.now().date():
-            return jsonify({"error": "No podés reservar en una fecha pasada"}), 400
+            return errores(400,"Bad request","No podés reservar en una fecha pasada")
         if fecha_.weekday() not in [3, 4, 5, 6]:
-            return jsonify({"error": "Solo aceptamos reservas de jueves a domingo"}), 400
+            return errores(400,"Bad request","Solo aceptamos reservas de jueves a domingo")
     except ValueError:
-        return jsonify({"error": "Formato de fecha inválido"}), 400
- 
- 
+        return errores(400,"Bad request","Solo aceptamos reservas de jueves a domingo")
+        
+
     cursor.execute("""
         SELECT COALESCE(SUM(cantidad_personas), 0) AS total
         FROM reservas WHERE fecha = %s AND hora = %s AND estado = 'confirmada'
         """, (fecha, hora))
- 
+
     ocupacion = cursor.fetchone()["total"]
- 
+
     if ocupacion + personas > capacidad_max:
         cursor.close()
         conn.close()
-        return jsonify({"error": "El horario seleccionado excede la capacidad disponible"}), 409
- 
+        return errores(409,"Conflict","El horario seleccionado excede la capacidad disponible")
+
     cursor.execute("SELECT id FROM usuarios WHERE email = %s", (email,))
     existente = cursor.fetchone()
     if existente:
@@ -187,51 +108,66 @@ def crear_reserva():
             (nombre, email, telefono)
         )
         id_cliente = cursor.lastrowid
- 
+
     cursor.execute("""
         INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado)
         VALUES (%s, %s, %s, %s, 'confirmada')
     """, (id_cliente, fecha, hora, personas))
     id_reserva = cursor.lastrowid
- 
-    mail = Mail(current_app._get_current_object())
+
     try:
+        mail = Mail(current_app._get_current_object())
         enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas)
     except Exception:
         conn.rollback()
         cursor.close()
         conn.close()
-        return jsonify({
-            "error": "No pudimos enviarte el mail de confirmación, así que la reserva no se guardó. Intentá de nuevo en unos minutos."
-        }), 500
- 
+        return errores(500,"Internal server error", "No pudimos enviarte el mail de confirmación, así que la reserva no se guardó. Intentá de nuevo en unos minutos.")
+
+
     conn.commit()
     cursor.close()
     conn.close()
- 
+
     return jsonify({"mensaje": "Reserva confirmada exitosamente", "id_reserva": id_reserva}), 201
 
+
 @reservas_bp.route("/<int:id>", methods=["POST"])
-def borrar_reserva(id):
+def cancelar_reserva(id):
     if id < 0:
-        return jsonify({"error": "Ingresar id valido, id > 0"}), 409
-    
+        return errores(400,"Bad request","Ingresar id valido, id > 0")
+
+    datos = request.get_json(silent=True) or {}
+    email = datos.get("email", "").strip().lower()
+
+    if not email:
+        return errores(400,"Bad request","Falta el email para confirmar a quién pertenece la reserva")
+
     try:
         conn = get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(dictionary=True)
     except Exception:
-        return jsonify({"error": "Error de conexión con la base de datos"}), 500
+        return errores(500,"Internal server error", "Error de conexión con la base de datos")
 
-    cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (id,))
+    cursor.execute("SELECT id_reserva, id_cliente FROM reservas WHERE id_reserva = %s", (id,))
     reserva = cursor.fetchone()
+
     if not reserva:
         cursor.close()
         conn.close()
-        return jsonify({"error": "Reserva no encontrada"}), 404 
-    
+        return errores(404,"Not found", "Reserva no encontrada")
+
+    cursor.execute("SELECT email FROM usuarios WHERE id = %s", (reserva["id_cliente"],))
+    cliente = cursor.fetchone()
+
+    if not cliente or cliente["email"].strip().lower() != email:
+        cursor.close()
+        conn.close()
+        return errores(403,"Forbidden", "El email no coincide con el titular de la reserva")
+
     cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
-        
+
     conn.commit()
     cursor.close()
     conn.close()
-    return jsonify({"mensaje": "Reserva eliminada"}), 200
+    return jsonify({"mensaje": "Reserva cancelada"}), 200
