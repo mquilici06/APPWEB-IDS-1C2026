@@ -22,30 +22,62 @@ def index():
 
 @mis_rutas.route('/reservas', methods=['GET', 'POST'])
 def reservas():
-    
+
     if request.method == 'POST':
         datos_reserva = {
-            "nombre": request.form.get('f_nombre'),
-            "email": request.form.get('f_email'),
-            "telefono": request.form.get('f_telefono'),
-            "personas": request.form.get('f_personas'),
-            "fecha": request.form.get('f_fecha_reserva'),
-            "hora": request.form.get('f_hora')
+            "nombre": request.form.get('fnombre'),
+            "email": request.form.get('femail'),
+            "telefono": request.form.get('ftelefono'),
+            "personas": request.form.get('fpersonas'),
+            "fecha": request.form.get('ffecha_reserva'),
+            "hora": request.form.get('fhora'),
+            "notas": request.form.get('fnotas', '')
         }
         try:
-            respuesta = requests.post(f"{BACKEND_URL}/reservas", json=datos_reserva, timeout=5)
+            respuesta = requests.post(f"{BACKEND_URL}/reservas/", json=datos_reserva, timeout=5)
+            resultado = respuesta.json()
+
             if respuesta.status_code != 201:
-                mensaje_error = respuesta.json().get('error', 'Error al procesar la reserva.')
+                lista_errores = resultado.get('errors', [])
+                mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
                 return redirect(url_for("frontend.reservas", aviso=mensaje_error, tipo="error"))
-            else:
-                return redirect(url_for("frontend.reservas", aviso="¡Reserva confirmada con exito!", tipo="exito"))
-                
+
+            return redirect(url_for("frontend.reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
+
         except requests.exceptions.RequestException:
             return redirect(url_for("frontend.reservas", aviso="Error de conexión con el servidor", tipo="error"))
+
     aviso = request.args.get("aviso")
     tipo = request.args.get("tipo")
 
     return render_template('reservas.html', aviso=aviso, tipo=tipo)
+
+
+@mis_rutas.route('/reservas/cancelar/<int:id_reserva>', methods=['GET'])
+def cancelar_reserva(id_reserva):
+    email = request.args.get("email", "").strip()
+
+    if not email:
+        return render_template("reserva_cancelada.html", exito=False,
+                                mensaje="Falta el email para confirmar la cancelación.")
+
+    try:
+        respuesta = requests.post(
+            f"{BACKEND_URL}/reservas/{id_reserva}",
+            json={"email": email},
+            timeout=10
+        )
+    except requests.exceptions.RequestException:
+        return render_template("reserva_cancelada.html", exito=False,
+                                mensaje="Error de conexión con el servidor.")
+
+    if respuesta.status_code == 200:
+        return render_template("reserva_cancelada.html", exito=True, id_reserva=id_reserva)
+
+    resultado = respuesta.json()
+    lista_errores = resultado.get("errors", [])
+    mensaje_error = lista_errores[0].get("description", "No pudimos cancelar la reserva.") if lista_errores else "No pudimos cancelar la reserva."
+    return render_template("reserva_cancelada.html", exito=False, mensaje=mensaje_error)
 
 @mis_rutas.route("/resenas", methods=["GET", "POST"])
 def resenas():
@@ -154,7 +186,7 @@ def cambiar_estado_reserva(id):
         )
         
         if respuesta.status_code == 200:
-            flash(f"Reserva {nuevo_estado} exitosamente.", "success")
+            flash(f"Reserva {nuevo_estado} exitosamente.", "exito")
         else:
             flash("Error al actualizar la reserva en el backend.", "error")
             
