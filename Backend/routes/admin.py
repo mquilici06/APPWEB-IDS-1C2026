@@ -502,6 +502,7 @@ def obtener_estadisticas():
     return jsonify(respuesta_json), 200
 
 @admin_bp.route("/servicios_extras", methods=["GET"])
+@jwt_required()
 def mostrar_servicios_extras():
     conn = None
     cursor = None
@@ -523,6 +524,7 @@ def mostrar_servicios_extras():
     
     
 @admin_bp.route("/servicios_extras", methods=["POST"])
+@jwt_required()
 def agregar_servicio_extra():
     conn = None
     cursor = None
@@ -563,6 +565,7 @@ def agregar_servicio_extra():
     
     
 @admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["PUT"])
+@jwt_required()
 def editar_servicio_extra(id_servicio):
     conn = None
     cursor = None
@@ -619,6 +622,7 @@ def editar_servicio_extra(id_servicio):
             conn.close()
     
 @admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["DELETE"])
+@jwt_required()
 def eliminar_servicio_extra(id_servicio):
     conn = None
     cursor = None
