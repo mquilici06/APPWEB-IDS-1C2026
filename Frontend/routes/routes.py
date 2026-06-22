@@ -477,7 +477,7 @@ def admin_cancelar_reserva(id):
     headers = {"Authorization": f"Bearer {token}"}
     
     try:
-        respuesta = requests.post(
+        respuesta = requests.delete(
             f"{BACKEND_URL}/admin/reservas/{id}/eliminar",
             headers=headers,
             timeout=5
