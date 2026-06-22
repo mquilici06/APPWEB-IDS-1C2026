@@ -14,10 +14,6 @@
         {% for servicio in servicios_extras %}
         <div class="servicio-tarjeta">
 
-            {% if servicio.imagen %}
-            <img src="{{ url_for('static', filename='images/servicios/' + servicio.imagen) }}"
-                alt="{{ servicio.nombre_servicio }}" class="servicio-img">
-            {% endif %}
 
             <div class="servicio-info">
                 <h2>{{ servicio.nombre_servicio }}</h2>

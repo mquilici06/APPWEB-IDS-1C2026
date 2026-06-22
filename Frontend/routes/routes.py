@@ -40,7 +40,7 @@ def crear_reservas():
             if respuesta.status_code != 201:
                 lista_errores = resultado.get('errors', [])
                 mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
-                return redirect(url_for("frontend.reservas", aviso=mensaje_error, tipo="error"))
+                return redirect(url_for("frontend.crear_reservas", aviso=mensaje_error, tipo="error"))
 
             return redirect(url_for("frontend.crear_reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
 
