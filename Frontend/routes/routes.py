@@ -409,11 +409,15 @@ def admin_servicios_extras():
         }
         editar_id = request.args.get("editar_id")
 
+        token = session.get("jwt_token")
+        headers = {"Authorization": f"Bearer {token}"}
+
         try:
             if editar_id:
                 respuesta = requests.put(
                     f"{BACKEND_URL}/admin/servicios_extras/{editar_id}",
                     json=datos,
+                    headers=headers,
                     timeout=5
                 )
                 if respuesta.status_code == 200:
@@ -424,6 +428,7 @@ def admin_servicios_extras():
                 respuesta = requests.post(
                     f"{BACKEND_URL}/admin/servicios_extras",
                     json=datos,
+                    headers=headers,
                     timeout=5
                 )
                 if respuesta.status_code == 201:
@@ -436,8 +441,11 @@ def admin_servicios_extras():
 
         return redirect(url_for("frontend.admin_servicios_extras"))
 
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
+
     try:
-        respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", timeout=5)
+        respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", headers=headers, timeout=5)
         servicios = respuesta.json().get("servicios_extras", [])
     except:
         servicios = []
@@ -461,9 +469,12 @@ def admin_servicios_extras():
 @mis_rutas.route("/admin/servicios_extras/eliminar/<int:id>", methods=["POST"])
 @admin_requerido
 def eliminar_servicio(id):
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
     try:
         respuesta = requests.delete(
             f"{BACKEND_URL}/admin/servicios_extras/{id}",
+            headers=headers,
             timeout=5
         )
         if respuesta.status_code == 200:
