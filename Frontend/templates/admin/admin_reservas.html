@@ -2,22 +2,13 @@
 
 {% block title %}Admin Reservas - Altezza Ristorante{% endblock %}
 
-{% block styles %}
+{% block estilos %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/admin_reservas.css') }}">
 {% endblock %}
 
+{% block admin_content %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="contenedor-mensajes">
-            {% for category, message in messages %}
-                <div class="{{ 'mensaje-exito' if category == 'exito' else 'mensaje-error' }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+
 
 <div class="contenedor-administracion">
     
@@ -63,6 +54,24 @@
             <button type="submit" class="boton-filtrar">Aplicar Filtros</button>
         </form>
     </section>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="contenedor-mensajes">
+            {% for category, message in messages %}
+                {% if category == 'exito' %}
+                <div class="mensaje-exito">
+                    {{ message }}
+                </div>
+                {% else %}
+                <div class="mensaje-error">
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
 
     <section class="seccion-tabla">
         <div class="contenedor-tabla-responsiva">
@@ -96,6 +105,14 @@
                                 </span>
                             </td>
                             <td class="celda-acciones">
+                               
+                                <form action="{{ url_for('frontend.admin_cancelar_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                    <input type="hidden" name="nuevo_estado" value="Reserva {{ reserva.id_reserva }} eliminada ">
+                                    <button type="submit" class="boton-accion boton-eliminar" title="Eliminar reserva">
+                                        <img src="{{ url_for('static', filename='images/tacho.png') }}" class="boton-eliminar img">
+                                    </button>
+                                </form>
+
                                 <form action="{{ url_for('frontend.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
                                     <input type="hidden" name="nuevo_estado" value="confirmada">
                                     <button type="submit" class="boton-accion boton-confirmar" title="Confirmar">✓</button>
