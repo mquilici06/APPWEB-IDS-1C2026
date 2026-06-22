@@ -23,6 +23,14 @@ El proyecto está separado en dos aplicaciones Flask:
 
 ---
 
+## Bibliotecas/complementos:
+* Flask-mail
+* Bcrypt
+* qrcode
+* python-dotenv
+* re
+* mysql-connector-python
+
 ## .env del FRONTEND
 
 SECRET_KEY=
@@ -47,11 +55,13 @@ DB_USER=
 DB_PASSWORD= 
 DB_NAME=altezza
 
-## .env de root
-
-DB_PASSWORD= 
-
----
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USE_SSL=False
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_DEFAULT_SENDER=altezzaadmin@gmail.com
 
 ## Puertos utilizados
 
@@ -94,6 +104,7 @@ Esto construye las imágenes y levanta los contenedores.
 ## Script de ejecución sin Docker
 
 El proyecto se puede levantar sin Docker usando el archivo:
+(LINUX)
 
 ```
 iniciar.sh

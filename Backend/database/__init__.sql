@@ -83,7 +83,7 @@ INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imag
 ('Seduzione di cioccolato', 'Volcán de chocolate con helado de crema', '14500', '', 'Postres',NULL),
 ('Crepe de dulce de leche', 'Crepé de dulce de leche con helado de crema', '14500', '', 'Postres',NULL),
 ('Tatén di mela con gelato', 'Tarta tibia de manzana con helado de crema y crocante de nuez', '14500', '', 'Postres',NULL),
-('Merengatta', 'Merengue italiano, helado de crema y frutillas', '14500', '', 'Postres','merengata.png'),
+('Merengatta', 'Merengue italiano, helado de crema y frutillas', '14500', '', 'Postres',NULL),
 ('Mousse di cioccolato - Sin tacc', 'Soufflé de chocolate con crema chantilly y prelinee de almendras', '14500', 'Sin TACC', 'Postres',NULL),
 ('Piccola torta di limone', 'Pequeña torta de limón con salsa de frutos del bosque', '14500', '', 'Postres',NULL),
 ('Gelato', 'Helado de la casa', '14500', 'Vegetariano', 'Postres',NULL),
