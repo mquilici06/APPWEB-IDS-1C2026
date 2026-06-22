@@ -8,9 +8,18 @@ El proyecto está separado en dos aplicaciones Flask:
 * **Frontend**: renderiza las vistas web y consume los endpoints del backend.
 
 ---
+
 ## Las credenciales que hay que cambiar:
 
+MAIL_USERNAME= (linea 49, 68)
+MAIL_PASSWORD= (linea 50, 69)
 
+SECRET_KEY= (linea 44, 57)
+JWT_SECRET_KEY= (linea 58)
+
+#DataBase
+Usuario: (linea 145)
+Contraseña: (linea 146)
 
 ---
 
