@@ -51,7 +51,7 @@ def esta_disponible():
 
 
 @reservas_bp.route("/", methods=["POST"])
-def crear_reserva():
+def alta_reserva():
     patron = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$"
     datos = request.get_json()
 
@@ -61,7 +61,7 @@ def crear_reserva():
     except Exception:
         return errores(500,"Internal server error", "Error de conexion con la base de datos")
 
-    for campo in ["nombre", "email", "telefono", "personas", "fecha", "hora"]:
+    for campo in ["nombre", "email", "telefono", "personas", "fecha", "horario"]:
         if not datos or not datos.get(campo):
             return errores(400,"Bad request",f"Falta el campo '{campo}'")
 
@@ -70,7 +70,7 @@ def crear_reserva():
     telefono = datos["telefono"]
     personas = int(datos["personas"])
     fecha = datos["fecha"]
-    hora = datos["hora"]
+    hora = datos["horario"]
     notas = datos.get("notas", "")
 
     if not re.match(patron, email):
@@ -111,7 +111,7 @@ def crear_reserva():
 
     cursor.execute("""
         INSERT INTO reservas (id_cliente, fecha, hora, cantidad_personas, estado)
-        VALUES (%s, %s, %s, %s, 'confirmada')
+        VALUES (%s, %s, %s, %s, 'pendiente')
     """, (id_cliente, fecha, hora, personas))
     id_reserva = cursor.lastrowid
 
@@ -132,7 +132,7 @@ def crear_reserva():
     return jsonify({"mensaje": "Reserva confirmada exitosamente", "id_reserva": id_reserva}), 201
 
 
-@reservas_bp.route("/<int:id>", methods=["POST"])
+@reservas_bp.route("/cancelar/<int:id>", methods=["DELETE"])
 def cancelar_reserva(id):
     if id < 0:
         return errores(400,"Bad request","Ingresar id valido, id > 0")
