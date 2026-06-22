@@ -33,20 +33,25 @@ def crear_reservas():
             "horario": request.form.get('f_hora'),
             "notas": request.form.get('f_notas', '')
         }
-        try:
-            respuesta = requests.post(f"{BACKEND_URL}/reservas/", json=datos_reserva, timeout=15)
-            resultado = respuesta.json()
+        respuesta = requests.get(f"{BACKEND_URL}/reservas/disponibilidad?fecha={datos_reserva['fecha']}&hora={datos_reserva['horario']}&cliente={datos_reserva['personas']}")
+        se_puede = respuesta.json()
+        se_puede = se_puede.get("esta_disp")
+        if se_puede:
+            try:
+                respuesta = requests.post(f"{BACKEND_URL}/reservas/", json=datos_reserva, timeout=15)
+                resultado = respuesta.json()
 
-            if respuesta.status_code != 201:
-                lista_errores = resultado.get('errors', [])
-                mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
-                return redirect(url_for("frontend.crear_reservas", aviso=mensaje_error, tipo="error"))
+                if respuesta.status_code != 201:
+                    lista_errores = resultado.get('errors', [])
+                    mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
+                    return redirect(url_for("frontend.crear_reservas", aviso=mensaje_error, tipo="error"))
 
-            return redirect(url_for("frontend.crear_reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
+                return redirect(url_for("frontend.crear_reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
 
-        except requests.exceptions.RequestException:
-            return redirect(url_for("frontend.crear_reservas", aviso="Error de conexión con el servidor", tipo="error"))
-
+            except requests.exceptions.RequestException:
+                return redirect(url_for("frontend.crear_reservas", aviso="Error de conexión con el servidor", tipo="error"))
+        else:
+            return redirect(url_for("frontend.crear_reservas", aviso="No hay disponibilidad para ese horario", tipo="error"))
     aviso = request.args.get("aviso")
     tipo = request.args.get("tipo")
 
