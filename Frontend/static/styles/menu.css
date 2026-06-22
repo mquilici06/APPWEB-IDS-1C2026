@@ -44,6 +44,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
+    padding-top: 8px;
 }
 
 .caja-plato-ind {
@@ -63,6 +64,7 @@ h1 {
     display: block;
     margin: 15px auto;
     border-radius: 8px;
+    padding-top: 8px;
 }
 
 .texto-caja-ind {
