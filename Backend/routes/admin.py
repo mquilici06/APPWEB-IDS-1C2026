@@ -156,6 +156,7 @@ def mostrar_reservas():
     buscar = request.args.get('buscar', '').lower()
     fecha_filtro = request.args.get('fecha', '')
     estado_filtro = request.args.get('estado', '').lower()
+    
 
     try:
         conn = get_connection()
@@ -646,3 +647,24 @@ def eliminar_servicio_extra(id_servicio):
             cursor.close()
         if conn:
             conn.close()
+
+@admin_bp.route("/reservas/<int:id>/eliminar", methods=["POST"])
+@jwt_required()
+def eliminar_reserva(id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return errores(500, "Internal server error", "Error de conexión con la base de datos")
+
+    cursor.execute("SELECT id_reserva FROM reservas WHERE id_reserva = %s", (id,))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return errores(404, "Not found", "Reserva no encontrada")
+
+    cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": "Reserva eliminada"}), 200
