@@ -168,6 +168,8 @@
 
 .fila-reserva:hover {
     background-color: #f8f9fa;
+    height: 70px;
+    vertical-align: middle;
 }
 
 .celda-id {
@@ -178,6 +180,8 @@
 .celda-cliente {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    vertical-align: middle;
 }
 
 .contacto-cliente {
@@ -218,10 +222,14 @@
 .celda-acciones {
     display: flex;
     gap: 8px;
+    align-items: center;
+    vertical-align: middle;
 }
 
 .formulario-accion {
     margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .boton-accion {
@@ -245,6 +253,12 @@
 .boton-confirmar:hover {
     background-color: #27ae60;
 }
+
+.boton-eliminar {
+    background-color: #74271f;
+    color: #ffffff;
+}
+
 
 .boton-cancelar {
     background-color: #e74c3c;
@@ -285,4 +299,10 @@
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+.boton-eliminar img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    display: block;
 }
