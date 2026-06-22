@@ -33,20 +33,25 @@ def crear_reservas():
             "horario": request.form.get('f_hora'),
             "notas": request.form.get('f_notas', '')
         }
-        try:
-            respuesta = requests.post(f"{BACKEND_URL}/reservas/", json=datos_reserva, timeout=15)
-            resultado = respuesta.json()
+        respuesta = requests.get(f"{BACKEND_URL}/reservas/disponibilidad?fecha={datos_reserva['fecha']}&hora={datos_reserva['horario']}&cliente={datos_reserva['personas']}")
+        se_puede = respuesta.json()
+        se_puede = se_puede.get("esta_disp")
+        if se_puede:
+            try:
+                respuesta = requests.post(f"{BACKEND_URL}/reservas/", json=datos_reserva, timeout=15)
+                resultado = respuesta.json()
 
-            if respuesta.status_code != 201:
-                lista_errores = resultado.get('errors', [])
-                mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
-                return redirect(url_for("frontend.crear_reservas", aviso=mensaje_error, tipo="error"))
+                if respuesta.status_code != 201:
+                    lista_errores = resultado.get('errors', [])
+                    mensaje_error = lista_errores[0].get('description', 'Error al procesar la reserva.') if lista_errores else 'Error al procesar la reserva.'
+                    return redirect(url_for("frontend.crear_reservas", aviso=mensaje_error, tipo="error"))
 
-            return redirect(url_for("frontend.crear_reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
+                return redirect(url_for("frontend.crear_reservas", aviso="¡Reserva confirmada con éxito! Revisá tu mail.", tipo="exito"))
 
-        except requests.exceptions.RequestException:
-            return redirect(url_for("frontend.crear_reservas", aviso="Error de conexión con el servidor", tipo="error"))
-
+            except requests.exceptions.RequestException:
+                return redirect(url_for("frontend.crear_reservas", aviso="Error de conexión con el servidor", tipo="error"))
+        else:
+            return redirect(url_for("frontend.crear_reservas", aviso="No hay disponibilidad para ese horario", tipo="error"))
     aviso = request.args.get("aviso")
     tipo = request.args.get("tipo")
 
@@ -404,11 +409,15 @@ def admin_servicios_extras():
         }
         editar_id = request.args.get("editar_id")
 
+        token = session.get("jwt_token")
+        headers = {"Authorization": f"Bearer {token}"}
+
         try:
             if editar_id:
                 respuesta = requests.put(
                     f"{BACKEND_URL}/admin/servicios_extras/{editar_id}",
                     json=datos,
+                    headers=headers,
                     timeout=5
                 )
                 if respuesta.status_code == 200:
@@ -419,6 +428,7 @@ def admin_servicios_extras():
                 respuesta = requests.post(
                     f"{BACKEND_URL}/admin/servicios_extras",
                     json=datos,
+                    headers=headers,
                     timeout=5
                 )
                 if respuesta.status_code == 201:
@@ -431,8 +441,11 @@ def admin_servicios_extras():
 
         return redirect(url_for("frontend.admin_servicios_extras"))
 
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
+
     try:
-        respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", timeout=5)
+        respuesta = requests.get(f"{BACKEND_URL}/admin/servicios_extras", headers=headers, timeout=5)
         servicios = respuesta.json().get("servicios_extras", [])
     except:
         servicios = []
@@ -456,9 +469,12 @@ def admin_servicios_extras():
 @mis_rutas.route("/admin/servicios_extras/eliminar/<int:id>", methods=["POST"])
 @admin_requerido
 def eliminar_servicio(id):
+    token = session.get("jwt_token")
+    headers = {"Authorization": f"Bearer {token}"}
     try:
         respuesta = requests.delete(
             f"{BACKEND_URL}/admin/servicios_extras/{id}",
+            headers=headers,
             timeout=5
         )
         if respuesta.status_code == 200:

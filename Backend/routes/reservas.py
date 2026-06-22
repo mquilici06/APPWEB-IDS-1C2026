@@ -15,10 +15,12 @@ capacidad_max = 10
 def esta_disponible():
     #se manda la fecha como query params
     fecha = request.args.get('fecha')
+    hora = request.args.get('hora')
+    comensales = int(request.args.get('cliente'))   
     capacidad = 0
     
-    if not fecha:
-        return errores(400,"Bad request","Falta el parámetro 'fecha'")
+    if not fecha or not hora:
+        return errores(400,"Bad request","Falta el parámetro 'fecha' u 'hora'")
     
     try:
         conn = get_connection()
@@ -29,15 +31,15 @@ def esta_disponible():
     cursor.execute("""
         SELECT COALESCE(SUM(cantidad_personas),0) AS total
         FROM reservas
-        WHERE fecha = %s
-        AND estado = 'confirmada'
-    """, (fecha,))
+        WHERE fecha = %s AND hora = %s
+        AND estado IN ('pendiente', 'confirmada')
+    """, (fecha,hora))
 
     total_personas = cursor.fetchone()
-    capacidad = total_personas["total"]
+    capacidad = 10 - total_personas["total"]
 
 
-    if capacidad >= capacidad_max:
+    if capacidad < comensales:
         esta_disponible = False
     else:
         esta_disponible = True
@@ -45,7 +47,7 @@ def esta_disponible():
     cursor.close()
     conn.close()
 
-    rdo = {"esta_disp": f"{esta_disponible}"}
+    rdo = {"esta_disp": esta_disponible}
     return jsonify(rdo), 200
 
 
@@ -88,7 +90,7 @@ def alta_reserva():
 
     cursor.execute("""
         SELECT COALESCE(SUM(cantidad_personas), 0) AS total
-        FROM reservas WHERE fecha = %s AND hora = %s AND estado = 'confirmada'
+        FROM reservas WHERE fecha = %s AND hora = %s AND estado IN ('pendiente', 'confirmada')  
         """, (fecha, hora))
 
     ocupacion = cursor.fetchone()["total"]
