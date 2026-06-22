@@ -32,21 +32,17 @@ def generar_qr(datos: str) -> bytes:
     img.save(buf, format="PNG")
     return buf.getvalue()
 
+
+
 def enviar_mail_reserva(mail, nombre, email, fecha, hora, personas, id_reserva, notas=""):
-    qr_texto = (
-        f"----ALTEZZA RISTORANTE----\n"
-        f"Reserva #{id_reserva}\n"
-        f"Nombre: {nombre}\n"
-        f"Fecha: {fecha}\n"
-        f"Hora: {hora}\n"
-        f"Personas: {personas}"
-    )
-    qr_texto += f"\nNotas: {notas}" if notas else "\nSin notas adicionales"
-
-    qr_bytes = generar_qr(qr_texto)
-
+    
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5001")
     link_cancelar = f"{frontend_url}/reservas/cancelar/{id_reserva}?email={quote(email)}"
+    
+    qr_link = (
+        f"{frontend_url}/admin/reservas/{id_reserva}/confirmar"
+    )
+    qr_bytes = generar_qr(qr_link)
 
     mensaje = Message(
         subject=f"Tu reserva en Altezza - #{id_reserva}",
