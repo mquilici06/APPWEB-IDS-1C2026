@@ -1,0 +1,25 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %} Confirmar reserva qr - Admin{% endblock %}
+
+{% block estilos %}
+ {{ super() }} <link rel="stylesheet" href="{{ url_for('static', filename='styles/confirmar_reserva.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="confirmar-reserva-bloque">
+  <h2 class="titulo">Confirmar reserva </h2>
+
+  <h3 class="pregunta"> ¿Desea confirmar la reserva N°{{ id_reserva }}? </h3>
+
+  <form action="{{ url_for('frontend.cambiar_estado_reserva', id=id_reserva) }}" method="POST" >
+      <input type="hidden" name="nuevo_estado" value="confirmada">
+      <button type="submit" class="boton-enviar">
+          Confirmar reserva
+      </button>
+
+  </form>
+</div>
+
+
+{% endblock %}
