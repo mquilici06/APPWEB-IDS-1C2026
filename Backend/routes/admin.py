@@ -648,7 +648,7 @@ def eliminar_servicio_extra(id_servicio):
         if conn:
             conn.close()
 
-@admin_bp.route("/reservas/<int:id>/eliminar", methods=["POST"])
+@admin_bp.route("/reservas/<int:id>/eliminar", methods=["DELETE"])
 @jwt_required()
 def eliminar_reserva(id):
     try:
