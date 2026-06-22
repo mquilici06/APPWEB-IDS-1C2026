@@ -8,6 +8,11 @@ El proyecto está separado en dos aplicaciones Flask:
 * **Frontend**: renderiza las vistas web y consume los endpoints del backend.
 
 ---
+## Las credenciales que hay que cambiar:
+
+
+
+---
 
 ## Tecnologías utilizadas
 
@@ -46,14 +51,14 @@ MAIL_DEFAULT_SENDER= altezzaadmin@gmail.com
 
 ## .env del BACKEND
 
-SECRET_KEY=altezza_password
-JWT_SECRET_KEY=altezza_jwt_password
+SECRET_KEY=
+JWT_SECRET_KEY=
 
 #Database
 DB_HOST=db
 DB_USER= 
 DB_PASSWORD= 
-DB_NAME=altezza
+DB_NAME= altezza
 
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
