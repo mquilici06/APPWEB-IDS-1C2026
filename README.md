@@ -21,6 +21,9 @@ JWT_SECRET_KEY= (linea 58)
 Usuario: (linea 145)
 Contraseña: (linea 146)
 
+DB_USER= (linea 86)
+DB_PASSWORD= (linea 87)
+
 ---
 
 ## Tecnologías utilizadas
@@ -77,6 +80,13 @@ MAIL_USERNAME=
 MAIL_PASSWORD=
 MAIL_DEFAULT_SENDER=altezzaadmin@gmail.com
 
+## .env del ROOT
+
+DB_NAME=altezza
+DB_USER=
+DB_PASSWORD=
+DB_HOST=db
+
 ## Puertos utilizados
 
 La aplicación funciona localmente con los siguientes puertos:
@@ -85,24 +95,6 @@ La aplicación funciona localmente con los siguientes puertos:
 Frontend: http://127.0.0.1:5001
 Backend:  http://127.0.0.1:5000
 ```
-
----
-
-## Base de datos
-
-El proyecto utiliza MySQL.
-
-Los datos de conexión por defecto son:
-
-```
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=
-DB_PASSWORD= 
-DB_NAME=altezza
-```
-
----
 
 ## Levantar el proyecto con Docker
 
@@ -114,7 +106,6 @@ docker compose up --build
 
 Esto construye las imágenes y levanta los contenedores.
 
----
 ## Script de ejecución sin Docker
 
 El proyecto se puede levantar sin Docker usando el archivo:
@@ -137,11 +128,10 @@ Backend:  puerto 5000
 Frontend: puerto 5001
 ```
 
----
-
 ## Verificar que MySQL esté corriendo y que los datos de conexión sean correctos.
 
-Datos por defecto:
+El proyecto utiliza MySQL.
+Los datos de conexión por defecto son:
 
 ```
 Usuario:
@@ -150,8 +140,6 @@ Base: altezza
 Puerto: 3306
 ```
 CORROBORAR QUE EL USUARIO Y LA CONTRASENA SEAN LOS INDICADOS
-
----
 
 ## Autores
 
