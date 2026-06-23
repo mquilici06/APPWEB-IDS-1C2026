@@ -33,6 +33,9 @@ def agregar_plato():
         seccion_plato = data.get("seccion")
         imagen = data.get("imagen")
 
+        if not imagen:
+            return errores(400,"Imagen requerida","Debe cargar una imagen")
+
         cursor.execute("""
                     SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
         existente = cursor.fetchone()["total"]
@@ -103,7 +106,7 @@ def editar_plato(id_plato):
     precio_act = data["precio"]
     restr_act = data["restricciones"]
     seccion_act = data["seccion"]
-    imagen_act = data["imagen"]
+    imagen_act = data.get("imagen")
 
     if imagen_act is None:
         imagen_act = plato["imagen"]

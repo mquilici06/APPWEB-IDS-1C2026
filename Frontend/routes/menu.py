@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
-import requests
+import requests, base64
 from routes.auth import admin_requerido, BACKEND_URL
 
 menu_bp = Blueprint('menu', __name__)
@@ -22,33 +22,33 @@ def admin_menu():
     if request.method == 'POST':
         token = session.get("jwt_token")
         headers = {"Authorization": f"Bearer {token}"}
+        archivo = request.files.get("imagen_plato")
+
+        imagen_base64 = None
+
+        if archivo and archivo.filename:
+            imagen_base64 = base64.b64encode(archivo.read()).decode("utf-8")
 
         datos_plato = {
-            "nombre": request.form.get("nombre_plato"),
-            "descripcion": request.form.get("desc_plato"),
-            "precio": request.form.get("precio"),
+            "nombre_plato": request.form.get("nombre_plato"),
+            "desc_plato": request.form.get("desc_plato"),
+            "precio": float(request.form.get("precio")),
             "seccion": request.form.get("seccion"),
-            "restricciones": request.form.get("restricciones")
+            "restricciones": request.form.get("restricciones"),
+            "imagen": imagen_base64
         }
-
-
-        archivo = request.files.get("imagen_plato")
-        files = {}
-        if archivo and archivo.filename != '':
-
-            files = {'imagen_plato': (archivo.filename, archivo.read(), archivo.content_type)}
 
         actualizar_id = request.args.get('actualizar_id', type=int)
 
         try:
             if actualizar_id:
-                respuesta = requests.put(f"{BACKEND_URL}/platos/{actualizar_id}", data=datos_plato, files=files, headers=headers, timeout=10)
+                respuesta = requests.put(f"{BACKEND_URL}/admin/menu/{actualizar_id}", json=datos_plato, headers=headers, timeout=10)
                 mensaje_ok = "Plato actualizado correctamente"
             else:
-                respuesta = requests.post(f"{BACKEND_URL}/platos", data=datos_plato, files=files, headers=headers, timeout=10)
+                respuesta = requests.post(f"{BACKEND_URL}/admin/menu", json=datos_plato, headers=headers, timeout=10)
                 mensaje_ok = "Plato guardado correctamente"
 
-            if respuesta.status_code in [200, 201]:
+            if respuesta.status_code in [200, 201, 204]:
                 flash(mensaje_ok, "exito")
             else:
                 flash(f"Error al procesar: {respuesta.text}", "error")
@@ -81,7 +81,7 @@ def eliminar_plato(id):
     headers = {"Authorization": f"Bearer {token}"}
 
     try:
-        response = requests.delete(f"{BACKEND_URL}/platos/{id}", headers=headers, timeout=5)
+        response = requests.delete(f"{BACKEND_URL}/admin/menu/{id}", headers=headers, timeout=5)
 
         if response.status_code == 200:
             flash("Plato eliminado correctamente", "exito")

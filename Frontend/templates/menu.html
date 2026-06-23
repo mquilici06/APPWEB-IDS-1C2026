@@ -22,7 +22,7 @@
       <h2 class="seccion">Nuestras Pastas:</h2>
       <div class="caja-platos">
         {% for plato in platos %}
-            {% if plato.seccion == 'Platos Principales' %}
+            {% if plato.seccion|lower == 'platos principales' %}
             <div class="caja-plato-ind">
                 <div>
                     {% if plato.imagen and plato.imagen|length > 50 %}
@@ -53,7 +53,7 @@
         <h2 class="seccion">Bebidas</h2>
         <div class="box-lista-b">
               {% for plato in platos %}
-                    {% if plato.seccion == 'Bebidas' %}
+                    {% if plato.seccion|lower == 'bebidas' %}
                       <div class="contenido-lista">
                         <ul class="lista">
                           <li>{{ plato.nombre_plato }}</li>
@@ -72,7 +72,7 @@
       <h2 class="seccion">Postres:</h2>
         <div class="caja-platos">
             {% for plato in platos %}
-                {% if plato.seccion == 'Postres' %}
+                {% if plato.seccion|lower == 'postres' %}
                     <div class="caja-plato-ind">
                         <div>
                             {% if plato.imagen and plato.imagen|length > 50 %}
