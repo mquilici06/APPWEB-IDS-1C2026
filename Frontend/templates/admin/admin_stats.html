@@ -13,11 +13,11 @@
     <div class="cabecera-stats">
         <h1 class="titulo-seccion">Tablero de Control</h1>
         
-        <form action="{{ url_for('frontend.admin_stats') }}" method="GET" class="formulario-filtro">
+        <form action="{{ url_for('core.admin_stats') }}" method="GET" class="formulario-filtro">
             <label for="fecha_filtro">Filtrar por fecha:</label>
             <input type="date" id="fecha_filtro" name="fecha_filtro">
             <button type="submit" class="btn-filtrar">Consultar</button>
-            <a href="{{ url_for('frontend.admin_stats') }}" class="btn-limpiar">Limpiar</a>
+            <a href="{{ url_for('core.admin_stats') }}" class="btn-limpiar">Limpiar</a>
         </form>
     </div>
     

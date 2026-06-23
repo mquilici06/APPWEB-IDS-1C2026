@@ -26,12 +26,12 @@
 
     <section>
     {% if plato_a_editar %}
-            <a href="{{ url_for('frontend.admin_menu') }}" class="btn-cancelar-edicion">Cancelar Edición</a>
+            <a href="{{ url_for('menu.admin_menu') }}" class="btn-cancelar-edicion">Cancelar Edición</a>
             <h2>Editar Plato: {{ plato_a_editar.nombre_plato }}</h2>
-            <form action="{{ url_for('frontend.admin_menu', actualizar_id=plato_a_editar.id_menu) }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
+            <form action="{{ url_for('menu.admin_menu', actualizar_id=plato_a_editar.id_menu) }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
         {% else %}
             <h2>Añadir Plato</h2>
-            <form action="{{ url_for('frontend.admin_menu') }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
+            <form action="{{ url_for('menu.admin_menu') }}" method="POST" class="formulario-plato" enctype="multipart/form-data">
         {% endif %}
        <div class="formulario-superior">
         <div class="columna-textos">
@@ -118,8 +118,8 @@
                         <td class="celda-precio">${{ plato.precio }}</td>
                         <td class="celda-restricciones">{{ plato.restricciones if plato.restricciones else '-' }}</td>
                         <td class="celda-acciones">
-                            <a href="{{ url_for('frontend.admin_menu', editar_id=plato.id_menu) }}" class="boton-de-accion">Editar</a>
-                            <form action="{{ url_for('frontend.eliminar_plato', id=plato.id_menu) }}" method="POST" class="form-en-linea">
+                            <a href="{{ url_for('menu.admin_menu', editar_id=plato.id_menu) }}" class="boton-de-accion">Editar</a>
+                            <form action="{{ url_for('menu.eliminar_plato', id=plato.id_menu) }}" method="POST" class="form-en-linea">
                                 <button type="submit" class="boton-de-accion">Eliminar</button>
                             </form>
                         </td>

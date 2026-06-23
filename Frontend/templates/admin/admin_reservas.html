@@ -33,7 +33,7 @@
     </section>
 
     <section class="seccion-filtros">
-        <form method="GET" action="{{ url_for('frontend.admin_reservas') }}" class="formulario-filtros">
+        <form method="GET" action="{{ url_for('reservas.admin_reservas') }}" class="formulario-filtros">
             <div class="grupo-filtro">
                 <label for="buscar_cliente">Buscar Cliente:</label>
                 <input type="text" id="buscar_cliente" name="buscar" placeholder="Nombre o e-mail..." value="{{ filtro_buscar }}">
@@ -106,19 +106,19 @@
                             </td>
                             <td class="celda-acciones">
                                
-                                <form action="{{ url_for('frontend.admin_cancelar_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                <form action="{{ url_for('reservas.admin_cancelar_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
                                     <input type="hidden" name="nuevo_estado" value="Reserva {{ reserva.id_reserva }} eliminada ">
                                     <button type="submit" class="boton-accion boton-eliminar" title="Eliminar reserva">
                                         <img src="{{ url_for('static', filename='images/tacho.png') }}" class="boton-eliminar img">
                                     </button>
                                 </form>
 
-                                <form action="{{ url_for('frontend.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                <form action="{{ url_for('reservas.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
                                     <input type="hidden" name="nuevo_estado" value="confirmada">
                                     <button type="submit" class="boton-accion boton-confirmar" title="Confirmar">✓</button>
                                 </form>
 
-                                <form action="{{ url_for('frontend.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
+                                <form action="{{ url_for('reservas.cambiar_estado_reserva', id=reserva.id_reserva) }}" method="POST" class="formulario-accion">
                                     <input type="hidden" name="nuevo_estado" value="cancelada">
                                     <button type="submit" class="boton-accion boton-cancelar" title="Cancelar">✕</button>
                                 </form>

@@ -12,7 +12,7 @@
 
   <h3 class="pregunta"> ¿Desea confirmar la reserva N°{{ id_reserva }}? </h3>
 
-  <form action="{{ url_for('frontend.cambiar_estado_reserva', id=id_reserva) }}" method="POST" >
+  <form action="{{ url_for('reservas.cambiar_estado_reserva', id=id_reserva) }}" method="POST" >
       <input type="hidden" name="nuevo_estado" value="confirmada">
       <button type="submit" class="boton-enviar">
           Confirmar reserva

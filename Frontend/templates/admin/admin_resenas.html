@@ -45,7 +45,7 @@
             </div>
             
             <div class="resena-acciones">
-               <form action="{{ url_for('frontend.cambiar_estado_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
+               <form action="{{ url_for('resenas.cambiar_estado_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
                     {% if resena.estado == 'Pendiente' %}
                         <input type="hidden" name="estado" value="Publicada">
                         <button type="submit" class="btn-aprobar">Aprobar</button>
@@ -54,7 +54,7 @@
                         <button type="submit" class="btn-ocultar">Ocultar</button>
                     {% endif %}
                 </form>
-                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
+                <form action="{{ url_for('resenas.eliminar_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </div>

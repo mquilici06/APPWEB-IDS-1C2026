@@ -24,7 +24,7 @@
         <div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
         {% endif %}
 
-        <form id="form-reserva" action="{{ url_for('frontend.crear_reservas') }}" method="POST" novalidate>
+        <form id="form-reserva" action="{{ url_for('reservas.crear_reservas') }}" method="POST" novalidate>
 
             <div class="reservas-fila">
                 <div class="campo">

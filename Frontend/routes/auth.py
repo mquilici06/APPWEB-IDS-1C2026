@@ -41,7 +41,7 @@ def login_admin():
             session["usuario_id"] = resultado["usuario"]["id"]
             session["rol"] = resultado["usuario"]["rol"]
             session["jwt_token"] = resultado.get("token")
-            return redirect(url_for("frontend.admin"))
+            return redirect(url_for("core.admin"))
 
         flash(resultado.get("mensaje", "Error al iniciar sesión"), "error")
         return redirect(url_for("auth.login_admin"))

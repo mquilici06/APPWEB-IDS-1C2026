@@ -28,11 +28,11 @@
     <section class="seccion-formulario-servicios">
         {% if servicio_a_editar %}
         <h2 class="titulo-formulario">Editar Servicio: {{ servicio_a_editar.nombre_servicio }}</h2>
-        <form action="{{ url_for('frontend.admin_servicios_extras') }}?editar_id={{ servicio_a_editar.id_servicio }}"
+        <form action="{{ url_for('servicios.admin_servicios_extras') }}?editar_id={{ servicio_a_editar.id_servicio }}"
             method="POST" class="formulario-servicio">
             {% else %}
             <h2 class="titulo-formulario">Añadir Servicio</h2>
-            <form action="{{ url_for('frontend.admin_servicios_extras') }}" method="POST" class="formulario-servicio">
+            <form action="{{ url_for('servicios.admin_servicios_extras') }}" method="POST" class="formulario-servicio">
                 {% endif %}
 
                 <input type="text" name="nombre_servicio" placeholder="Nombre del servicio" required
@@ -46,7 +46,7 @@
                         {% if servicio_a_editar %}Actualizar Cambios{% else %}Guardar Servicio{% endif %}
                     </button>
                     {% if servicio_a_editar %}
-                    <a href="{{ url_for('frontend.admin_servicios_extras') }}" class="boton-cancelar-servicio">Cancelar
+                    <a href="{{ url_for('servicios.admin_servicios_extras') }}" class="boton-cancelar-servicio">Cancelar
                         Edición</a>
                     {% endif %}
                 </div>
@@ -65,9 +65,9 @@
                     <p class="id-servicio-item">ID: {{ servicio.id_servicio }}</p>
                 </div>
                 <div class="acciones-servicio-item">
-                    <a href="{{ url_for('frontend.admin_servicios_extras', editar_id=servicio.id_servicio) }}"
+                    <a href="{{ url_for('servicios.admin_servicios_extras', editar_id=servicio.id_servicio) }}"
                         class="boton-editar-servicio">Editar</a>
-                    <form action="{{ url_for('frontend.eliminar_servicio', id=servicio.id_servicio) }}" method="POST"
+                    <form action="{{ url_for('servicios.eliminar_servicio', id=servicio.id_servicio) }}" method="POST"
                         class="form-inline-servicio">
                         <button type="submit" class="boton-eliminar-servicio"
                             onclick="return confirm('¿Seguro que querés eliminar este servicio?');">Eliminar</button>

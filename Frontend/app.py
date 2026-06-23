@@ -1,6 +1,10 @@
 from flask import Flask, render_template
 from flask_mail import Mail
-from routes.routes import mis_rutas
+from routes.core import core_bp
+from routes.reservas import reservas_bp
+from routes.resenas import resenas_bp
+from routes.menu import menu_bp
+from routes.servicios_extras import servicios_bp
 from routes.auth import auth_bp
 from routes.contacto import contacto_bp
 from dotenv import load_dotenv
@@ -11,7 +15,11 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-app.register_blueprint(mis_rutas, url_prefix="")
+app.register_blueprint(core_bp, url_prefix="")
+app.register_blueprint(reservas_bp, url_prefix="")
+app.register_blueprint(resenas_bp, url_prefix="")
+app.register_blueprint(menu_bp, url_prefix="")
+app.register_blueprint(servicios_bp, url_prefix="")
 app.register_blueprint(auth_bp)
 app.register_blueprint(contacto_bp)
 
