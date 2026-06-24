@@ -106,10 +106,10 @@ docker compose up --build
 
 Esto construye las imágenes y levanta los contenedores.
 
-## Script de ejecución sin Docker
+## Script de ejecución sin Docker (macOS, iniciar.sh y apagar.sh)
 
 El proyecto se puede levantar sin Docker usando el archivo:
-(LINUX)
+(macOS)
 
 ```
 iniciar.sh
@@ -123,6 +123,27 @@ apagar.sh
 
 Configuración actual:
 
+```
+Backend:  puerto 5000
+Frontend: puerto 5001
+```
+
+## Script de ejecución sin Docker (ubuntu, iniciar_ubuntu.sh y apagar_ubuntu.sh)
+El proyecto se puede levantar sin Docker usando el archivo:
+(ubuntu)
+
+```
+iniciar_ubuntu.sh
+```
+
+Y bajarlo con:
+
+```
+apagar_ubuntu.sh
+```
+Configuración actual:
+Pide usuario y contraseña varias veces la primera vez que se ejecuta
+si falla cambiar "db" por "localhost" en el .env del backend
 ```
 Backend:  puerto 5000
 Frontend: puerto 5001
