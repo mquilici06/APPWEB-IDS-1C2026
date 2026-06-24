@@ -2,6 +2,16 @@
     margin: 0;
 }
 
+body {
+    background-image: url(../images/wpp-contact.png);
+    background-position: top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+
 footer {
     flex-direction: column;
     text-align: center;

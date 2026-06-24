@@ -1,12 +1,6 @@
 .main {
     color: black;
     padding: 1rem;
-    background-image: url(../images/index.png);
-    background-position: top;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    min-height: 100vh;
 }
 
 h1 {
@@ -50,6 +44,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
+    padding-top: 8px;
 }
 
 .caja-plato-ind {
@@ -62,9 +57,14 @@ h1 {
     border-radius: 8px;
 }
 
-.img-platos {
-    width: 90%;
-    padding: 5%;
+.imagen-platos {
+    width: 95%;
+    height: 250px; 
+    object-fit: cover;
+    display: block;
+    margin: 15px auto;
+    border-radius: 8px;
+    padding-top: 8px;
 }
 
 .texto-caja-ind {

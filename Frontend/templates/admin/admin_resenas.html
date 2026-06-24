@@ -8,6 +8,20 @@
 
 {% block admin_content %}
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="contenedor-mensajes">
+        {% for category, message in messages %}
+            {% if category == 'exito' %}
+                <div class="mensaje-exito">{{ message }}</div>
+            {% else %}
+                <div class="mensaje-error">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <div class="abm-container">
     <h1 class="abm-titulo">Gestion de Reseñas</h1>
     <p class="abm-subtitulo">Revisa y elimina las reseñas de los clientes.</p>
@@ -19,9 +33,28 @@
                 <h3 class="resena-nombre">{{ resena.nombre_cliente }}</h3>
                 <p class="resena-puntuacion">Puntuación: {{ resena.puntuacion }} / 5 estrellas</p>
                 <p class="resena-mensaje">"{{ resena.mensaje }}"</p>
+                
+                <p class="resena-estado">
+                    Estado: 
+                    {% if resena.estado == 'Publicada' %}
+                        <strong class="estado-publicada">{{ resena.estado }}</strong>
+                    {% else %}
+                        <strong class="estado-pendiente">{{ resena.estado }}</strong>
+                    {% endif %}
+                </p>
             </div>
+            
             <div class="resena-acciones">
-                <form action="{{ url_for('frontend.eliminar_resena', id=resena.id_resena) }}" method="POST">
+               <form action="{{ url_for('resenas.cambiar_estado_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
+                    {% if resena.estado == 'Pendiente' %}
+                        <input type="hidden" name="estado" value="Publicada">
+                        <button type="submit" class="btn-aprobar">Aprobar</button>
+                    {% else %}
+                        <input type="hidden" name="estado" value="Pendiente">
+                        <button type="submit" class="btn-ocultar">Ocultar</button>
+                    {% endif %}
+                </form>
+                <form action="{{ url_for('resenas.eliminar_resena', id=resena.id_resena) }}" method="POST" class="form-sin-margen">
                     <button type="submit" class="btn-eliminar">Eliminar</button>
                 </form>
             </div>

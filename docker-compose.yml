@@ -1,8 +1,10 @@
+x-db-password: &db-password ${DB_PASSWORD:-rootpassword}
+
 services:
   backend:
     build:
       context: .
-      dockerfile: Backend/Dockerfile
+      dockerfile: Backend/dockerfile
     container_name: altezza_backend
     ports:
       - "5002:5000"
@@ -11,16 +13,18 @@ services:
     environment:
       DB_HOST: db
       DB_USER: root
-      DB_PASSWORD: Root123!
+      DB_PASSWORD: *db-password
       DB_NAME: altezza
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - ./Backend/.env
 
   frontend:
     build:
       context: .
-      dockerfile: Frontend/Dockerfile
+      dockerfile: Frontend/dockerfile
     container_name: altezza_frontend
     ports:
       - "5001:5001"
@@ -28,14 +32,17 @@ services:
       - ./Frontend:/app
     depends_on:
       - backend
+    env_file:
+      - ./Frontend/.env
 
   db:
     image: mysql:8.0
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     container_name: altezza_db
     restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD: Root123!
+      MYSQL_ROOT_PASSWORD: *db-password
       MYSQL_DATABASE: altezza
     ports:
       - "3307:3306"
@@ -43,10 +50,11 @@ services:
       - mysql_data:/var/lib/mysql
       - ./Backend/database/__init__.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pRoot123!"]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD" ]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
   mysql_data:
+    name: altezza_mysql_data

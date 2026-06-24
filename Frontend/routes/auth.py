@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 import requests
+import os
 
 auth_bp = Blueprint("auth", __name__)
 
-BACKEND_URL = "http://backend:5000"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:5000")
 
 def admin_requerido(funcion):
     @wraps(funcion)
@@ -40,7 +41,7 @@ def login_admin():
             session["usuario_id"] = resultado["usuario"]["id"]
             session["rol"] = resultado["usuario"]["rol"]
             session["jwt_token"] = resultado.get("token")
-            return redirect(url_for("frontend.admin"))
+            return redirect(url_for("core.admin"))
 
         flash(resultado.get("mensaje", "Error al iniciar sesión"), "error")
         return redirect(url_for("auth.login_admin"))

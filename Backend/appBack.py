@@ -1,15 +1,33 @@
 from flask import Flask, render_template, Blueprint
 from flask_cors import CORS
+from flask_mail import Mail
 from routes.platos import menu_bp
 from routes.resenas import resenas_bp
 from routes.reservas import reservas_bp
 from routes.admin import admin_bp
 from flask_jwt_extended import JWTManager
+from routes.servicios_extras import servicios_extras_bp
+from dotenv import load_dotenv
+import os
+from datetime import timedelta
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "altezza_password"  
-app.config["JWT_SECRET_KEY"] = "altezza_jwt_password"
+app.secret_key = os.getenv("SECRET_KEY")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=2)
 jwt = JWTManager(app)
+
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
+app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT", 587))
+app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS", "True") == "True"
+app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL", "False") == "True"
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
+
+mail = Mail(app)
 
 CORS(app)
 
@@ -17,7 +35,7 @@ app.register_blueprint(menu_bp, url_prefix="/platos")
 app.register_blueprint(resenas_bp, url_prefix = "/resenas")
 app.register_blueprint(reservas_bp, url_prefix = "/reservas")
 app.register_blueprint(admin_bp, url_prefix = "/admin")
+app.register_blueprint(servicios_extras_bp, url_prefix = "/servicios_extras")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-

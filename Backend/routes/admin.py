@@ -3,65 +3,71 @@ from database.db import get_connection
 from flask_jwt_extended import create_access_token, jwt_required
 import bcrypt
 from datetime import date, datetime
+from utils.auxiliar import errores
 
 admin_bp = Blueprint("admin", __name__)
 
 @admin_bp.route("/menu", methods=['POST'])
 @jwt_required()
 def agregar_plato():
+    conn = None
+    cursor = None
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}),500
     
-    data = request.json
+        data = request.json
 
-    datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion"]
-    secciones_validas = ["platos principales", "bebidas", "postres"]
+        datos_requeridos = ["nombre_plato","desc_plato","precio","restricciones","seccion","imagen"]
+        secciones_validas = ["platos principales", "bebidas", "postres"]
 
-    for campo in datos_requeridos:
-        if campo not in data:
+        for campo in datos_requeridos:
+            if campo not in data:
+                return errores(400,"Datos incompletos","Falta Completar algun campo obligatorio")
+    
+        nombre_plato = data.get("nombre_plato")
+        descripcion_plato = data.get("desc_plato")
+        precio_plato = data.get("precio")
+        restricciones_plato = data.get("restricciones")
+        seccion_plato = data.get("seccion")
+        imagen = data.get("imagen")
+
+        if not imagen:
+            return errores(400,"Imagen requerida","Debe cargar una imagen")
+
+        cursor.execute("""
+                    SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
+        existente = cursor.fetchone()["total"]
+
+        if existente > 0:
+            return errores(409,"Plato existente","Ya existe un plato con ese nombre o descripcion") 
+        
+
+        if not isinstance(precio_plato,(int,float)) or precio_plato <= 0:
+            return errores(400,"Precio establecido invalido","El precio debe ser un entero mayor a 0 ")
+
+        if seccion_plato.lower() not in secciones_validas:
+            return errores(400,"Seccion del menu invalida", "la seccion indicada no existe")
+        
+        cursor.execute("""
+                    INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion, imagen)
+                    VALUES (%s,%s,%s,%s,%s,%s)
+                    """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize(),imagen)
+                    )
+        conn.commit()
+    
+        return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
+    
+    except Exception as e:
+        return errores(500, "Error interno", str(e))
+    
+    finally:
+        if cursor is not None:
             cursor.close()
+        if conn is not None:
             conn.close()
-            return jsonify({"Error": "Falta Completar algun campo"}), 400
     
-    nombre_plato = data.get("nombre_plato")
-    descripcion_plato = data.get("desc_plato")
-    precio_plato = data.get("precio")
-    restricciones_plato = data.get("restricciones")
-    seccion_plato = data.get("seccion")
-
-    cursor.execute("""
-                   SELECT COUNT(*) AS total FROM menu WHERE nombre_plato = %s AND desc_plato = %s """,(nombre_plato,descripcion_plato))
-    existente = cursor.fetchone()["total"]
-
-    if existente > 0:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Plato ya existente"}), 409
-    
-
-    if not isinstance(precio_plato,(int,float)) or precio_plato <= 0:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Precio establecido invalido"}), 400
-
-    if seccion_plato.lower() not in secciones_validas:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Seccion del menu invalida"}), 400
-    
-    cursor.execute("""
-                   INSERT INTO menu (nombre_plato, desc_plato, precio, restricciones, seccion)
-                   VALUES (%s,%s,%s,%s,%s)
-                   """,(nombre_plato.capitalize(), descripcion_plato.capitalize(), precio_plato, restricciones_plato.capitalize(), seccion_plato.capitalize())
-                   )
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify({"Mensaje": "Plato agregado correctamente"}), 201
 
 
 @admin_bp.route("/menu/<int:id_plato>", methods=["PUT"])
@@ -100,10 +106,14 @@ def editar_plato(id_plato):
     precio_act = data["precio"]
     restr_act = data["restricciones"]
     seccion_act = data["seccion"]
+    imagen_act = data.get("imagen")
+
+    if imagen_act is None:
+        imagen_act = plato["imagen"]
     
     cursor.execute("""
-                    UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s WHERE id_menu = %s;
-                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act, id_plato))
+                    UPDATE menu SET nombre_plato = %s, desc_plato = %s, precio = %s, restricciones = %s, seccion = %s, imagen = %s WHERE id_menu = %s;
+                   """, (nombre_act, desc_act, precio_act, restr_act, seccion_act,imagen_act, id_plato))
     conn.commit()
 
     cursor.close()
@@ -116,33 +126,40 @@ def editar_plato(id_plato):
 @admin_bp.route("/menu/<int:eliminar_id>", methods=["DELETE"])
 @jwt_required()
 def eliminar_plato(eliminar_id):
+    conn = None
+    cursor = None
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except:
-        return jsonify({"Error": "Error de conexion con la base de datos"}), 500
-    
-    cursor.execute("SELECT id_menu FROM menu WHERE id_menu = %s", (eliminar_id,))
-    existe = cursor.fetchone()
 
-    if not existe:
-        cursor.close()
-        conn.close()
-        return jsonify({"Mensaje": "El plato no existe en el menu"}), 404
+        cursor.execute("SELECT id_menu FROM menu WHERE id_menu = %s", (eliminar_id,))
+        existe = cursor.fetchone()
 
-    cursor.execute("DELETE FROM menu WHERE id_menu = %s", (eliminar_id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({"Mensaje": "Plato eliminado"}), 200
+        if not existe:
+            return jsonify({"Mensaje": "El plato no existe en el menu"}), 404
+
+        cursor.execute("DELETE FROM menu WHERE id_menu = %s", (eliminar_id,))
+        conn.commit()
+        return jsonify({"Mensaje": "Plato eliminado"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 @admin_bp.route("/reservas", methods=["GET"])
+@jwt_required()
 def mostrar_reservas():
     #Atrapa params
     buscar = request.args.get('buscar', '').lower()
     fecha_filtro = request.args.get('fecha', '')
     estado_filtro = request.args.get('estado', '').lower()
+    
 
     try:
         conn = get_connection()
@@ -207,13 +224,48 @@ def mostrar_reservas():
 
     return jsonify({"Reservas": reservas_hechas}), 200
 
-@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
-def modificar_reserva(modificar_reserva):
-    if modificar_reserva < 1:
-        return jsonify({"Error": "Ingrese un id valido"}),400
-    
+@admin_bp.route("/reservas/<int:id_reserva>/estado", methods=["PUT"])
+@jwt_required()
+def actualizar_estado_reserva(id_reserva):
     data = request.json
+    nuevo_estado = data.get("estado")
+
+    if nuevo_estado not in ["confirmada", "cancelada", "pendiente"]:
+        return jsonify({"Error": "Estado no válido"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE reservas 
+            SET estado = %s 
+            WHERE id_reserva = %s
+        """, (nuevo_estado, id_reserva))
+        
+        conn.commit()
+        return jsonify({"Mensaje": "Estado de la reserva actualizado"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": f"Error en BD: {str(e)}"}), 500
     
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@admin_bp.route("/reservas/<int:modificar_reserva>", methods=["PUT"])
+@jwt_required()
+def modificar_reserva(modificar_reserva):
+    conn = None
+    cursor = None
+
+    if modificar_reserva < 1:
+        return jsonify({"Error": "Ingrese un id valido"}), 400
+
+    data = request.json
+
     campos_requeridos = ["fecha", "hora", "cantidad_personas", "estado"]
     for campo in campos_requeridos:
         if campo not in data:
@@ -222,47 +274,42 @@ def modificar_reserva(modificar_reserva):
     cantidad_personas = data["cantidad_personas"]
     if not isinstance(cantidad_personas, int) or cantidad_personas <= 0:
         return jsonify({"Error": "La cantidad de personas debe ser un número positivo"}), 400
-    
+
     estado_nuevo = data["estado"].strip().lower()
     if estado_nuevo not in ["pendiente", "confirmada", "cancelada"]:
         return jsonify({"Error": "Estado inválido"}), 400
-    
+
     try:
         fecha_reserva = datetime.strptime(data["fecha"], "%Y-%m-%d").date()
         if fecha_reserva < datetime.now().date():
             return jsonify({"Error": "No se pueden programar reservas para fechas pasadas"}), 400
     except ValueError:
         return jsonify({"Error": "Formato de fecha inválido. Por favor, use el formato YYYY-MM-DD"}), 400
-    
+
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-    except Exception as e:
-      return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)} "}), 500
 
-    try:
         cursor.execute("SELECT * FROM reservas WHERE id_reserva = %s", (modificar_reserva,))
         reserva = cursor.fetchone()
         if not reserva:
-            cursor.close()
-            conn.close()
             return jsonify({"Error": "Reserva no encontrada"}), 404
 
-        query = """UPDATE reservas SET fecha = %s, hora = %s, cantidad_personas = %s, estado = %s WHERE id_reserva = %s"""
+        query = """UPDATE reservas SET fecha = %s, hora = %s, cantidad_personas = %s, estado = %s 
+                   WHERE id_reserva = %s"""
         valores = (data["fecha"], data["hora"], cantidad_personas, estado_nuevo, modificar_reserva)
         cursor.execute(query, valores)
         conn.commit()
-        
-        cursor.close()
-        conn.close()
-        return "el cambio se realizo correctamente", 200
 
-    except:
-        cursor.close()
-        conn.close()
-        return jsonify({"Error": "Error interno del servidor"}), 500 
+        return jsonify({"Mensaje": "El cambio se realizó correctamente"}), 200
 
-
+    except Exception as e:
+        return jsonify({"Error": f"Error al modificar reserva: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 @admin_bp.route("/resenas/<int:resena_id>", methods=["DELETE"])
 @jwt_required()
@@ -289,6 +336,72 @@ def eliminar_resena(resena_id):
     cursor.close()
     conn.close()
     return '', 204
+
+@admin_bp.route("/resenas/<int:id>/estado", methods=["PUT"])
+@jwt_required()
+def cambiar_estado_resena(id):
+    if id < 1:
+        return jsonify({"error": "ID invalido"}), 400
+
+    data = request.get_json(silent=True)
+    nuevo_estado = data.get("estado") if data else None
+
+    if nuevo_estado not in ["Publicada", "Pendiente"]:
+        return jsonify({"error": "Estado invalido, debe ser Publicada o Pendiente"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+    
+    cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id,))
+
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Reseña no encontrada"}), 404
+    
+    cursor.execute("UPDATE resenas SET estado = %s WHERE id_resena = %s", (nuevo_estado, id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": f"Reseña marcada como {nuevo_estado}"}), 200
+
+@admin_bp.route("/resenas", methods=["GET"])
+@jwt_required()
+def listar_todas_resenas():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return jsonify({"error": "Error de conexion con la base de datos"}), 500
+
+    cursor.execute("SELECT * FROM resenas")
+    lista_resenas = cursor.fetchall()
+
+    if not lista_resenas:
+        cursor.close()
+        conn.close()
+        return jsonify({"resenas": []}), 200
+
+    resenas_armadas = []
+    for resena in lista_resenas:
+        cursor.execute("SELECT nombre FROM usuarios WHERE id = %s", (resena["id_cliente"],))
+        cliente = cursor.fetchone()
+        if cliente:
+            resena_completa = {
+                "id_resena": resena["id_resena"],
+                "nombre_cliente": cliente["nombre"],
+                "mensaje": resena["mensaje"],
+                "puntuacion": resena["puntuacion"],
+                "estado": resena.get("estado", "Pendiente")
+            }
+            resenas_armadas.append(resena_completa)
+
+    cursor.close()
+    conn.close()
+    return jsonify({"resenas": resenas_armadas}), 200
 
 @admin_bp.route("/login", methods=["POST"])
 def login():
@@ -333,6 +446,7 @@ def login():
     }), 200
 
 @admin_bp.route('/stats/', methods=['GET'])
+@jwt_required()
 def obtener_estadisticas():
     fecha_filtro = request.args.get('fecha')
     
@@ -389,3 +503,175 @@ def obtener_estadisticas():
         }
 
     return jsonify(respuesta_json), 200
+
+@admin_bp.route("/servicios_extras", methods=["GET"])
+@jwt_required()
+def mostrar_servicios_extras():
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM servicios_extras")
+        servicios = cursor.fetchall()
+        return jsonify({"servicios_extras": servicios}), 200
+
+    except Exception as e:
+        return jsonify({"Mensaje": f"Error con la base de datos: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+    
+@admin_bp.route("/servicios_extras", methods=["POST"])
+@jwt_required()
+def agregar_servicio_extra():
+    conn = None
+    cursor = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        data = request.json
+        if not data:
+            return jsonify({"Error": "No se recibieron datos"}), 400
+
+        nombre_servicio = data.get("nombre_servicio")
+        descripcion_servicio = data.get("descripcion_servicio")
+
+        if not nombre_servicio or not descripcion_servicio:
+            return jsonify({"Error": "Faltan datos requeridos"}), 400
+
+        cursor.execute("SELECT COUNT(*) AS total FROM servicios_extras WHERE nombre_servicio = %s", (nombre_servicio,))
+        existente = cursor.fetchone()["total"]
+
+        if existente > 0:
+            return jsonify({"Error": "Servicio extra ya existente"}), 409
+
+        cursor.execute("""
+            INSERT INTO servicios_extras (nombre_servicio, descripcion_servicio) 
+            VALUES (%s, %s)
+        """, (nombre_servicio, descripcion_servicio))
+        conn.commit()
+        return jsonify({"Mensaje": "Servicio extra agregado correctamente"}), 201
+
+    except Exception as e:
+        return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+    
+@admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["PUT"])
+@jwt_required()
+def editar_servicio_extra(id_servicio):
+    conn = None
+    cursor = None
+
+    if id_servicio < 1:
+        return jsonify({"Mensaje": "Por favor ingrese un id valido"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        data = request.json
+        if not data:
+            return jsonify({"Mensaje": "No se recibieron los datos necesarios"}), 400
+
+        nombre_servicio_act = data.get("nombre_servicio")
+        descripcion_servicio_act = data.get("descripcion_servicio")
+
+        if not nombre_servicio_act or not descripcion_servicio_act:
+            return jsonify({"Mensaje": "Faltan datos requeridos para la actualización"}), 400
+
+        cursor.execute("SELECT * FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        servicio = cursor.fetchone()
+
+        if not servicio:
+            return jsonify({"Mensaje": "El servicio extra no existe"}), 404
+
+        if (nombre_servicio_act == servicio["nombre_servicio"] and
+                descripcion_servicio_act == servicio["descripcion_servicio"]):
+            return jsonify({"Mensaje": "Para modificar el servicio debe ingresar valores nuevos"}), 400
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total 
+            FROM servicios_extras WHERE nombre_servicio = %s AND id_servicio != %s
+        """, (nombre_servicio_act, id_servicio))
+        duplicado = cursor.fetchone()["total"]
+
+        if duplicado > 0:
+            return jsonify({"Mensaje": "Ya existe otro servicio con ese nombre"}), 409
+
+        cursor.execute("""
+            UPDATE servicios_extras SET nombre_servicio = %s, descripcion_servicio = %s 
+            WHERE id_servicio = %s
+        """, (nombre_servicio_act, descripcion_servicio_act, id_servicio))
+        conn.commit()
+        return jsonify({"Mensaje": "Servicio extra actualizado"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+@admin_bp.route("/servicios_extras/<int:id_servicio>", methods=["DELETE"])
+@jwt_required()
+def eliminar_servicio_extra(id_servicio):
+    conn = None
+    cursor = None
+
+    if id_servicio < 1:
+        return jsonify({"Mensaje": "Por favor ingrese un id valido"}), 400
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        servicio = cursor.fetchone()
+
+        if not servicio:
+            return jsonify({"Mensaje": "El servicio extra no existe"}), 404
+
+        cursor.execute("DELETE FROM servicios_extras WHERE id_servicio = %s", (id_servicio,))
+        conn.commit()
+        return jsonify({"Mensaje": "Servicio extra eliminado"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": f"Error de conexion con la base de datos: {str(e)}"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@admin_bp.route("/reservas/<int:id>/eliminar", methods=["DELETE"])
+@jwt_required()
+def eliminar_reserva(id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+    except Exception:
+        return errores(500, "Internal server error", "Error de conexión con la base de datos")
+
+    cursor.execute("SELECT id_reserva FROM reservas WHERE id_reserva = %s", (id,))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return errores(404, "Not found", "Reserva no encontrada")
+
+    cursor.execute("DELETE FROM reservas WHERE id_reserva = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"mensaje": "Reserva eliminada"}), 200

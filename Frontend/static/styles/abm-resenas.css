@@ -85,3 +85,39 @@
 }
 
 .btn-eliminar:hover { background-color: #8b0e22; }
+
+
+.btn-aprobar {
+    background-color: #28a745; 
+    color: white; 
+    padding: 6px 12px; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold;
+}
+
+
+.btn-ocultar {
+    background-color: #ffc107; 
+    color: black; 
+    padding: 6px 12px; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold;
+}
+
+
+.contenedor-mensajes { margin-bottom: 20px; }
+.mensaje-exito { padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 5px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.mensaje-error { padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 5px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+
+.resena-estado { margin-top: 10px; font-size: 0.9em; }
+.estado-publicada { color: #28a745; }
+.estado-pendiente { color: #ff9800; }
+
+
+.resena-acciones { display: flex; gap: 10px; align-items: center; }
+.form-sin-margen { margin: 0; }

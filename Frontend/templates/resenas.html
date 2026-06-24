@@ -4,6 +4,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/resenas.css') }}">
 {% endblock %}
 {% block content %}
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+        {% for categoria, mensaje in mensajes %}
+            <div class="aviso-fijo {{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 <section class="resenas-hero">
     <p class="resenas-subtitulo">La experiencia de nuestros comensales</p>
     <h1 class="resenas-titulo">Reseñas</h1>
@@ -27,7 +34,7 @@
     </div>
     <div class="resenas-columna">
         <h2 class="resenas-seccion-titulo">Deja tu reseña</h2>
-        <form action="{{ url_for('frontend.resenas') }}" method="post">
+        <form action="{{ url_for('resenas.resenas') }}" method="post">
             <div class="campo">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="f_nombre" placeholder="Tu nombre" required>
@@ -56,9 +63,6 @@
         </form>
     </div>
 </section>
-{% if aviso %}
-<div class="aviso-fijo {{ tipo }}">{{ aviso }}</div>
-{% endif %}
 {% endblock %}
 
 {% block scripts %}

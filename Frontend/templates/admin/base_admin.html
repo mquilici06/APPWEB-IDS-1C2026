@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Altezza{% endblock %}</title>
-    
+
     {% block links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base_admin.css')}}">
-	<link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
     {% endblock %}
 
-	{% block estilos %}{% endblock %}
+    {% block estilos %}{% endblock %}
 </head>
 
 <body>
 
     <div class="contenedor-total-admin">
-    <div class="barra-lateral">
-        <h2 class="titulo-menu">Menú Admin</h2>
-        <nav class="navegacion-admin">
-            <ul>
-                <li><a class="enlace-menu" href="{{ url_for('frontend.admin_reservas') }}">Gestionar Reservas</a></li>
-                <li><a class="enlace-menu" href="{{ url_for('frontend.admin_menu') }}">Gestionar Menú</a></li>
-                <li><a class="enlace-menu" href="{{ url_for('frontend.admin_resenas') }}">Gestionar Reseñas</a></li>
-                <li><a class="enlace-menu" href="{{ url_for('frontend.admin_stats') }}">Ver Estadisticas</a></li>
-            </ul>
-        </nav>
-        <div id="boton-inicio">
-            <a class="enlace-menu" href="{{ url_for('frontend.index') }}">Inicio</a>
-            <a class="enlace-menu" href="{{ url_for('frontend.logout') }}">Cerrar Sesión</a>
+        <div class="barra-lateral">
+            <h2 class="titulo-menu">Menú Admin</h2>
+            <nav class="navegacion-admin">
+                <ul>
+                    <li><a class="enlace-menu" href="{{ url_for('reservas.admin_reservas') }}">Gestionar Reservas</a>
+                    </li>
+                    <li><a class="enlace-menu" href="{{ url_for('menu.admin_menu') }}">Gestionar Menú</a></li>
+                    <li><a class="enlace-menu" href="{{ url_for('resenas.admin_resenas') }}">Gestionar Reseñas</a></li>
+                    <li><a class="enlace-menu" href="{{ url_for('core.admin_stats') }}">Ver Estadisticas</a></li>
+                    <li><a class="enlace-menu" href="{{ url_for('servicios.admin_servicios_extras') }}">Gestionar
+                            Servicios Extra</a></li>
+                </ul>
+            </nav>
+            <div id="boton-inicio">
+                <a class="enlace-menu" href="{{ url_for('core.index') }}">Inicio</a>
+                <a class="enlace-menu" href="{{ url_for('core.logout') }}">Cerrar Sesión</a>
+            </div>
         </div>
-      </div>
 
-      <main class="area-principal">
-        {% block admin_content %}{% endblock %}
-    </main>
-</div>
+        <main class="area-principal">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
 </body>
+
 </html>

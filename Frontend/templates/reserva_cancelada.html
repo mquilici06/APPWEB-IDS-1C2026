@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Reserva cancelada{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/reserva_cancelada.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="reserva-cancelada-bloque">
+    <h1 class="titulo">
+        {% if exito %}Reserva cancelada con éxito{% else %}No pudimos cancelar tu reserva{% endif %}
+    </h1>
+    <p class="subtitulo">
+        {% if exito %}
+            Tu reserva {% if id_reserva %}N° {{ id_reserva }}{% endif %} fue cancelada correctamente.
+        {% else %}
+            {{ mensaje }}
+        {% endif %}
+    </p>
+    <a href="{{url_for('reservas.crear_reservas')}}">
+        <button class="boton-enviar">
+            Volver a Reservas
+        </button>
+    </a>
+    
+</div>
+{% endblock %}
